@@ -1,0 +1,91 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use App\Models\Product;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
+
+class ProductController extends Controller
+{
+    public function index()
+    {
+        $products = Product::where('supplier_id', Auth::id())->get();
+        return Inertia::render('Products/Index', ['products' => $products]);
+    }
+
+    public function create(Request $request)
+    {
+        try {
+
+            Log::debug('creating Product');
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'price' => 'nullable|',
+                'stock_quantity' => 'nullable|',
+            ]);
+
+            Log::debug('creating Product', [$validated]);
+
+            $validated['supplier_id'] = Auth::id();
+
+            Product::create($validated);
+        } catch (\Throwable $th) {
+            Log::debug('creating Product failed', [$th]);
+        }
+
+        return redirect()->back();
+    }
+
+    public function store(Request $request)
+    {
+       $validated =  $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price' => 'required|numeric|min:0',
+            'stock_quantity' => 'required|integer|min:0',
+        ]);
+
+       $validated['supplier_id'] = Auth::id();
+
+       Product::create($validated);
+
+       return redirect()->back()->with('success', 'Product created!');
+    }
+
+    public function edit(Product $product)
+    {
+        $this->authorize('update', $product);
+        return Inertia::render('Supplier/Products/Edit', ['product' => $product]);
+    }
+
+    public function update(Request $request, Product $product)
+    {
+        $this->authorize('update', $product);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price' => 'required|numeric|min:0',
+            'stock_quantity' => 'required|integer|min:0',
+        ]);
+
+        $product->update($request->only('name', 'description', 'price', 'stock_quantity'));
+
+        return redirect()->route('supplier.products.index')->with('success', 'Product updated!');
+    }
+
+    public function delete(Product $product)
+    {
+        if ($product->supplier_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+        $product->delete();
+
+        return redirect()->back()->with('success', 'Product Deleted!');
+    }
+}
