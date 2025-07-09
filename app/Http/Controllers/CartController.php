@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class CartController extends Controller
 {
@@ -24,7 +26,7 @@ class CartController extends Controller
             ['created_at' => now()]
         );
 
-        // Add or update the cart item
+//        // Add or update the cart item
         $item = $cart->items()->updateOrCreate(
             ['product_id' => $product->id],
             ['quantity' => \DB::raw("quantity + {$request->quantity}"), 'price_at_time' => $product->price]
@@ -35,7 +37,33 @@ class CartController extends Controller
 
     public function removeFromCart(Request $request)
     {
+       $cart = Cart::where('user_id', auth()->id())->first();
 
+       $cartItem = $cart->cartItems()->where('id', $request->id)->first();
+
+        if ($cartItem) {
+            $cartItem->delete();
+            return redirect()->back()->with('success', 'Product removed from cart!');
+        }
+
+        return redirect()->back()->with('error', 'Item not found in your cart.');
+    }
+
+    public function viewCart()
+    {
+        $cart = Cart::with('items.product')->where('user_id', auth()->id())->firstOrFail();
+
+        return Inertia::render('Cart/ViewCart', [
+            'cartItems' => $cart->items->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'product_id' => $item->product->id,
+                    'name' => $item->product->name,
+                    'price' => $item->product->price,
+                    'stock_quantity' => $item->quantity,
+                ];
+            }),
+        ]);
     }
 
     public function checkout()
@@ -66,7 +94,7 @@ class CartController extends Controller
         // Clear the cart
         $cart->items()->delete();
 
-        return redirect()->route('orders.index')->with('success', 'Order placed successfully!');
+        return redirect()->route('dashboard')->with('success', 'Order placed successfully!');
     }
 
 }

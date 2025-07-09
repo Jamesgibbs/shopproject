@@ -17,6 +17,11 @@ class ProductController extends Controller
         return Inertia::render('Products/Index', ['products' => $products]);
     }
 
+    public function view(Product $product)
+    {
+        return Inertia::render('Products/Product', ['product' => $product]);
+    }
+
     public function create(Request $request)
     {
         try {
@@ -88,4 +93,5 @@ class ProductController extends Controller
 
         return redirect()->back()->with('success', 'Product Deleted!');
     }
+
 }

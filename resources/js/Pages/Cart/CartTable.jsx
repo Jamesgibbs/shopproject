@@ -1,19 +1,18 @@
 import React from 'react';
 import { Link, useForm } from '@inertiajs/react';
 
-export default function CartTable({ products }) {
+export default function CartTable({ cartItems }) {
 
     const { delete: removeProduct } = useForm();
 
+    console.log(cartItems);
 
-    if (!products || products.length === 0) {
-        return <p>Cart Is Empty.</p>;
+    if (!Array.isArray(cartItems) || cartItems.length === 0) {
+        return <p>Cart is empty.</p>;
     }
 
-    const handleDelete = (id) => {
-        if (confirm('Are you sure you want to delete this product?')) {
-            removeProduct(`/products/${id}`);
-        }
+    const handleRemoveFromCart = (id) => {
+        removeProduct(`/products/${id}`);
     };
 
     return (
@@ -24,26 +23,20 @@ export default function CartTable({ products }) {
                 <th style={thStyle}>Price</th>
                 <th style={thStyle}>Quantity</th>
                 <th style={thStyle}>Actions</th>
-                <th style={thStyle}>Delete</th>
             </tr>
             </thead>
             <tbody>
-            {products.map(product => (
-                <tr key={product.id}>
-                    <td style={tdStyle}>{product.name}</td>
-                    <td style={tdStyle}>£{product.price}</td>
-                    <td style={tdStyle}>{product.stock_quantity}</td>
-                    <td style={tdStyle}>
-                        <Link href={`/products/${product.id}/edit`} style={linkStyle}>
-                            Edit
-                        </Link>
-                    </td>
+            {cartItems.map(item => (
+                <tr key={item.id}>
+                    <td style={tdStyle}>{item.name}</td>
+                    <td style={tdStyle}>£{item.price}</td>
+                    <td style={tdStyle}>{item.stock_quantity}</td>
                     <td style={tdStyle}>
                         <button
-                            onClick={() => handleDelete(product.id)}
+                            onClick={() => handleRemoveFromCart(item.id)}
                             style={deleteButtonStyle}
                         >
-                            Delete
+                            Remove From Cart
                         </button>
                     </td>
                 </tr>

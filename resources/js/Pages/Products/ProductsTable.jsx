@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link, useForm } from '@inertiajs/react';
+import AddToCartButton from "@/Pages/Cart/AddToCartButton.jsx";
+import { router } from '@inertiajs/react'
 
 export default function ProductsTable({ products }) {
 
     const { delete: removeProduct } = useForm();
-
 
     if (!products || products.length === 0) {
         return <p>No products available.</p>;
@@ -30,7 +31,12 @@ export default function ProductsTable({ products }) {
             <tbody>
             {products.map(product => (
                 <tr key={product.id}>
-                    <td style={tdStyle}>{product.name}</td>
+                    <td
+                        style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
+                        onClick={() => router.visit(`/products/${product.id}`)}
+                    >
+                        {product.name}
+                    </td>
                     <td style={tdStyle}>£{product.price}</td>
                     <td style={tdStyle}>{product.stock_quantity}</td>
                     <td style={tdStyle}>
