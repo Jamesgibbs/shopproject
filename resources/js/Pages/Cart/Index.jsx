@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, usePage } from '@inertiajs/react';
-import GuestLayout from "@/Layouts/GuestLayout.jsx";
 import CartTable from "./CartTable.jsx";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 
 export default function Index() {
     const { products = [] } = usePage().props;
@@ -24,4 +24,4 @@ export default function Index() {
     );
 }
 
-Index.layout = page => <GuestLayout children={page} />;
+Index.layout = page => <AuthenticatedLayout children={page} />;

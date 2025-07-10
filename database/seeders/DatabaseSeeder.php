@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'testsupplier@test.com'],
             [
-                'name' => 'Admin User',
+                'name' => 'Test Supplier User',
                 'password' => Hash::make('password'),
                 'role' => 'supplier',
             ]);
@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'testcustomer@test.com'],
             [
-                'name' => 'Admin User',
+                'name' => 'Test Customer User',
                 'password' => Hash::make('password'),
                 'role' => 'customer',
             ]);

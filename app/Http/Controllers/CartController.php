@@ -39,7 +39,12 @@ class CartController extends Controller
     {
        $cart = Cart::where('user_id', auth()->id())->first();
 
-       $cartItem = $cart->cartItems()->where('id', $request->id)->first();
+       if (!$cart) {
+           return redirect()->back()->with('error', 'No cart found.');
+       }
+
+
+       $cartItem = $cart->items()->where('id', $request->id)->first();
 
         if ($cartItem) {
             $cartItem->delete();

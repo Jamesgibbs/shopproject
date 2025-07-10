@@ -61,6 +61,14 @@ export default function Register() {
                 </div>
 
                 <div className="mt-4">
+                    <select name="role" onChange={e => setData('role', e.target.value)} required>
+                        <option value="">Select role</option>
+                        <option value="customer">Customer</option>
+                        <option value="supplier">Supplier</option>
+                    </select>
+                </div>
+
+                <div className="mt-4">
                     <InputLabel htmlFor="password" value="Password" />
 
                     <TextInput

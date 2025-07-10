@@ -1,9 +1,12 @@
 import React from 'react';
 import { usePage, useForm } from '@inertiajs/react';
-import GuestLayout from "@/Layouts/GuestLayout.jsx";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 
 export default function Product() {
-    const { product } = usePage().props;
+    const { product, auth } = usePage().props;
+    const user = auth.user;
+    const isCustomer = user && user.role === 'customer';
+
     const { data, setData, post, processing } = useForm({
         product_id: product.id,
         quantity: 1,
@@ -15,17 +18,21 @@ export default function Product() {
 
 
     return (
-        <div>
-            <h1>{product.name}</h1>
-            <p>{product.description}</p>
+        <div className="max-w-screen-xl mx-auto px-4">
+            <h1>Product Name: {product.name}</h1>
+            <p>Product Description: {product.description}</p>
             <p>Price: £{product.price}</p>
             <p>Stock: {product.stock_quantity}</p>
 
-            <button onClick={handleAddToCart} disabled={processing}>
+            {isCustomer && (
+                <button onClick={handleAddToCart} disabled={processing} className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded shadow mb-6">
                 Add to Cart
-            </button>
+                </button>
+            )}
+
+
         </div>
     );
 }
 
-Product.layout = page => <GuestLayout children={page} />;
+Product.layout = page => <AuthenticatedLayout children={page} />;

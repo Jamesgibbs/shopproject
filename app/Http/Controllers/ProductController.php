@@ -38,7 +38,7 @@ class ProductController extends Controller
 
             $validated['supplier_id'] = Auth::id();
 
-            Product::create($validated);
+            Product::createOrUpdate($validated);
         } catch (\Throwable $th) {
             Log::debug('creating Product failed', [$th]);
         }
@@ -57,31 +57,30 @@ class ProductController extends Controller
 
        $validated['supplier_id'] = Auth::id();
 
-       Product::create($validated);
+
+       Product::createOrUpdate($validated);
 
        return redirect()->back()->with('success', 'Product created!');
     }
 
-    public function edit(Product $product)
-    {
-        $this->authorize('update', $product);
-        return Inertia::render('Supplier/Products/Edit', ['product' => $product]);
-    }
-
     public function update(Request $request, Product $product)
     {
-        $this->authorize('update', $product);
-
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'stock_quantity' => 'required|integer|min:0',
         ]);
 
-        $product->update($request->only('name', 'description', 'price', 'stock_quantity'));
 
-        return redirect()->route('supplier.products.index')->with('success', 'Product updated!');
+        $product->update($validated);
+
+        return redirect()->back()->with('success', 'Product created!')->with('success', 'Product updated!');
+    }
+
+    public function edit(Product $product)
+    {
+        return Inertia::render('Products/Edit', ['product' => $product]);
     }
 
     public function delete(Product $product)

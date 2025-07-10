@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'supplier' => \App\Http\Middleware\IsSupplier::class,
+            'customer' => \App\Http\Middleware\IsCustomer::class,
         ]);
 
         //

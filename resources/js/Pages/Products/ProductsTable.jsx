@@ -3,9 +3,10 @@ import { Link, useForm } from '@inertiajs/react';
 import AddToCartButton from "@/Pages/Cart/AddToCartButton.jsx";
 import { router } from '@inertiajs/react'
 
-export default function ProductsTable({ products }) {
+export default function ProductsTable({ products, user }) {
 
     const { delete: removeProduct } = useForm();
+    const isSupplier = user && user.role === 'supplier';
 
     if (!products || products.length === 0) {
         return <p>No products available.</p>;
@@ -18,45 +19,42 @@ export default function ProductsTable({ products }) {
     };
 
     return (
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-            <tr>
-                <th style={thStyle}>Name</th>
-                <th style={thStyle}>Price</th>
-                <th style={thStyle}>Quantity</th>
-                <th style={thStyle}>Actions</th>
-                <th style={thStyle}>Delete</th>
-            </tr>
-            </thead>
-            <tbody>
-            {products.map(product => (
-                <tr key={product.id}>
-                    <td
-                        style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
-                        onClick={() => router.visit(`/products/${product.id}`)}
-                    >
-                        {product.name}
-                    </td>
-                    <td style={tdStyle}>£{product.price}</td>
-                    <td style={tdStyle}>{product.stock_quantity}</td>
-                    <td style={tdStyle}>
-                        <Link href={`/products/${product.id}/edit`} style={linkStyle}>
-                            Edit
-                        </Link>
-                    </td>
-                    <td style={tdStyle}>
-                        <button
-                            onClick={() => handleDelete(product.id)}
-                            style={deleteButtonStyle}
-                        >
-                            Delete
-                        </button>
-                    </td>
+        <div className="max-w-screen-xl mx-auto px-4">
+            <table className="w-full max-w-7xl table-auto border border-gray-200 text-center">
+                <thead className="bg-gray-100">
+                <tr>
+                    <th className="px-4 py-2 border-b">Name</th>
+                    <th className="px-4 py-2 border-b">Price</th>
+                    <th className="px-4 py-2 border-b">Quantity</th>
+                    {isSupplier && <th className="px-4 py-2 border-b">Edit</th>}
+                    {isSupplier && <th className="px-4 py-2 border-b">Delete</th>}
                 </tr>
-            ))}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                {products.map(product => (
+                    <tr key={product.id}>
+                        <td className="px-4 py-2 border-b text-blue-600 underline cursor-pointer" onClick={() => router.visit(`/products/${product.id}`)}>
+                            {product.name}
+                        </td>
+                        <td className="px-4 py-2 border-b">£{product.price}</td>
+                        <td className="px-4 py-2 border-b">{product.stock_quantity}</td>
+                        {isSupplier && (
+                            <td className="px-4 py-2 border-b">
+                                <Link href={`/products/edit-product/${product.id}`} className="text-blue-500 hover:underline">Edit</Link>
+                            </td>
+                        )}
+                        {isSupplier && (
+                            <td className="px-4 py-2 border-b">
+                                <button onClick={() => handleDelete(product.id)} className="text-red-600 hover:underline">Delete</button>
+                            </td>
+                        )}
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+        </div>
     );
+
 }
 
 // Optional inline styles for simplicity
