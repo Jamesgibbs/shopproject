@@ -7,13 +7,10 @@ export default function OrdersTable({ orders }) {
         return <p></p>;
     }
 
-    console.log(orders);
-
     return (
         <div>
 
-
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <table className="w-full max-w-7xl table-auto border border-gray-200 text-center">
             <thead>
             <tr>
                 <th style={thStyle}>Total</th>

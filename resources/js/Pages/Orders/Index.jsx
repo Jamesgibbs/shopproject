@@ -9,7 +9,9 @@ export default function Index() {
 
     return (
         <div>
-            <h1>Orders</h1>
+            <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">
+                Orders
+            </h1>
 
             <h2>Pending Orders</h2>
             <OrdersTable orders={pendingOrders} />

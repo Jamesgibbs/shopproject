@@ -13,7 +13,11 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::where('supplier_id', Auth::id())->get();
+        if (Auth::user()->role === 'customer') {
+            $products = Product::all();
+        } else {
+            $products = Product::where('supplier_id', Auth::id())->get();
+        }
         return Inertia::render('Products/Index', ['products' => $products]);
     }
 
@@ -38,7 +42,7 @@ class ProductController extends Controller
 
             $validated['supplier_id'] = Auth::id();
 
-            Product::createOrUpdate($validated);
+            Product::create($validated);
         } catch (\Throwable $th) {
             Log::debug('creating Product failed', [$th]);
         }
@@ -58,7 +62,7 @@ class ProductController extends Controller
        $validated['supplier_id'] = Auth::id();
 
 
-       Product::createOrUpdate($validated);
+       Product::create($validated);
 
        return redirect()->back()->with('success', 'Product created!');
     }

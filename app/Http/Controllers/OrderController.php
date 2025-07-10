@@ -72,11 +72,10 @@ class OrderController extends Controller
             ->map(function ($item) {
                 return [
                     'id' => $item->id,
+                    'customer_name' => $item->order?->user?->name ?? '',
                     'product_name' => $item->product->name,
                     'quantity' => $item->quantity,
-                    'price' => $item->price,
-                    'total' => $item->quantity * $item->price,
-                    'buyer_name' => $item->order->user->name ?? 'Guest',
+                    'price' => $item->price_at_time,
                     'order_id' => $item->order->id,
                     'ordered_at' => $item->order->created_at->toDateTimeString(),
                 ];
