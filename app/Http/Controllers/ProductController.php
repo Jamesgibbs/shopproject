@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Role;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -13,7 +14,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        if (Auth::user()->role === 'customer') {
+        if (Auth::user()->role === Role::CUSTOMER->value) {
             $products = Product::all();
         } else {
             $products = Product::where('supplier_id', Auth::id())->get();
@@ -79,7 +80,7 @@ class ProductController extends Controller
 
         $product->update($validated);
 
-        return redirect()->back()->with('success', 'Product created!')->with('success', 'Product updated!');
+        return redirect()->back()->with('success', 'Product updated!');
     }
 
     public function edit(Product $product)
@@ -92,6 +93,7 @@ class ProductController extends Controller
         if ($product->supplier_id !== Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
+
         $product->delete();
 
         return redirect()->back()->with('success', 'Product Deleted!');

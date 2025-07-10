@@ -11,7 +11,9 @@ export default function Index() {
 
     return (
         <div>
-            <h1>Shopping Cart</h1>
+            <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">
+                Shopping Cart
+            </h1>
 
             <button onClick={toggleForm} className="btn btn-primary mb-4">
                 {showForm ? 'Cancel' : 'Add To Cart'}

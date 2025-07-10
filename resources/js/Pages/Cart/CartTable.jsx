@@ -8,9 +8,8 @@ export default function CartTable({ cartItems }) {
     const { post: removeProduct } = useForm();
 
     if (!Array.isArray(cartItems) || cartItems.length === 0) {
-        return <p>Cart is empty.</p>;
+        return null
     }
-
 
     const handleRemoveFromCart = (id) => {
         router.post(route('cart.remove'), { id })
@@ -33,7 +32,7 @@ export default function CartTable({ cartItems }) {
                     <td>{item.price}</td>
                     <td>{item.stock_quantity}</td>
                     <td>
-                        <button onClick={() => handleRemoveFromCart(item.id)}>
+                        <button onClick={() => handleRemoveFromCart(item.id)} className="bg-red-600 hover:bg-red-700 text-white-500 hover:underline">
                             Remove from Cart
                         </button>
                     </td>

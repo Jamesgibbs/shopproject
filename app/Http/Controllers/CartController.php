@@ -11,6 +11,26 @@ use Inertia\Inertia;
 
 class CartController extends Controller
 {
+    public function viewCart()
+    {
+        $cart = Cart::with('items.product')->where('user_id', auth()->id())->first();
+
+        if (!$cart) {
+            return Inertia::render('Cart/ViewCart', ['cartItems' => []]);
+        }
+        return Inertia::render('Cart/ViewCart', [
+            'cartItems' => $cart->items->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'product_id' => $item->product->id,
+                    'name' => $item->product->name,
+                    'price' => $item->product->price,
+                    'stock_quantity' => $item->quantity,
+                ];
+            }),
+        ]);
+    }
+
     public function addToCart(Request $request)
     {
         $request->validate([
@@ -54,23 +74,6 @@ class CartController extends Controller
         return redirect()->back()->with('error', 'Item not found in your cart.');
     }
 
-    public function viewCart()
-    {
-        $cart = Cart::with('items.product')->where('user_id', auth()->id())->firstOrFail();
-
-        return Inertia::render('Cart/ViewCart', [
-            'cartItems' => $cart->items->map(function ($item) {
-                return [
-                    'id' => $item->id,
-                    'product_id' => $item->product->id,
-                    'name' => $item->product->name,
-                    'price' => $item->product->price,
-                    'stock_quantity' => $item->quantity,
-                ];
-            }),
-        ]);
-    }
-
     public function checkout()
     {
         $cart = Cart::with('items.product')->where('user_id', auth()->id())->firstOrFail();
@@ -93,7 +96,8 @@ class CartController extends Controller
                 'product_id' => $item->product_id,
                 'quantity' => $item->quantity,
                 'price_at_time' => $item->price_at_time,
-            ]);
+                'product_name' => $item->product->name,
+                ]);
         }
 
         // Clear the cart

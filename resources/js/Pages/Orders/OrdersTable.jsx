@@ -14,6 +14,8 @@ export default function OrdersTable({ orders }) {
             <thead>
             <tr>
                 <th style={thStyle}>Total</th>
+                <th style={thStyle}>Items</th>
+                <th style={thStyle}>Date</th>
                 <th style={thStyle}>Status</th>
             </tr>
             </thead>
@@ -29,6 +31,12 @@ export default function OrdersTable({ orders }) {
                                 </li>
                             ))}
                         </ul>
+                    </td>
+                    <td style={tdStyle}>
+                        {order.ordered_at}
+                    </td>
+                    <td style={tdStyle}>
+                        {order.status}
                     </td>
                 </tr>
             ))}

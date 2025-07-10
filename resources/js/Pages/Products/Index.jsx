@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Link, usePage } from '@inertiajs/react';
-import GuestLayout from "@/Layouts/GuestLayout.jsx";
+import { usePage } from '@inertiajs/react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 import ProductsTable from "./ProductsTable.jsx";
 import CreateProduct from "./Create.jsx";
@@ -19,6 +18,7 @@ export default function Index() {
                 Products
             </h1>
 
+            { isSupplier && (
             <button
                 onClick={toggleForm}
                 className={`${
@@ -27,8 +27,9 @@ export default function Index() {
             >
                 {showForm ? 'Cancel' : 'Add Product'}
             </button>
+            ) }
 
-            {showForm && <CreateProduct />}
+            { showForm && <CreateProduct onSuccess={() => setShowForm(false)} /> }
 
             <ProductsTable products={products} user={user} />
         </div>

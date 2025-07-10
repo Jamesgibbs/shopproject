@@ -1,7 +1,6 @@
 import React from 'react';
 import CartTable from "./CartTable.jsx";
-
-import Index from "@/Pages/Cart/Index.jsx";
+import { Link } from '@inertiajs/react';
 import {usePage, useForm} from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 
@@ -15,11 +14,25 @@ export default function ViewCart() {
 
     return (
         <div>
-        <CartTable cartItems={cartItems}/>
-
             <div>
-                <h1>Checkout</h1>
-                <button onClick={handleCheckout}>Continue To Checkout!</button>
+                <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">Cart</h1>
+                <CartTable cartItems={cartItems}/>
+
+                {Array.isArray(cartItems) && cartItems.length > 0 ? (
+                    <button
+                        onClick={handleCheckout}
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded shadow"
+                    >
+                        Continue To Checkout!
+                    </button>
+                ) : (
+                    <Link
+                        href="/products"
+                        className="w-full block text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded shadow"
+                    >
+                        Cart is empty. Click here to add items to your cart.
+                    </Link>
+                )}
             </div>
         </div>
     );

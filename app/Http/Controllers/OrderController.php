@@ -16,6 +16,7 @@ class OrderController extends Controller
             ->where('user_id', auth()->id())
             ->get();
 
+
         $pendingOrders = $orders->filter(fn($order) => $order->status === 'pending')->values();
         $otherOrders = $orders->filter(fn($order) => $order->status !== 'pending')->values();
 
@@ -29,15 +30,16 @@ class OrderController extends Controller
     {
         return [
             'id' => $order->id,
-            'customer_name' => $order->user->name ?? 'Guest',
-            'total' => $order->total,
+            'customer_name' => $order?->user?->name,
+            'total' => $order->total_amount,
             'status' => $order->status,
             'items' => $order->items->map(fn($item) => [
                 'id' => $item->id,
                 'name' => $item->product->name ?? 'Unknown Product',
                 'quantity' => $item->quantity,
-                'price' => $item->price,
+                'price' => $item->price_at_time,
             ]),
+            'ordered_at' => $order->created_at->toDateTimeString(),
         ];
     }
 

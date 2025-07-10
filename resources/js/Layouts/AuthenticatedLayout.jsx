@@ -4,9 +4,12 @@ import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
+import FlashMessage from "@/Components/FlashMessage.jsx";
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
+    const { flash } = usePage().props
+
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
     return (
@@ -21,12 +24,6 @@ export default function AuthenticatedLayout({ header, children }) {
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('dashboard')} active={route().current('dashboard')}>
-                                    Dashboard
-                                </NavLink>
-                            </div>
-
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink href={route('products.index')} active={route().current('products.index', '*')}>
                                     Products
                                 </NavLink>
@@ -35,7 +32,7 @@ export default function AuthenticatedLayout({ header, children }) {
                             {user.role === 'customer' && (
                                 <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                     <NavLink href={route('cart.view')} active={route().current('cart.view')}>
-                                        Checkout
+                                        Cart
                                     </NavLink>
                                 </div>
                             )}
@@ -146,7 +143,20 @@ export default function AuthenticatedLayout({ header, children }) {
                 </header>
             )}
 
-            <main>{children}</main>
+            <main>
+                {/* Flash Message Section */}
+                {flash.success && (
+                    <div className="bg-green-100 text-green-800 px-4 py-2 rounded shadow mx-4 my-4">
+                         {flash.success}
+                    </div>
+                )}
+                {flash.error && (
+                    <div className="bg-red-100 text-red-800 px-4 py-2 rounded shadow mx-4 my-4">
+                         {flash.error}
+                    </div>
+                )}
+                {children}
+            </main>
         </div>
     );
 }

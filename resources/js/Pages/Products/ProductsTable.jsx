@@ -19,8 +19,8 @@ export default function ProductsTable({ products, user }) {
     };
 
     return (
-        <div className="max-w-screen-xl mx-auto px-4">
-            <table className="w-full max-w-7xl table-auto border border-gray-200 text-center">
+        <div className="w-full">
+            <table className="w-full table-auto border border-gray-200 text-stretch">
                 <thead className="bg-gray-100">
                 <tr>
                     <th className="px-4 py-2 border-b">Name</th>
@@ -57,28 +57,28 @@ export default function ProductsTable({ products, user }) {
 
 }
 
-// Optional inline styles for simplicity
-const thStyle = {
-    borderBottom: '2px solid #ccc',
-    textAlign: 'left',
-    padding: '8px',
-};
-
-const tdStyle = {
-    borderBottom: '1px solid #eee',
-    padding: '8px',
-};
-
-const linkStyle = {
-    color: '#007bff',
-    textDecoration: 'none',
-};
-
-const deleteButtonStyle = {
-    background: 'none',
-    border: 'none',
-    color: 'red',
-    cursor: 'pointer',
-    textDecoration: 'underline',
-};
+// // Optional inline styles for simplicity
+// const thStyle = {
+//     borderBottom: '2px solid #ccc',
+//     textAlign: 'left',
+//     padding: '8px',
+// };
+//
+// const tdStyle = {
+//     borderBottom: '1px solid #eee',
+//     padding: '8px',
+// };
+//
+// const linkStyle = {
+//     color: '#007bff',
+//     textDecoration: 'none',
+// };
+//
+// const deleteButtonStyle = {
+//     background: 'none',
+//     border: 'none',
+//     color: 'red',
+//     cursor: 'pointer',
+//     textDecoration: 'underline',
+// };
 
