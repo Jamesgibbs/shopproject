@@ -80,7 +80,7 @@ export default function Login({ status, canResetPassword }) {
                     </label>
                 </div>
 
-                <div className="mt-4 flex items-center justify-end">
+                <div className="mt-4 flex flex-col items-end space-y-2">
                     {canResetPassword && (
                         <Link
                             href={route('password.request')}
@@ -90,10 +90,18 @@ export default function Login({ status, canResetPassword }) {
                         </Link>
                     )}
 
-                    <PrimaryButton className="ms-4" disabled={processing}>
+                    <Link
+                        href={route('register')}
+                        className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    >
+                        Register
+                    </Link>
+
+                    <PrimaryButton className="mt-2" disabled={processing}>
                         Log in
                     </PrimaryButton>
                 </div>
+
             </form>
         </GuestLayout>
     );

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link, useForm } from '@inertiajs/react';
-import AddToCartButton from "@/Pages/Cart/AddToCartButton.jsx";
 import { router } from '@inertiajs/react'
 
 export default function ProductsTable({ products, user }) {

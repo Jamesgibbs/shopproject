@@ -31,15 +31,12 @@ class ProductController extends Controller
     {
         try {
 
-            Log::debug('creating Product');
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
                 'description' => 'nullable|string',
                 'price' => 'nullable|',
                 'stock_quantity' => 'nullable|',
             ]);
-
-            Log::debug('creating Product', [$validated]);
 
             $validated['supplier_id'] = Auth::id();
 
@@ -76,7 +73,6 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'stock_quantity' => 'required|integer|min:0',
         ]);
-
 
         $product->update($validated);
 

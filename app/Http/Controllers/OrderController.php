@@ -48,8 +48,7 @@ class OrderController extends Controller
         try {
             $cart = Cart::where('user_id', $request->user()->id);
 
-
-            $order = Order::create([
+            Order::create([
                 'user_id' => $request->user()->id,
                 'cart_id' => $cart->id,
                 'status' => 'pending',

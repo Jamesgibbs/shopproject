@@ -1,15 +1,12 @@
-import React from 'react';
+import { useState } from 'react';
 import { Link, useForm } from '@inertiajs/react';
 import { route } from 'ziggy-js';
 import { router } from '@inertiajs/react';
 
-export default function CartTable({ cartItems }) {
+export default function CartTable({ cartItems, onUpdateQuantity, onRemoveItem }) {
+    const [editingItemId, setEditingItemId] = useState(null);
+    const [editValue, setEditValue] = useState('');
 
-    const { post: removeProduct } = useForm();
-
-    if (!Array.isArray(cartItems) || cartItems.length === 0) {
-        return null
-    }
 
     const handleRemoveFromCart = (id) => {
         router.post(route('cart.remove'), { id })
@@ -26,13 +23,17 @@ export default function CartTable({ cartItems }) {
             </tr>
             </thead>
             <tbody>
-            {cartItems.map(item => (
+            {cartItems.map((item) => (
                 <tr key={item.id}>
-                    <td>{item.name}</td>
-                    <td>{item.price}</td>
-                    <td>{item.stock_quantity}</td>
-                    <td>
-                        <button onClick={() => handleRemoveFromCart(item.id)} className="bg-red-600 hover:bg-red-700 text-white-500 hover:underline">
+                    <td className="px-4 py-2 border-b">{item.name}</td>
+                    <td className="px-4 py-2 border-b">£{item.price}</td>
+                    <td className="px-4 py-2 border-b">
+                       {item.stock_quantity}
+                    </td>
+                    <td className="px-4 py-2 border-b">
+                        <button onClick={() => handleRemoveFromCart(item.id)}
+                                className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded"
+                        >
                             Remove from Cart
                         </button>
                     </td>
@@ -40,31 +41,5 @@ export default function CartTable({ cartItems }) {
             ))}
             </tbody>
         </table>
-
     );
 }
-
-// Optional inline styles for simplicity
-const thStyle = {
-    borderBottom: '2px solid #ccc',
-    textAlign: 'left',
-    padding: '8px',
-};
-
-const tdStyle = {
-    borderBottom: '1px solid #eee',
-    padding: '8px',
-};
-
-const linkStyle = {
-    color: '#007bff',
-    textDecoration: 'none',
-};
-
-const deleteButtonStyle = {
-    background: 'none',
-    border: 'none',
-    color: 'red',
-    cursor: 'pointer',
-    textDecoration: 'underline',
-};

@@ -14,7 +14,7 @@ export default function ViewCart() {
 
     return (
         <div>
-            <div>
+            <div className="flex flex-col items-center p-8">
                 <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">Cart</h1>
                 <CartTable cartItems={cartItems}/>
 
@@ -28,7 +28,7 @@ export default function ViewCart() {
                 ) : (
                     <Link
                         href="/products"
-                        className="w-full block text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded shadow"
+                        className="w-fit bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded shadow"
                     >
                         Cart is empty. Click here to add items to your cart.
                     </Link>
