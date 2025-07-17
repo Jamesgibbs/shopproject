@@ -37,6 +37,9 @@ Route::middleware(['auth', 'verified','customer'])->group(function () {
 
     Route::get('/orders',            [OrderController::class, 'index'])->name('orders.index');
     Route::post('/orders',           [OrderController::class, 'submit'])->name('orders.submit');
+
+    Route::get('/profile/billing-info',   [ProfileController::class, 'addBillingInfo'])->name('profile.billinginfoform');
+    Route::post('/profile/billing-info',  [ProfileController::class, 'saveBillingInfo'])->name('profile.savebillinginfo');
 });
 
 

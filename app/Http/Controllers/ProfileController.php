@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Order;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -53,6 +55,15 @@ class ProfileController extends Controller
 
         Auth::logout();
 
+        DB::transaction(function () use ($user) {
+            $orders = Order::where('user_id', $user->id)->get();
+            foreach ($orders as $order) {
+                $order->anonymizePersonalData();
+                $order->delete();
+            }
+        });
+
+
         $user->delete();
 
         $request->session()->invalidate();
@@ -60,4 +71,36 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    public function addBillingInfo()
+    {
+
+        return Inertia::render('Profile/BillingInfoForm');
+    }
+
+    public function saveBillingInfo(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'billing_name' => 'required|string|max:255',
+            'billing_address' => 'required|string|max:255',
+            'email_address' => 'required|email|max:255',
+            'phone_number' => 'required|string|max:20',
+        ]);
+
+        $user = $request->user();
+
+        $user->billingAddresses()->updateOrCreate(
+            ['is_default' => true],
+            [
+                ...$validated,
+                'is_default' => true
+            ]
+        );
+
+
+        return Redirect::route('dashboard')
+            ->with('status', 'billing-information-updated');
+    }
+
+
 }

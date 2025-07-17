@@ -14,6 +14,7 @@ class ProductController extends Controller
 {
     public function index()
     {
+
         if (Auth::user()->role === Role::CUSTOMER->value) {
             $products = Product::all();
         } else {
@@ -21,6 +22,12 @@ class ProductController extends Controller
         }
         return Inertia::render('Products/Index', ['products' => $products]);
     }
+
+    public function checkPalindrome()
+    {
+
+    }
+
 
     public function view(Product $product)
     {
