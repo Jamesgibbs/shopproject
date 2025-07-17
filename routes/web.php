@@ -2,73 +2,95 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+/*
+|--------------------------------------------------------------------------
+| Public Routes
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/', function () {
-    return Auth::check()
-        ? redirect()->route('dashboard')
-        : redirect()->route('login');
-});
+    return Auth::check() ? redirect()->route('dashboard') : redirect()->route('login');
+})->name('home');
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+/*
+|--------------------------------------------------------------------------
+| Authentication Required Routes
+|--------------------------------------------------------------------------
+*/
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/products',           [ProductController::class, 'index'])->name('products.index');
-    Route::get('/products/{product}', [ProductController::class, 'view'])->name('products.view');
+    // Dashboard
+    Route::get('/dashboard', fn() => Inertia::render('Dashboard'))->name('dashboard');
+
+    // Profile Management
+    Route::controller(ProfileController::class)->group(function () {
+        Route::get('/profile', 'edit')->name('profile.edit');
+        Route::patch('/profile', 'update')->name('profile.update');
+        Route::delete('/profile', 'destroy')->name('profile.destroy');
+    });
+
+    // Products (Public View)
+    Route::controller(ProductController::class)->group(function () {
+        Route::get('/products', 'index')->name('products.index');
+        Route::get('/products/{product}', 'view')->name('products.view');
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Customer Routes
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('customer')->group(function () {
+        // Cart Management
+        Route::controller(CartController::class)->prefix('cart')->name('cart.')->group(function () {
+            Route::post('/', 'addToCart')->name('add');
+            Route::get('/', 'viewCart')->name('view');
+            Route::post('/remove', 'removeFromCart')->name('remove');
+            Route::post('/checkout', 'checkout')->name('checkout');
+        });
+
+        // Order Management
+        Route::controller(OrderController::class)->prefix('orders')->name('orders.')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::post('/', 'submit')->name('submit');
+        });
+
+        // Billing Information
+        Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {
+            Route::get('/billing-info', 'addBillingInfo')->name('billinginfoform');
+            Route::post('/billing-info', 'saveBillingInfo')->name('savebillinginfo');
+        });
+
+        // Payment
+        Route::get('/payment', [PaymentController::class, 'showPaymentForm'])->name('payment.form');
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Supplier Routes
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('supplier')->group(function () {
+        // Product Management
+        Route::controller(ProductController::class)->prefix('products')->name('products.')->group(function () {
+            Route::post('/', 'store')->name('store');
+            Route::get('/edit-product/{product}', 'edit')->name('edit');
+            Route::delete('/{product}', 'delete')->name('delete');
+            Route::post('/update/{product}', 'update')->name('update');
+        });
+
+        // Sales History
+        Route::get('/orders/sales-history', [OrderController::class, 'salesHistory'])->name('orders.salesHistory');
+    });
 });
-
-Route::middleware(['auth', 'verified','customer'])->group(function () {
-    Route::post('/cart',             [CartController::class, 'addToCart'])->name('cart.add');
-    Route::get('/view-cart',         [CartController::class, 'viewCart'])->name('cart.view');
-    Route::post('/remove-from-cart', [CartController::class, 'removeFromCart'])->name('cart.remove');
-    Route::post('/checkout',         [CartController::class, 'checkout'])->name('cart.checkout');
-
-    Route::get('/orders',            [OrderController::class, 'index'])->name('orders.index');
-    Route::post('/orders',           [OrderController::class, 'submit'])->name('orders.submit');
-
-    Route::get('/profile/billing-info',   [ProfileController::class, 'addBillingInfo'])->name('profile.billinginfoform');
-    Route::post('/profile/billing-info',  [ProfileController::class, 'saveBillingInfo'])->name('profile.savebillinginfo');
-});
-
-
-Route::middleware(['auth', 'verified','supplier'])->group(function () {
-    Route::post('/products',                        [ProductController::class, 'store'])->name('products.store');
-    Route::get('/products/edit-product/{product}',  [ProductController::class, 'edit'])->name('products.edit');
-    Route::delete('/products/{product}',            [ProductController::class, 'delete'])->name('products.delete');
-    Route::post('/products/update/{product}',       [ProductController::class, 'update'])->name('products.update');
-
-    Route::get('/orders/sales-history',              [OrderController::class, 'salesHistory'])->name('orders.salesHistory');
-});
-
-Route::get('/db-test', function() {
-    try {
-        DB::connection()->getPdo();
-        return [
-            'can_connect' => true,
-            'database_name' => DB::connection()->getDatabaseName(),
-            'config' => config('database.connections.mysql'),
-            'host' => DB::connection()->getConfig('host')
-        ];
-    } catch (\Exception $e) {
-        return [
-            'can_connect' => false,
-            'error' => $e->getMessage(),
-            'config' => config('database.connections.mysql')
-        ];
-    }
-});
-
 
 require __DIR__.'/auth.php';
