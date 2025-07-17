@@ -6,12 +6,12 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 
-export default function BillingInfoForm({ auth }) {
+export default function BillingInfoForm({ auth, billingInfo }) {
     const { data, setData, post, processing, errors } = useForm({
-        billing_name: '',
-        billing_address: '',
-        email_address: '',
-        phone_number: '',
+        billing_name: billingInfo ? billingInfo.billing_name : '',
+        billing_address: billingInfo ? billingInfo.billing_address : '',
+        email_address: billingInfo ? billingInfo.email_address : '',
+        phone_number: billingInfo ? billingInfo.phone_number : '',
     });
 
     const submit = (e) => {
@@ -22,7 +22,11 @@ export default function BillingInfoForm({ auth }) {
     return (
         <AuthenticatedLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Billing Information</h2>}
+            header={
+                <h2 className="font-semibold text-xl text-gray-800 leading-tight">
+                    { billingInfo ? 'Update Billing Information' : 'Add Billing Information' }
+                </h2>
+            }
         >
             <Head title="Billing Information" />
 

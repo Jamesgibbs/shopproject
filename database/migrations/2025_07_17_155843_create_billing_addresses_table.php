@@ -16,8 +16,10 @@ return new class extends Migration
             $table->string('billing_address');
             $table->string('email_address');
             $table->string('phone_number');
-            $table->boolean('is_default')->default(true);
             $table->timestamps();
+
+            // Ensuring one address per user
+            $table->unique('user_id');
         });
     }
 

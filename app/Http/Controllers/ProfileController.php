@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\BillingAddress;
 use App\Models\Order;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
@@ -74,8 +75,8 @@ class ProfileController extends Controller
 
     public function addBillingInfo()
     {
-
-        return Inertia::render('Profile/BillingInfoForm');
+        $billingInfo = BillingAddress::where('user_id', auth()->id())->first();
+        return Inertia::render('Profile/BillingInfoForm', ['billingInfo' => $billingInfo ?? '']);
     }
 
     public function saveBillingInfo(Request $request): RedirectResponse

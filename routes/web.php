@@ -52,5 +52,23 @@ Route::middleware(['auth', 'verified','supplier'])->group(function () {
     Route::get('/orders/sales-history',              [OrderController::class, 'salesHistory'])->name('orders.salesHistory');
 });
 
+Route::get('/db-test', function() {
+    try {
+        DB::connection()->getPdo();
+        return [
+            'can_connect' => true,
+            'database_name' => DB::connection()->getDatabaseName(),
+            'config' => config('database.connections.mysql'),
+            'host' => DB::connection()->getConfig('host')
+        ];
+    } catch (\Exception $e) {
+        return [
+            'can_connect' => false,
+            'error' => $e->getMessage(),
+            'config' => config('database.connections.mysql')
+        ];
+    }
+});
+
 
 require __DIR__.'/auth.php';
