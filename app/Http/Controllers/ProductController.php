@@ -17,7 +17,9 @@ class ProductController extends Controller
         if (Auth::user()->role === Role::CUSTOMER->value) {
             $products = Product::all();
         } else {
-            $products = Product::where('supplier_id', Auth::id())->get();
+            $products = Product::query()
+                ->where('supplier_id', Auth::id())
+                ->get();
         }
 
         return Inertia::render('Products/Index', ['products' => $products]);

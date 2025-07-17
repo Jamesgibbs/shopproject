@@ -1,83 +1,83 @@
 import React from 'react';
-import { Link, useForm } from '@inertiajs/react';
-import { router } from '@inertiajs/react'
+import { Link, router } from '@inertiajs/react';
 
 export default function ProductsTable({ products, user }) {
-
-    const { delete: removeProduct } = useForm();
     const isSupplier = user && user.role === 'supplier';
 
     if (!products || products.length === 0) {
         return <p>No products available.</p>;
     }
 
-    const handleDelete = (id) => {
+    const handleDelete = (productId) => {
         if (confirm('Are you sure you want to delete this product?')) {
-            removeProduct(`/products/${id}`);
+            router.delete(`/products/${productId}`);
         }
     };
 
+    const handleAddToCart = (e, productId) => {
+        e.stopPropagation();
+        router.post('/cart', {
+            product_id: productId,
+            quantity: 1
+        });
+    };
+
+
     return (
-        <div className="w-full">
-            <table className="w-full table-auto border border-gray-200 text-stretch">
-                <thead className="bg-gray-100">
+        <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
                 <tr>
-                    <th className="px-4 py-2 border-b">Name</th>
-                    <th className="px-4 py-2 border-b">Price</th>
-                    <th className="px-4 py-2 border-b">Quantity</th>
-                    {isSupplier && <th className="px-4 py-2 border-b">Edit</th>}
-                    {isSupplier && <th className="px-4 py-2 border-b">Delete</th>}
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
                 </thead>
-                <tbody>
-                {products.map(product => (
-                    <tr key={product.id}>
-                        <td className="px-4 py-2 border-b text-blue-600 underline cursor-pointer" onClick={() => router.visit(`/products/${product.id}`)}>
-                            {product.name}
+                <tbody className="bg-white divide-y divide-gray-200">
+                {products.map((product) => (
+                    <tr
+                        key={product.id}
+                        className="hover:bg-gray-50 cursor-pointer"
+                        onClick={() => window.location.href = `/products/${product.id}`}
+                    >
+                        <td className="px-6 py-4 whitespace-nowrap">{product.name}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">{product.description}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">£{product.price}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">{product.stock_quantity}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex gap-4" onClick={(e) => e.stopPropagation()}>
+                                {isSupplier && product.supplier_id === user.id ? (
+                                    <>
+                                        <Link
+                                            href={`/products/${product.id}/edit`}
+                                            className="text-indigo-600 hover:text-indigo-900"
+                                        >
+                                            Edit
+                                        </Link>
+                                        <button
+                                            onClick={() => handleDelete(product.id)}
+                                            className="text-red-600 hover:text-red-900"
+                                        >
+                                            Delete
+                                        </button>
+                                    </>
+                                ) : (
+                                    <button
+                                        onClick={(e) => handleAddToCart(e, product.id)}
+                                        className="text-indigo-600 hover:text-indigo-900"
+                                    >
+                                        Add to Cart
+                                    </button>
+
+                                )}
+                            </div>
                         </td>
-                        <td className="px-4 py-2 border-b">£{product.price}</td>
-                        <td className="px-4 py-2 border-b">{product.stock_quantity}</td>
-                        {isSupplier && (
-                            <td className="px-4 py-2 border-b">
-                                <Link href={`/products/edit-product/${product.id}`} className="text-blue-500 hover:underline">Edit</Link>
-                            </td>
-                        )}
-                        {isSupplier && (
-                            <td className="px-4 py-2 border-b">
-                                <button onClick={() => handleDelete(product.id)} className="text-red-600 hover:underline">Delete</button>
-                            </td>
-                        )}
                     </tr>
                 ))}
                 </tbody>
             </table>
         </div>
     );
-
 }
-
-// // Optional inline styles for simplicity
-// const thStyle = {
-//     borderBottom: '2px solid #ccc',
-//     textAlign: 'left',
-//     padding: '8px',
-// };
-//
-// const tdStyle = {
-//     borderBottom: '1px solid #eee',
-//     padding: '8px',
-// };
-//
-// const linkStyle = {
-//     color: '#007bff',
-//     textDecoration: 'none',
-// };
-//
-// const deleteButtonStyle = {
-//     background: 'none',
-//     border: 'none',
-//     color: 'red',
-//     cursor: 'pointer',
-//     textDecoration: 'underline',
-// };
-

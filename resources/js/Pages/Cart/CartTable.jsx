@@ -3,43 +3,45 @@ import { Link, useForm } from '@inertiajs/react';
 import { route } from 'ziggy-js';
 import { router } from '@inertiajs/react';
 
-export default function CartTable({ cartItems, onUpdateQuantity, onRemoveItem }) {
-    const [editingItemId, setEditingItemId] = useState(null);
-    const [editValue, setEditValue] = useState('');
-
+export default function CartTable({ cartItems = [] }) {
+    if (!Array.isArray(cartItems)) {
+        return <div>No items in cart</div>;
+    }
 
     const handleRemoveFromCart = (id) => {
-        router.post(route('cart.remove'), { id })
+        router.post(route('cart.remove'), { id });
     }
 
     return (
-        <table className="w-full max-w-screen-xl mx-auto table-auto border border-gray-200 text-center">
-            <thead className="bg-gray-100">
-            <tr>
-                <th className="px-4 py-2 border-b">Name</th>
-                <th className="px-4 py-2 border-b">Price</th>
-                <th className="px-4 py-2 border-b">Quantity</th>
-                <th className="px-4 py-2 border-b">Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            {cartItems.map((item) => (
-                <tr key={item.id}>
-                    <td className="px-4 py-2 border-b">{item.name}</td>
-                    <td className="px-4 py-2 border-b">£{item.price}</td>
-                    <td className="px-4 py-2 border-b">
-                       {item.stock_quantity}
-                    </td>
-                    <td className="px-4 py-2 border-b">
-                        <button onClick={() => handleRemoveFromCart(item.id)}
-                                className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded"
-                        >
-                            Remove from Cart
-                        </button>
-                    </td>
+        <div className="table-container">
+            <table className="table-wrapper">
+                <thead>
+                <tr>
+                    <th className="table-header">Product</th>
+                    <th className="table-header">Quantity</th>
+                    <th className="table-header">Price</th>
+                    <th className="table-header">Actions</th>
                 </tr>
-            ))}
-            </tbody>
-        </table>
+                </thead>
+
+                <tbody className="divide-y divide-gray-200">
+                {cartItems.map((item) => (
+                    <tr key={item.id} className="table-row">
+                        <td className="table-cell">{item.name || 'N/A'}</td>
+                        <td className="table-cell">{item.stock_quantity || 0}</td>
+                        <td className="table-cell">£{item.price || 0}</td>
+                        <td className="table-cell">
+                            <button
+                                onClick={() => handleRemoveFromCart(item.id)}
+                                className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded"
+                            >
+                                Remove from Cart
+                            </button>
+                        </td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+        </div>
     );
 }

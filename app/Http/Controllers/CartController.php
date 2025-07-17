@@ -18,17 +18,24 @@ class CartController extends Controller
         if (!$cart) {
             return Inertia::render('Cart/ViewCart', ['cartItems' => []]);
         }
+
+        // Only show cart items where the product exists and isn't deleted
+        $cartItems = $cart->items->filter(function ($item) {
+            return $item->product !== null;
+        })->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'product_id' => $item->product->id,
+                'name' => $item->product->name,
+                'price' => $item->product->price,
+                'stock_quantity' => $item->quantity,
+            ];
+        })->values()->all();
+
         return Inertia::render('Cart/ViewCart', [
-            'cartItems' => $cart->items->map(function ($item) {
-                return [
-                    'id' => $item->id,
-                    'product_id' => $item->product->id,
-                    'name' => $item->product->name,
-                    'price' => $item->product->price,
-                    'stock_quantity' => $item->quantity,
-                ];
-            }),
+            'cartItems' => $cartItems
         ]);
+
     }
 
     public function addToCart(Request $request)
@@ -91,45 +98,7 @@ class CartController extends Controller
             return redirect()->back()->with('error', 'Your cart is empty.');
         }
 
-        foreach ($cart->items as $item) {
-            $product = $item->product;
-            if (!$product || $product->stock_quantity < $item->quantity) {
-                return redirect()->back()->with(
-                    'error',
-                    "Insufficient stock for '{$product->name}'. Please adjust your cart."
-                );
-            }
-        }
-
-        $order = Order::create([
-            'user_id' => auth()->id(),
-            'total_amount' => $cart->items->sum(fn($item) => $item->quantity * $item->price_at_time),
-            'status' => 'pending',
-        ]);
-
-        foreach ($cart->items as $item) {
-            OrderItem::create([
-                'order_id' => $order->id,
-                'product_id' => $item->product_id,
-                'quantity' => $item->quantity,
-                'price_at_time' => $item->price_at_time,
-                'product_name' => $item->product->name,
-                ]);
-
-            $product = $item->product;
-            if ($product && $product->stock_quantity >= $item->quantity) {
-                $product->decrement('stock_quantity', $item->quantity);
-            } else {
-                if ($product->stock_quantity < $item->quantity) {
-                    return redirect()->back()->with('error', "Not enough stock for {$product->name}.");
-                }
-            }
-        }
-
-        // Clear the cart
-        $cart->items()->delete();
-
-        return redirect()->route('dashboard')->with('success', 'Order placed successfully!');
+        return redirect()->route('payment.form');
     }
 
 }

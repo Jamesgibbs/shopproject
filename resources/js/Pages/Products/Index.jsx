@@ -3,6 +3,7 @@ import { usePage } from '@inertiajs/react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 import ProductsTable from "./ProductsTable.jsx";
 import CreateProduct from "./Create.jsx";
+import PageCard from "@/Components/PageCard.jsx";
 
 export default function Index() {
     const { products, auth = [] } = usePage().props;
@@ -12,27 +13,35 @@ export default function Index() {
 
     const toggleForm = () => setShowForm(prev => !prev);
 
+    const actions = isSupplier && (
+        <button
+            onClick={toggleForm}
+            className={`
+                ${showForm
+                ? 'bg-red-600 hover:bg-red-700 focus:ring-red-500'
+                : 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'
+            }
+                inline-flex items-center px-4 py-2
+                text-sm font-medium text-white
+                rounded-md shadow-sm
+                focus:outline-none focus:ring-2 focus:ring-offset-2
+                transition-all duration-200
+            `}
+        >
+            <span className="mr-2">{showForm ? '×' : '+'}</span>
+            {showForm ? 'Cancel' : 'Add Product'}
+        </button>
+    );
+
     return (
-        <div className="flex flex-col items-center p-8">
-            <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">
-                Products
-            </h1>
-
-            { isSupplier && (
-            <button
-                onClick={toggleForm}
-                className={`${
-                    showForm ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'
-                } text-white font-semibold py-2 px-6 rounded shadow mb-6`}
-            >
-                {showForm ? 'Cancel' : 'Add Product'}
-            </button>
-            ) }
-
-            { showForm && <CreateProduct onSuccess={() => setShowForm(false)} /> }
-
+        <PageCard title="Products" actions={actions}>
+            {showForm && (
+                <div className="bg-gray-50 p-6 mb-6 border border-gray-200 rounded-md">
+                    <CreateProduct onSuccess={() => setShowForm(false)} />
+                </div>
+            )}
             <ProductsTable products={products} user={user} />
-        </div>
+        </PageCard>
     );
 }
 

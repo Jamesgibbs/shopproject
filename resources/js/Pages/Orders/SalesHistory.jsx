@@ -1,38 +1,44 @@
 import React from 'react';
+import { usePage } from '@inertiajs/react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
-import Index from "@/Pages/Orders/Index.jsx";
-import {Link, router, usePage} from "@inertiajs/react";
+import PageCard from "@/Components/PageCard.jsx";
 
 export default function SalesHistory() {
     const { sales = [] } = usePage().props;
 
     return (
-        <div>
-            <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">Sales History</h1>
-            <table className="w-full max-w-7xl table-auto border border-gray-200 text-center">
-                <thead className="bg-gray-100">
-                <tr>
-                    <th className="px-4 py-2 border-b">Product Name</th>
-                    <th className="px-4 py-2 border-b">Customer Name</th>
-                    <th className="px-4 py-2 border-b">Quantity</th>
-                    <th className="px-4 py-2 border-b">Total Price</th>
-                    <th className="px-4 py-2 border-b">Order Date</th>
-                </tr>
-                </thead>
-                <tbody>
-                {sales.map((sale, index) => (
-                    <tr key={index}>
-                        <td className="px-4 py-2 border-b">{sale.product_name}</td>
-                        <td className="px-4 py-2 border-b">{sale.customer_name}</td>
-                        <td className="px-4 py-2 border-b">{sale.quantity}</td>
-                        <td className="px-4 py-2 border-b">£{sale.price}</td>
-                        <td className="px-4 py-2 border-b">{sale.ordered_at}</td>
-                    </tr>
-                ))}
-                </tbody>
+        <PageCard title="Sales History">
 
-            </table>
-        </div>
+            <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                    <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                    </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                    {sales.map((sale) => (
+                        <tr key={sale.id}>
+                            <td className="px-6 py-4 whitespace-nowrap">{sale.order_id}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">{sale.customer_name}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">{sale.product_name}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">{sale.quantity}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">${sale.price}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                                {new Date(sale.ordered_at).toLocaleDateString()}
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
+
+        </PageCard>
     );
 }
 
