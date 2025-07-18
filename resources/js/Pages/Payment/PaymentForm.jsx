@@ -26,7 +26,7 @@ export default function PaymentForm({ auth }) {
             setMessage('Payment processed successfully! (Demo Mode)');
             // Optional: reset form
             setTimeout(() => {
-                router.visit(route('orders.index'));
+                router.post(route('payment.process'));
             }, 1500);
 
         } else {

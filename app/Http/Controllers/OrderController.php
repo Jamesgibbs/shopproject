@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderConfirmation;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class OrderController extends Controller
@@ -48,12 +50,14 @@ class OrderController extends Controller
         try {
             $cart = Cart::where('user_id', $request->user()->id);
 
-            Order::create([
+            $order = Order::create([
                 'user_id' => $request->user()->id,
                 'cart_id' => $cart->id,
                 'status' => 'pending',
                 'total_amount' => $cart->total,
             ]);
+
+            Mail::to($request->user()->email)->send(new OrderConfirmation($order));
 
         } catch (\Throwable $th) {
             return redirect()->back()->with('error', 'Error creating Order!');

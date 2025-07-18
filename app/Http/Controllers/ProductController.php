@@ -27,7 +27,18 @@ class ProductController extends Controller
 
     public function view(Product $product)
     {
-        return Inertia::render('Products/Product', ['product' => $product]);
+        $product->load(['reviews' => function($query) {
+            $query->with('user:id,name')
+            ->latest();
+        }]);
+
+        return Inertia::render('Products/Product', [
+            'product' => array_merge($product->toArray(), [
+                'average_rating' => $product->average_rating,
+                'reviews_count' => $product->reviews_count,
+            ])
+        ]);
+
     }
 
     public function create(Request $request)

@@ -71,6 +71,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Payment
         Route::get('/payment', [PaymentController::class, 'showPaymentForm'])->name('payment.form');
+        Route::post('/payment', [PaymentController::class, 'processPayment'])->name('payment.process');;
     });
 
     /*
