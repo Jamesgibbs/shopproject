@@ -28,7 +28,7 @@ class CartController extends Controller
                 'product_id' => $item->product->id,
                 'name' => $item->product->name,
                 'price' => $item->product->price,
-                'stock_quantity' => $item->quantity,
+                'quantity' => $item->quantity,
             ];
         })->values()->all();
 
@@ -100,5 +100,31 @@ class CartController extends Controller
 
         return redirect()->route('payment.form');
     }
+
+    public function updateQuantity(Request $request)
+    {
+        $validated = $request->validate([
+            'cart_item_id' => 'required|exists:cart_items,id',
+            'quantity' => 'required|integer|min:1',
+            'product_id' => 'required|integer|min:1',
+        ]);
+
+        $product = Product::where('id', $validated['product_id'])->first();
+        if ($validated['quantity'] > $product->stock_quantity) {
+            return redirect()->back()->with('error', 'No more stock available!');
+        }
+
+        $cart = Cart::where('user_id', auth()->id())->firstOrFail();
+        $cartItem = $cart->items()->findOrFail($validated['cart_item_id']);
+
+        $cartItem->update([
+            'quantity' => $validated['quantity']
+        ]);
+
+        return redirect()->back()->with('success', 'Quantity updated!');
+    }
+
+
+
 
 }

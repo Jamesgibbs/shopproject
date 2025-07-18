@@ -34,6 +34,7 @@ export default function Index() {
     );
 
     return (
+
         <PageCard title="Products" actions={actions}>
             {showForm && (
                 <div className="bg-gray-50 p-6 mb-6 border border-gray-200 rounded-md">
@@ -41,6 +42,7 @@ export default function Index() {
                 </div>
             )}
             <ProductsTable products={products} user={user} />
+
         </PageCard>
     );
 }

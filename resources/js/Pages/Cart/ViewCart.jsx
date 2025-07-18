@@ -1,15 +1,16 @@
 import React from 'react';
 import CartTable from "./CartTable.jsx";
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { usePage, useForm } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
+
 
 export default function ViewCart() {
     const { cartItems = [] } = usePage().props;
     const { post } = useForm();
 
     const handleCheckout = () => {
-        post('/checkout');
+        router.post(route('cart.checkout'));
     };
 
     return (

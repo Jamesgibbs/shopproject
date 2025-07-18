@@ -24,10 +24,18 @@ Route::get('/', function () {
 | Authentication Required Routes
 |--------------------------------------------------------------------------
 */
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard', [
+        'auth' => [
+            'user' => Auth::user(),
+        ],
+    ]);
+})->name('dashboard');
+
+
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard
-    Route::get('/dashboard', fn() => Inertia::render('Dashboard'))->name('dashboard');
 
     // Profile Management
     Route::controller(ProfileController::class)->group(function () {
@@ -55,6 +63,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/', 'viewCart')->name('view');
             Route::post('/remove', 'removeFromCart')->name('remove');
             Route::post('/checkout', 'checkout')->name('checkout');
+            Route::post('/update-quantity', 'updateQuantity')->name('updateQuantity');
+
         });
 
         // Order Management

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, router } from '@inertiajs/react';
 
+
 export default function ProductsTable({ products, user }) {
     const isSupplier = user && user.role === 'supplier';
 
@@ -28,11 +29,11 @@ export default function ProductsTable({ products, user }) {
             <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                 <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    <th className="table-header">Name</th>
+                    <th className="table-header">Description</th>
+                    <th className="table-header">Price</th>
+                    <th className="table-header">Stock</th>
+                    <th className="table-header">Actions</th>
                 </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -66,9 +67,10 @@ export default function ProductsTable({ products, user }) {
                                 ) : (
                                     <button
                                         onClick={(e) => handleAddToCart(e, product.id)}
-                                        className="text-indigo-600 hover:text-indigo-900"
+                                        disabled={product.stock_quantity < 1}
+                                        className="btn-yellow"
                                     >
-                                        Add to Cart
+                                        Add to Basket
                                     </button>
 
                                 )}

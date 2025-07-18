@@ -5,6 +5,10 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import FlashMessage from "@/Components/FlashMessage.jsx";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faShoppingCart, faBox, faCreditCard, faClipboardList, faFileInvoice } from '@fortawesome/free-solid-svg-icons';
+
+
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
@@ -25,26 +29,36 @@ export default function AuthenticatedLayout({ header, children }) {
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink href={route('products.index')} active={route().current('products.index', '*')}>
-                                    Products
+                                    Products  <FontAwesomeIcon icon={faBox} />
                                 </NavLink>
                             </div>
 
                             {user.role === 'customer' && (
-                                <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                    <NavLink href={route('cart.view')} active={route().current('cart.view')}>
-                                        Cart
-                                    </NavLink>
+                                <>
+                                    <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                        <NavLink href={route('cart.view')} active={route().current('cart.view')}>
+                                            Basket <FontAwesomeIcon icon={faShoppingCart} className="ml-1" />
+                                        </NavLink>
+
+                                    </div>
+
+                                    <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                        <NavLink href={route('payment.form')} active={route().current('payment.form')}>
+                                             Checkout <FontAwesomeIcon icon={faCreditCard} />
+                                        </NavLink>
                                 </div>
+                                </>
                             )}
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 {user.role === 'customer' ? (
                                     <NavLink href={route('orders.index')} active={route().current('orders.index', '*')}>
-                                        Orders
+                                        Orders <FontAwesomeIcon icon={faClipboardList} />
+
                                     </NavLink>
                                 ) : user.role === 'supplier' ? (
                                     <NavLink href={route('orders.salesHistory')} active={route().current('orders.index', '*')}>
-                                        Sales History
+                                        Sales History <FontAwesomeIcon icon={faFileInvoice} />
                                     </NavLink>
                                 ) : null}
                             </div>
