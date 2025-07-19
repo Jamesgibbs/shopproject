@@ -82,24 +82,39 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            # Install necessary tools
+            sudo apt update -y
+            sudo apt install -y curl php php-cli php-mbstring git unzip php-xml php-curl
+
+            # Install Composer
+            curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+
+            # Install Node.js and npm (using NodeSource for latest version)
+            curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+            sudo apt install -y nodejs
+
+            # Configure directory
             git config --global --add safe.directory /var/www/laravel-app
             mkdir -p /var/www/laravel-app
             cd /var/www/laravel-app
+
+            # Pull latest code
             git pull origin main
+
+            # Install PHP dependencies
             export COMPOSER_MEMORY_LIMIT=-1
             composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+
+            # Run migrations
             php artisan migrate --force
-            sudo apt update -y
-            sudo apt install -y nodejs npm
-            sudo apt install -y php
-            # Increase Node.js memory limit to 8GB
+
+            # Install and build frontend assets
             export NODE_OPTIONS="--max-old-space-size=8192"
-            # Clear npm cache and remove node_modules
             npm cache clean --force
             rm -rf node_modules
-            # Install dependencies with reduced parallel tasks
-            npm install --production --no-audit --no-optional --maxsockets=1
-            # Run build with production mode and reduced chunk size
-            VITE_BUILD_CHUNK_SIZE_WARNING=1000 npm run build
-            php -d memory_limit=-1 artisan optimize
+            npm install --production --no-audit --no-optional
+            npm run build
+
+            # Final optimization
+            php artisan optimize
 
