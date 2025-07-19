@@ -81,10 +81,15 @@ jobs:
     steps:
       - name: Deploy to production
         uses: appleboy/ssh-action@master
+        env:
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_DATABASE: ${{ secrets.DB_DATABASE }}
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: DB_USERNAME,DB_PASSWORD,DB_DATABASE
           script: |
             # Install latest Docker Compose V2
             sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
