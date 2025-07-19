@@ -82,20 +82,13 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # Install necessary tools
-            sudo apt update -y
-            sudo apt install -y curl php php-cli php-mbstring git unzip php-xml php-curl
-
-            # Stop and disable Apache if it's running
-            sudo systemctl stop apache2 || true
-            sudo systemctl disable apache2 || true
-
-            # Install Composer
-            curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
-
-            # Install Node.js and npm (using NodeSource for latest version)
-            curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-            sudo apt install -y nodejs
+            # Install Docker if not installed
+            if ! command -v docker &> /dev/null; then
+              sudo apt update -y
+              sudo apt install -y docker.io docker-compose
+              sudo systemctl start docker
+              sudo systemctl enable docker
+            fi
 
             # Configure directory
             git config --global --add safe.directory /var/www/laravel-app
@@ -105,20 +98,20 @@ jobs:
             # Pull latest code
             git pull origin main
 
-            # Install PHP dependencies
-            export COMPOSER_MEMORY_LIMIT=-1
-            composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+            # Copy environment file if not exists
+            if [ ! -f .env ]; then
+              cp .env.example .env
+            fi
 
-            # Run migrations
-            php artisan migrate --force
+            # Stop containers without removing volumes
+            docker-compose stop
 
-            # Install and build frontend assets
-            export NODE_OPTIONS="--max-old-space-size=8192"
-            npm cache clean --force
-            rm -rf node_modules
-            npm install --production --no-audit --no-optional
-            npm run build
+            # Build and start Docker containers
+            docker-compose build --no-cache
+            docker-compose up -d
 
-            # Final optimization
-            php artisan optimize
+            # Run Laravel commands inside the app container
+            docker-compose exec -T app composer install --no-interaction --prefer-dist --optimize-autoloader
+            docker-compose exec -T app php artisan migrate --force
+            docker-compose exec -T app php artisan optimize
 
