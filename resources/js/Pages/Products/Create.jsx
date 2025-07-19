@@ -1,15 +1,37 @@
 import React, { useState } from 'react';
-import { useForm } from '@inertiajs/react';
+import { useForm, router } from '@inertiajs/react';
+import MultiSelect from '@/Components/Multiselect';
 
-export default function Create({ onSuccess }) {
+
+export default function Create({ categories, onSuccess }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         description: '',
         price: '',
         stock_quantity: '',
+        image: null,
+        categories: [],
     });
 
     const [submitted, setSubmitted] = useState(false);
+    const [imagePreview, setImagePreview] = useState(null);
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        setData('image', file);
+
+        // Create preview URL
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            setImagePreview(null);
+        }
+    };
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -73,6 +95,52 @@ export default function Create({ onSuccess }) {
                             className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                            Product Image
+                        </label>
+                        <div className="mt-1 flex items-center">
+                            <div className="space-y-2">
+                                <input
+                                    type="file"
+                                    onChange={handleImageChange}
+                                    className="block w-full text-sm text-gray-500
+                                    file:mr-4 file:py-2 file:px-4
+                                    file:rounded-full file:border-0
+                                    file:text-sm file:font-semibold
+                                    file:bg-indigo-50 file:text-indigo-700
+                                    hover:file:bg-indigo-100"
+                                    accept="image/*"
+                                />
+                                {errors.image && <div className="text-red-500 text-sm">{errors.image}</div>}
+                            </div>
+                        </div>
+                        {imagePreview && (
+                            <div className="mt-2">
+                                <img
+                                    src={imagePreview}
+                                    alt="Preview"
+                                    className="h-32 w-32 object-cover rounded-lg"
+                                />
+                            </div>
+                        )}
+                    </div>
+
+                    <div>
+                        <label htmlFor="categories" className="block text-sm font-medium text-gray-700">
+                            Categories
+                        </label>
+                        <MultiSelect
+                            options={categories}
+                            value={data.categories}
+                            onChange={value => setData('categories', value)}
+                            className="mt-1"
+                        />
+                        {errors.categories && <div className="text-red-500 text-sm mt-1">{errors.categories}</div>}
+                    </div>
+
+
 
                     {errors && (
                         <div className="text-red-600 font-medium">

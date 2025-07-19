@@ -7,7 +7,8 @@ import { useState } from 'react';
 import FlashMessage from "@/Components/FlashMessage.jsx";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faShoppingCart, faBox, faCreditCard, faClipboardList, faFileInvoice } from '@fortawesome/free-solid-svg-icons';
-
+import { DarkModeProvider } from '@/Contexts/DarkModeContext';
+import DarkModeToggle from '@/Components/DarkMode/DarkModeToggle';
 
 
 export default function AuthenticatedLayout({ header, children }) {
@@ -17,6 +18,8 @@ export default function AuthenticatedLayout({ header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
     return (
+        <DarkModeProvider>
+
         <div className="min-h-screen bg-gray-100">
             <nav className="border-b border-gray-100 bg-white">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -24,7 +27,7 @@ export default function AuthenticatedLayout({ header, children }) {
                         {/* Left navigation */}
                         <div className="flex">
                             <div className="flex shrink-0 items-center">
-                                <ApplicationLogo className="block h-9 w-auto" />
+                                <h1> Acme Corporation </h1>
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
@@ -92,6 +95,9 @@ export default function AuthenticatedLayout({ header, children }) {
                                     </Dropdown.Trigger>
 
                                     <Dropdown.Content>
+
+                                        <DarkModeToggle />
+
 
                                         <ResponsiveNavLink method="get" href={route('profile.edit')} as="button">
                                             Profile Settings
@@ -182,5 +188,7 @@ export default function AuthenticatedLayout({ header, children }) {
                 {children}
             </main>
         </div>
+            {children}
+        </DarkModeProvider>
     );
 }

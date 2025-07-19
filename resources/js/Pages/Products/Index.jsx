@@ -4,9 +4,10 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 import ProductsTable from "./ProductsTable.jsx";
 import CreateProduct from "./Create.jsx";
 import PageCard from "@/Components/PageCard.jsx";
+import Pagination from "@/Components/Pagination/Pagination.jsx";
 
 export default function Index() {
-    const { products, auth = [] } = usePage().props;
+    const { products, auth, categories = [] } = usePage().props;
     const [showForm, setShowForm] = useState(false);
     const user = auth.user;
     const isSupplier = user && user.role === 'supplier';
@@ -41,7 +42,7 @@ export default function Index() {
                     <CreateProduct onSuccess={() => setShowForm(false)} />
                 </div>
             )}
-            <ProductsTable products={products} user={user} />
+            <ProductsTable products={products} user={user} categories={categories}/>
 
         </PageCard>
     );

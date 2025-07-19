@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link, router } from '@inertiajs/react';
+import Pagination from "@/Components/Pagination/Pagination.jsx";
 
 
 export default function ProductsTable({ products, user }) {
     const isSupplier = user && user.role === 'supplier';
 
-    if (!products || products.length === 0) {
+    if (!products || !products.data || products.data.length === 0) {
         return <p>No products available.</p>;
     }
 
@@ -23,31 +24,32 @@ export default function ProductsTable({ products, user }) {
         });
     };
 
+    const headers = ['Name', 'Description', 'Price', 'Stock', 'Actions'];
 
     return (
         <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                 <tr>
-                    <th className="table-header">Name</th>
-                    <th className="table-header">Description</th>
-                    <th className="table-header">Price</th>
-                    <th className="table-header">Stock</th>
-                    <th className="table-header">Actions</th>
+                    {headers.map((header, index) => (
+                        <th key={index} className="table-header">
+                            {header}
+                        </th>
+                    ))}
                 </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                {products.map((product) => (
+                {products.data.map((product) => (
                     <tr
                         key={product.id}
                         className="hover:bg-gray-50 cursor-pointer"
                         onClick={() => window.location.href = `/products/${product.id}`}
                     >
-                        <td className="px-6 py-4 whitespace-nowrap">{product.name}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{product.description}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">£{product.price}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{product.stock_quantity}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="data-table tbody td">{product.name}</td>
+                        <td className="data-table tbody td">{product.description}</td>
+                        <td className="data-table tbody td">£{product.price}</td>
+                        <td className="data-table tbody td">{product.stock_quantity}</td>
+                        <td className="data-table tbody td">
                             <div className="flex gap-4" onClick={(e) => e.stopPropagation()}>
                                 {isSupplier && product.supplier_id === user.id ? (
                                     <>
@@ -80,6 +82,8 @@ export default function ProductsTable({ products, user }) {
                 ))}
                 </tbody>
             </table>
+
+            <Pagination links={products.links} />
         </div>
     );
 }

@@ -93,4 +93,122 @@ class ProductControllerTest extends TestCase
         $response->assertRedirect();
         $this->assertSoftDeleted('products', ['id' => $product->id]);
     }
+
+    public function test_can_view_single_product()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $product = Product::factory()->create();
+        Review::factory()->count(3)->create(['product_id' => $product->id]);
+
+        $response = $this->get(route('products.view', $product));
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) =>
+        $page->component('Products/Product')
+            ->has('product.reviews')
+            ->has('product.average_rating')
+            ->has('product.reviews_count')
+        );
+    }
+
+    public function test_supplier_can_create_product_form()
+    {
+        $supplier = User::factory()->create([
+            'role' => Role::SUPPLIER->value,
+        ]);
+        $this->actingAs($supplier);
+
+        $response = $this->get(route('products.create'));
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) =>
+        $page->component('Products/Create')
+        );
+    }
+
+    public function test_store_product_validates_required_fields()
+    {
+        $supplier = User::factory()->create([
+            'role' => Role::SUPPLIER->value,
+        ]);
+        $this->actingAs($supplier);
+
+        $response = $this->post(route('products.store'), []);
+
+        $response->assertSessionHasErrors(['name', 'price', 'stock_quantity']);
+    }
+
+    public function test_supplier_can_edit_product()
+    {
+        $supplier = User::factory()->create([
+            'role' => Role::SUPPLIER->value,
+        ]);
+        $this->actingAs($supplier);
+
+        $product = Product::factory()->create(['supplier_id' => $supplier->id]);
+
+        $response = $this->get(route('products.edit', $product));
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) =>
+        $page->component('Products/Edit')
+            ->has('product')
+        );
+    }
+
+    public function test_supplier_can_update_own_product()
+    {
+        $supplier = User::factory()->create([
+            'role' => Role::SUPPLIER->value,
+        ]);
+        $this->actingAs($supplier);
+
+        $product = Product::factory()->create(['supplier_id' => $supplier->id]);
+
+        $updatedData = [
+            'name' => 'Updated Product',
+            'description' => 'Updated description',
+            'price' => 199.99,
+            'stock_quantity' => 20,
+        ];
+
+        $response = $this->put(route('products.update', $product), $updatedData);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id,
+            'name' => 'Updated Product',
+            'price' => 199.99,
+            'stock_quantity' => 20,
+        ]);
+    }
+
+    public function test_product_update_validates_required_fields()
+    {
+        $supplier = User::factory()->create([
+            'role' => Role::SUPPLIER->value,
+        ]);
+        $this->actingAs($supplier);
+
+        $product = Product::factory()->create(['supplier_id' => $supplier->id]);
+
+        $response = $this->put(route('products.update', $product), []);
+
+        $response->assertSessionHasErrors(['name', 'price', 'stock_quantity']);
+    }
+
+    public function test_unauthorized_user_cannot_edit_product()
+    {
+        $supplier = User::factory()->create();
+        $otherUser = User::factory()->create();
+
+        $product = Product::factory()->create(['supplier_id' => $supplier->id]);
+
+        $this->actingAs($otherUser);
+
+        $response = $this->get(route('products.edit', $product));
+        $response->assertStatus(403);
+    }
+
 }

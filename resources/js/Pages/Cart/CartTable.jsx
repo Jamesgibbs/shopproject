@@ -1,5 +1,6 @@
 import React from 'react';
 import { router } from '@inertiajs/react';
+import Pagination from "@/Components/Pagination/Pagination.jsx";
 
 export default function CartTable({ cartItems }) {
     if (!Array.isArray(cartItems) || cartItems.length === 0) {
@@ -37,9 +38,9 @@ export default function CartTable({ cartItems }) {
                 <tbody className="bg-white divide-y divide-gray-200">
                 {cartItems.map((item) => (
                     <tr key={item.id}>
-                        <td className="px-6 py-4 whitespace-nowrap">{item.name}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">£{item.price}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="data-table tbody td">{item.name}</td>
+                        <td className="data-table tbody td">£{item.price}</td>
+                        <td className="data-table tbody td">
                             <div className="flex items-center space-x-2">
                                 <button
                                     onClick={() => handleQuantityChange(item.id, item.quantity - 1, item.product_id)}
@@ -60,10 +61,10 @@ export default function CartTable({ cartItems }) {
                                 </button>
                             </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="data-table tbody td">
                             £{(item.price * item.quantity).toFixed(2)}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="data-table tbody tdp">
                             <button
                                 onClick={() => handleRemove(item.id)}
                                 className="text-red-600 hover:text-red-900"
@@ -75,6 +76,8 @@ export default function CartTable({ cartItems }) {
                 ))}
                 </tbody>
             </table>
+
+            <Pagination links={cartItems.links} />
         </div>
     );
 }

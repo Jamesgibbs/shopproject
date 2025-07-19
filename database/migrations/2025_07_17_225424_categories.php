@@ -8,14 +8,6 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('slug')->unique();
-            $table->text('description')->nullable();
-            $table->timestamps();
-        });
-
         // Create pivot table for products and categories
         Schema::create('category_product', function (Blueprint $table) {
             $table->id();
@@ -28,6 +20,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('category_product');
-        Schema::dropIfExists('categories');
     }
 };
