@@ -86,6 +86,10 @@ jobs:
             sudo apt update -y
             sudo apt install -y curl php php-cli php-mbstring git unzip php-xml php-curl
 
+            # Stop and disable Apache if it's running
+            sudo systemctl stop apache2 || true
+            sudo systemctl disable apache2 || true
+
             # Install Composer
             curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
 
