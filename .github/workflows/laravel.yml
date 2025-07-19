@@ -82,13 +82,15 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # Install Docker if not installed
-            if ! command -v docker &> /dev/null; then
-              sudo apt update -y
-              sudo apt install -y docker.io docker-compose
-              sudo systemctl start docker
-              sudo systemctl enable docker
-            fi
+            # Remove old docker-compose if exists
+            sudo rm -f /usr/local/bin/docker-compose
+
+            # Install latest Docker Compose V2
+            sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+
+            # Verify version
+            docker-compose --version
 
             # Configure directory
             git config --global --add safe.directory /var/www/laravel-app
@@ -114,4 +116,3 @@ jobs:
             docker-compose exec -T app composer install --no-interaction --prefer-dist --optimize-autoloader
             docker-compose exec -T app php artisan migrate --force
             docker-compose exec -T app php artisan optimize
-
