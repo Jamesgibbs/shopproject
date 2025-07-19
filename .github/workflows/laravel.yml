@@ -86,11 +86,20 @@ jobs:
             mkdir -p /var/www/laravel-app
             cd /var/www/laravel-app
             git pull origin main
-            composer install --no-interaction --prefer-dist --optimize-autoloader
+            export COMPOSER_MEMORY_LIMIT=-1
+            composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
             php artisan migrate --force
             sudo apt update -y
             sudo apt install -y nodejs npm
             sudo apt install -y php
-            npm install
-            npm run build
-            php artisan optimize
+            # Increase Node.js memory limit to 8GB
+            export NODE_OPTIONS="--max-old-space-size=8192"
+            # Clear npm cache and remove node_modules
+            npm cache clean --force
+            rm -rf node_modules
+            # Install dependencies with reduced parallel tasks
+            npm install --production --no-audit --no-optional --maxsockets=1
+            # Run build with production mode and reduced chunk size
+            VITE_BUILD_CHUNK_SIZE_WARNING=1000 npm run build
+            php -d memory_limit=-1 artisan optimize
+
