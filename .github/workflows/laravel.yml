@@ -90,6 +90,7 @@ jobs:
             php artisan migrate --force
             sudo apt update -y
             sudo apt install -y nodejs npm
+            sudo apt install -y php
             npm install
             npm run build
             php artisan optimize
