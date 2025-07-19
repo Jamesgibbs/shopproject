@@ -81,38 +81,60 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            # Remove old docker-compose if exists
-            sudo rm -f /usr/local/bin/docker-compose
+        script: |
+          # Install latest Docker Compose V2
+          sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
 
-            # Install latest Docker Compose V2
-            sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-            sudo chmod +x /usr/local/bin/docker-compose
+          # Configure directory
+          git config --global --add safe.directory /var/www/laravel-app
+          mkdir -p /var/www/laravel-app
+          cd /var/www/laravel-app
 
-            # Verify version
-            docker-compose --version
+          # Pull latest code
+          git pull origin main
 
-            # Configure directory
-            git config --global --add safe.directory /var/www/laravel-app
-            mkdir -p /var/www/laravel-app
-            cd /var/www/laravel-app
+          # Ensure environment variables are set with default values if not provided
+          if [ -z "${DB_USERNAME}" ]; then
+            echo "Warning: DB_USERNAME not set. Please set this in your deployment environment"
+            exit 1
+          fi
 
-            # Pull latest code
-            git pull origin main
+          if [ -z "${DB_PASSWORD}" ]; then
+            echo "Warning: DB_PASSWORD not set. Please set this in your deployment environment"
+            exit 1
+          fi
 
-            # Copy environment file if not exists
-            if [ ! -f .env ]; then
-              cp .env.example .env
-            fi
+          # Copy environment file if not exists
+          if [ ! -f .env ]; then
+            cp .env.example .env
+            # Update .env with deployment environment variables
+            sed -i "s/DB_CONNECTION=.*/DB_CONNECTION=mysql/" .env
+            sed -i "s/DB_HOST=.*/DB_HOST=laravel-db/" .env
+            sed -i "s/DB_PORT=.*/DB_PORT=3306/" .env
+            sed -i "s/DB_DATABASE=.*/DB_DATABASE=${DB_DATABASE}/" .env
+            sed -i "s/DB_USERNAME=.*/DB_USERNAME=${DB_USERNAME}/" .env
+            sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=${DB_PASSWORD}/" .env
 
-            # Stop containers without removing volumes
-            docker-compose stop
+            # Set production environment
+            sed -i "s/APP_ENV=.*/APP_ENV=production/" .env
+            sed -i "s/APP_DEBUG=.*/APP_DEBUG=false/" .env
+          fi
 
-            # Build and start Docker containers
-            docker-compose build --no-cache
-            docker-compose up -d
 
-            # Run Laravel commands inside the app container
-            docker-compose exec -T app composer install --no-interaction --prefer-dist --optimize-autoloader
-            docker-compose exec -T app php artisan migrate --force
-            docker-compose exec -T app php artisan optimize
+  # Force remove any existing containers (including those that might be stuck)
+          docker-compose down --remove-orphans
+          docker rm -f laravel-app laravel-nginx laravel-db laravel-redis laravel-node 2>/dev/null || true
+
+          # Build and start Docker containers
+          docker-compose build --no-cache
+          docker-compose up -d
+
+          # Wait for database to be ready
+          echo "Waiting for database to be ready..."
+          sleep 30
+
+          # Run Laravel commands inside the app container
+          docker-compose exec -T app composer install --no-interaction --prefer-dist --optimize-autoloader
+          docker-compose exec -T app php artisan migrate --force
+          docker-compose exec -T app php artisan optimize
