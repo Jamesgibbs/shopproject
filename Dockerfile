@@ -43,7 +43,8 @@ RUN chown -R laravel:www-data /var/www && \
 # Install npm dependencies and build assets
 RUN which npm && \
     npm ci && \
-    npm run build
+    npm run build && \
+    ls -la /var/www/public/build
 
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
