@@ -152,27 +152,29 @@ jobs:
 
 
             # Docker cleanup and restart
-            docker-compose down --remove-orphans
+            docker compose -f docker-compose.prod.yml down --remove-orphans
             docker system prune -f
-            docker-compose build --no-cache
-            docker-compose up -d
+            docker compose -f docker-compose.prod.yml build --no-cache
+            docker compose -f docker-compose.prod.yml up -d
+
 
             # Wait for services
             echo "Waiting for services to be ready..."
             sleep 15
 
             # Fix permissions inside container
-            docker-compose exec -T app chown -R laravel:www-data /var/www
-            docker-compose exec -T app chmod -R 755 /var/www
-            docker-compose exec -T app chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+            # Fix permissions inside container
+            docker compose -f docker-compose.prod.yml exec -T app chown -R laravel:www-data /var/www
+            docker compose -f docker-compose.prod.yml exec -T app chmod -R 755 /var/www
+            docker compose -f docker-compose.prod.yml exec -T app chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
             # Application setup
-            docker-compose exec -T app composer install --no-dev --optimize-autoloader
+            docker compose -f docker-compose.prod.yml exec -T app composer install --no-dev --optimize-autoloader
             # Generate application key
-            docker-compose exec -T app php artisan key:generate
-            docker-compose exec -T app php artisan migrate --force
-            docker-compose exec -T app php artisan config:cache
-            docker-compose exec -T app php artisan route:cache
-            docker-compose exec -T app php artisan view:cache
+            docker compose -f docker-compose.prod.yml exec -T app php artisan key:generate
+            docker compose -f docker-compose.prod.yml exec -T app php artisan migrate --force
+            docker compose -f docker-compose.prod.yml exec -T app php artisan config:cache
+            docker compose -f docker-compose.prod.yml exec -T app php artisan route:cache
+            docker compose -f docker-compose.prod.yml exec -T app php artisan view:cache
 
             echo "Deployment completed successfully"
