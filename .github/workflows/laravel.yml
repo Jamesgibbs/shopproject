@@ -150,6 +150,10 @@ jobs:
             sed -i "s|APP_ENV=.*|APP_ENV=production|g" .env
             sed -i "s|APP_DEBUG=.*|APP_DEBUG=false|g" .env
 
+            docker run --rm php:8.3-cli-alpine php -r "echo 'base64:'.base64_encode(random_bytes(32));" > app_key.txt
+            sed -i "s|APP_KEY=.*|APP_KEY=$(cat app_key.txt)|g" .env
+            rm app_key.txt
+
 
             # Docker cleanup and restart
             docker compose -f docker-compose.prod.yml down --remove-orphans
@@ -169,11 +173,14 @@ jobs:
             docker compose -f docker-compose.prod.yml exec -T app chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
             # Application setup
-            docker compose -f docker-compose.prod.yml exec -T app php artisan key:generate
             docker compose -f docker-compose.prod.yml exec -T app php artisan config:clear
             docker compose -f docker-compose.prod.yml exec -T app php artisan migrate --force
             docker compose -f docker-compose.prod.yml exec -T app php artisan config:cache
             docker compose -f docker-compose.prod.yml exec -T app php artisan route:cache
             docker compose -f docker-compose.prod.yml exec -T app php artisan view:cache
+
+            # Verify APP_KEY is set
+            echo "Verifying APP_KEY..."
+            docker compose -f docker-compose.prod.yml exec -T app php artisan tinker --execute="echo config('app.key');"
 
             echo "Deployment completed successfully"
