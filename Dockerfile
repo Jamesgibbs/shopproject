@@ -8,7 +8,9 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     zip \
-    unzip
+    unzip \
+    libicu-dev
+
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -27,8 +29,11 @@ RUN mkdir -p /home/laravel/.composer && \
 # Set working directory
 WORKDIR /var/www
 
-COPY --chown=laravel:laravel . /var/www
-RUN chown -R laravel:www-data /var/www && chmod -R 755 /var/www/storage
+COPY . /var/www
+RUN chown -R laravel:www-data /var/www && \
+    chmod -R 755 /var/www && \
+    chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+
 
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
