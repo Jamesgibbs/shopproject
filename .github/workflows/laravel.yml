@@ -104,6 +104,13 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           envs: DEPLOY_PATH,MYSQL_USER,MYSQL_PASSWORD,MYSQL_ROOT_PASSWORD,MYSQL_DATABASE
           script: |
+            sudo mkdir -p ${DEPLOY_PATH}
+            sudo chown -R $USER:$USER ${DEPLOY_PATH}
+            cd ${DEPLOY_PATH}
+
+            # Configure git globally for this deployment
+            git config --global --add safe.directory ${DEPLOY_PATH}
+
             # Install latest Docker Compose V2
             if ! command -v docker-compose &> /dev/null; then
               sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -126,10 +133,10 @@ jobs:
               git clone https://github.com/Jamesgibbs/shopproject.git .
             fi
 
-            # Setup storage directories
+            # Setup storage directories with correct permissions
             sudo mkdir -p storage/logs storage/framework/{sessions,views,cache}
+            sudo chown -R $USER:www-data storage bootstrap/cache
             sudo chmod -R 775 storage bootstrap/cache
-            sudo chown -R www-data:www-data storage bootstrap/cache
 
             # Environment setup
             rm -f .env  # Force remove any existing .env
@@ -153,6 +160,11 @@ jobs:
             # Wait for services
             echo "Waiting for services to be ready..."
             sleep 15
+
+            # Fix permissions inside container
+            docker-compose exec -T app chown -R laravel:www-data /var/www
+            docker-compose exec -T app chmod -R 755 /var/www
+            docker-compose exec -T app chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
             # Application setup
             docker-compose exec -T app composer install --no-dev --optimize-autoloader
