@@ -94,14 +94,15 @@ jobs:
         uses: appleboy/ssh-action@master
         env:
           DEPLOY_PATH: /var/www/laravel-app
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_DATABASE: ${{ secrets.DB_DATABASE }}
+          MYSQL_USER: ${{ secrets.DB_USERNAME }}
+          MYSQL_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.DB_DATABASE }}
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          envs: DEPLOY_PATH,DB_USERNAME,DB_PASSWORD,DB_DATABASE
+          envs: DEPLOY_PATH,MYSQL_USER,MYSQL_PASSWORD, MYSQL_ROOT_PASSWORD,MYSQL_DATABASE
           script: |
             # Install latest Docker Compose V2
             if ! command -v docker-compose &> /dev/null; then
@@ -136,13 +137,14 @@ jobs:
             sed -i "s|DB_CONNECTION=.*|DB_CONNECTION=mysql|g" .env
             sed -i "s|#* *DB_HOST=.*|DB_HOST=laravel-db|g" .env
             sed -i "s|#* *DB_PORT=.*|DB_PORT=3306|g" .env
-            sed -i "s|#* *DB_DATABASE=.*|DB_DATABASE=${DB_DATABASE}|g" .env
-            sed -i "s|#* *DB_USERNAME=.*|DB_USERNAME=${DB_USERNAME}|g" .env
-            sed -i "s|#* *DB_PASSWORD=.*|DB_PASSWORD=${DB_PASSWORD}|g" .env
+            sed -i "s|#* *DB_DATABASE=.*|DB_DATABASE=${MYSQL_DATABASE}|g" .env
+            sed -i "s|#* *DB_USERNAME=.*|DB_USERNAME=${MYSQL_USER}|g" .env
+            sed -i "s|#* *DB_PASSWORD=.*|DB_PASSWORD=${MYSQL_PASSWORD}|g" .env
             sed -i "s|APP_ENV=.*|APP_ENV=production|g" .env
             sed -i "s|APP_DEBUG=.*|APP_DEBUG=false|g" .env
 
-            # Docker cleanup and restart
+
+  # Docker cleanup and restart
             docker-compose down --remove-orphans
             docker-compose pull
             docker-compose build --no-cache
