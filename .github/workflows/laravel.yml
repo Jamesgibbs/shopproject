@@ -102,7 +102,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          envs: DEPLOY_PATH,MYSQL_USER,MYSQL_PASSWORD, MYSQL_ROOT_PASSWORD,MYSQL_DATABASE
+          envs: DEPLOY_PATH,MYSQL_USER,MYSQL_PASSWORD,MYSQL_ROOT_PASSWORD,MYSQL_DATABASE
           script: |
             # Install latest Docker Compose V2
             if ! command -v docker-compose &> /dev/null; then
@@ -144,7 +144,7 @@ jobs:
             sed -i "s|APP_DEBUG=.*|APP_DEBUG=false|g" .env
 
 
-  # Docker cleanup and restart
+            # Docker cleanup and restart
             docker-compose down --remove-orphans
             docker-compose pull
             docker-compose build --no-cache
