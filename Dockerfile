@@ -16,7 +16,6 @@ RUN curl -sLS https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && npm install -g npm
 
-
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -39,8 +38,18 @@ RUN chown -R laravel:www-data /var/www && \
     chmod -R 755 /var/www && \
     chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
-
 RUN npm ci && npm run build
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
+# Configure PHP-FPM
+RUN mkdir -p /var/run/php-fpm && \
+    chown -R laravel:www-data /var/run/php-fpm
+
+# Copy custom php-fpm.conf
+COPY php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
+
+# Switch to non-root user
 USER laravel
+
+# Start PHP-FPM in foreground
+CMD ["php-fpm", "--nodaemonize"]
