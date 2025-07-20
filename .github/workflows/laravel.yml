@@ -169,8 +169,6 @@ jobs:
             docker compose -f docker-compose.prod.yml exec -T app chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
             # Application setup
-            docker compose -f docker-compose.prod.yml exec -T app composer install --no-dev --optimize-autoloader
-            # Generate application key
             docker compose -f docker-compose.prod.yml exec -T app php artisan key:generate
             docker compose -f docker-compose.prod.yml exec -T app php artisan migrate --force
             docker compose -f docker-compose.prod.yml exec -T app php artisan config:cache
