@@ -12,9 +12,11 @@ RUN apt-get update && apt-get install -y \
     libicu-dev
 
 # Install Node.js
-RUN curl -sLS https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs \
-    && npm install -g npm
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs && \
+    node --version && \
+    npm --version
+
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -38,7 +40,11 @@ RUN chown -R laravel:www-data /var/www && \
     chmod -R 755 /var/www && \
     chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
-RUN npm ci && npm run build
+# Install npm dependencies and build assets
+RUN which npm && \
+    npm ci && \
+    npm run build
+
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
 # Configure PHP-FPM
