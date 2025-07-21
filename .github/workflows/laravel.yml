@@ -51,6 +51,8 @@ jobs:
       - name: Copy .env.ci
         run: cp .env.ci .env
 
+
+
       - name: Install Composer Dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
 
@@ -140,6 +142,8 @@ jobs:
             sudo mkdir -p ${DEPLOY_PATH}
             sudo chown -R $USER:$USER ${DEPLOY_PATH}
             cd ${DEPLOY_PATH}
+
+            git config --global --add safe.directory /var/www
 
             # Configure git globally for this deployment
             git config --global --add safe.directory ${DEPLOY_PATH}
