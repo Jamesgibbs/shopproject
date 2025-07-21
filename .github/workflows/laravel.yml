@@ -146,16 +146,22 @@ jobs:
           ls -al scripts/deploy.sh
           file scripts/deploy.sh
 
-    # 4. Upload via SCP (now non-empty!)
+      - name: Debug tar packaging
+        run: |
+          echo "Creating manual tar of build.zip and script:"
+          tar cvf tmp.tar build.zip scripts/deploy.sh
+          ls -lh tmp.tar
+          tar tvf tmp.tar
+
       - name: Upload build.zip & deploy.sh
         uses: appleboy/scp-action@v0.1.5
         with:
-          host: ${{ secrets.HOST }}
+          host:     ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key:      ${{ secrets.SSH_PRIVATE_KEY }}
           source: |
-            build.zip
-            scripts/deploy.sh
+            ${{ github.workspace }}/build.zip
+            ${{ github.workspace }}/scripts/deploy.sh
           target: /tmp
 
       # 5. SSH in and kick off your deploy.sh
