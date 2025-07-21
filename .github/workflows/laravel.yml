@@ -114,13 +114,24 @@ jobs:
     if: github.ref == 'refs/heads/main'
 
     steps:
+      # 1) Grab your code (so scripts/deploy.sh is present)
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      # 2) Download the build.zip into the root
       - name: Download frontend assets
         uses: actions/download-artifact@v4
         with:
           name: vite-assets
+          path: .
 
-      - name: Upload build and script to server
-        uses: appleboy/scp-action@v0.1.4
+      # 3) Debug: verify both files are here
+      - name: List workspace
+        run: ls -al .
+
+      # 4) Upload both the artifact and your deploy script
+      - name: Upload build.zip & deploy.sh
+        uses: appleboy/scp-action@v0.1.5
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
@@ -130,6 +141,7 @@ jobs:
             scripts/deploy.sh
           target: /tmp
 
+      # 5) SSH in & invoke your script
       - name: Execute remote deploy script
         uses: appleboy/ssh-action@v1
         with:
@@ -137,8 +149,6 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
-          envs: DEPLOY_PATH,DB_USERNAME,DB_PASSWORD,DB_DATABASE,APP_URL
           script: |
             chmod +x /tmp/deploy.sh
             bash /tmp/deploy.sh /tmp/build.zip
-
