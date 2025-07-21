@@ -198,10 +198,7 @@ jobs:
 
             # Copy contents into Laravel public/build
             mkdir -p ${DEPLOY_PATH}/public/build
-            cp -r /tmp/build/public/build/* ${DEPLOY_PATH}/public/build/
-
-#            # Move assets
-#            cp -r /tmp/build/public/build ${DEPLOY_PATH}/public/
+            cp -r "/tmp/build/public/build/*" "${DEPLOY_PATH}/public/build/"
 
             # Move manifest.json where Laravel expects it
             if [ -f "${DEPLOY_PATH}/public/build/.vite/manifest.json" ]; then
