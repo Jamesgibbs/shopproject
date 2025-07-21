@@ -79,7 +79,7 @@ jobs:
           ls -la public/build
 
       - name: Check if public/build exists
-        run: ls -l public
+        run: ls -la public/build
 
       - name: Check manifest presence
         run: ls -la public/build/manifest.json
