@@ -192,7 +192,6 @@ jobs:
             sed -i "s|APP_KEY=.*|APP_KEY=$(cat app_key.txt)|g" .env
             rm app_key.txt
 
-            scp build.zip ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/tmp/build.zip
             ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
             unzip /tmp/build.zip -d /tmp/build
 
