@@ -84,6 +84,13 @@ jobs:
       - name: Check manifest presence
         run: ls -la public/build/manifest.json
 
+      - name: Fail if build directory is empty
+        run: |
+          if [ ! -s public/build/manifest.json ]; then
+            echo "Build failed: manifest.json missing or empty"
+            exit 1
+          fi
+
       - name: Execute tests (Unit and Feature tests) via PHPUnit
         env:
           DB_CONNECTION: mysql
