@@ -134,6 +134,10 @@ jobs:
       - name: Ensure deploy.sh is executable
         run: chmod 755 scripts/deploy.sh
 
+      - name: Confirm deploy script exists
+        run: |
+          ls -al scripts/deploy.sh
+          file scripts/deploy.sh
 
     # 4. Upload via SCP (now non-empty!)
       - name: Upload build.zip & deploy.sh
