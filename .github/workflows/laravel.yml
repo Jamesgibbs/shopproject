@@ -159,9 +159,9 @@ jobs:
           host:     ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key:      ${{ secrets.SSH_PRIVATE_KEY }}
-          source: |
-            build.zip
-            scripts/deploy.sh
+          source:
+            - build.zip
+            - scripts/deploy.sh
           target: /tmp
 
       # 5. SSH in and kick off your deploy.sh
