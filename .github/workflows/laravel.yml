@@ -156,9 +156,9 @@ jobs:
       - name: Upload build.zip & deploy.sh
         uses: appleboy/scp-action@v0.1.5
         with:
-          host: ${{ secrets.HOST }}
+          host:     ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key:      ${{ secrets.SSH_PRIVATE_KEY }}
           source: |
             build.zip
             scripts/deploy.sh
