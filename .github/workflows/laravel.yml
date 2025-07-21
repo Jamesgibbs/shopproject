@@ -156,12 +156,8 @@ jobs:
             sed -i "s|APP_URL=.*|APP_URL=${APP_URL}|g" .env
             sed -i "s|VITE_APP_URL=.*|VITE_APP_URL=\"${APP_URL}\"|g" .env
             sed -i "s|ASSET_URL=.*|ASSET_URL=\"${APP_URL}\"|g" .env
-
-
-  # Add Vite production settings
+            # Add Vite production settings
             sed -i "s|VITE_DEV_SERVER_URL=.*|VITE_DEV_SERVER_URL=|g" .env
-            sed -i "s|VITE_APP_URL=.*|VITE_APP_URL=${APP_URL}|g" .env
-
 
             docker run --rm php:8.3-cli-alpine php -r "echo 'base64:'.base64_encode(random_bytes(32));" > app_key.txt
             sed -i "s|APP_KEY=.*|APP_KEY=$(cat app_key.txt)|g" .env
