@@ -122,6 +122,9 @@ jobs:
       - name: Unzip assets
         run: unzip build.zip
 
+      - name: Create .ssh directory
+        run: mkdir -p ~/.ssh
+
       - name: Add SSH key to known_hosts
         run: ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
 
