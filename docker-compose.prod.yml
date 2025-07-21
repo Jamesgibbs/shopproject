@@ -14,6 +14,7 @@ services:
     volumes:
       - ./storage:/var/www/storage
       - ./bootstrap/cache:/var/www/bootstrap/cache
+      - ./public/build:/var/www/public/build
 
     networks:
       - laravel-network
