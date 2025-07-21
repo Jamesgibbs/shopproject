@@ -75,6 +75,9 @@ jobs:
           NODE_ENV: production
         run: npm run build
 
+      - name: Check manifest presence
+        run: ls -la public/build/manifest.json
+
       - name: Execute tests (Unit and Feature tests) via PHPUnit
         env:
           DB_CONNECTION: mysql
