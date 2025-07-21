@@ -78,6 +78,9 @@ jobs:
           echo "Listing build contents:"
           ls -la public/build
 
+      - name: Check if public/build exists
+        run: ls -l public
+
       - name: Check manifest presence
         run: ls -la public/build/manifest.json
 
