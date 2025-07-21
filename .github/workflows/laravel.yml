@@ -121,7 +121,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
 
     steps:
-      # 1. Bring in your repo (so scripts/deploy.sh is present)
+      # 1. Checkout your repo (so scripts/deploy.sh is present)
       - name: Checkout repo
         uses: actions/checkout@v4
 
@@ -129,8 +129,8 @@ jobs:
       - name: Download frontend assets
         uses: actions/download-artifact@v4
         with:
-          name: vite-assets      # must match your 'upload-artifact' name
-          path: .                # drops build.zip in the root
+          name: vite-assets
+          path: .
 
       # 3. Sanity-check that both files exist
       - name: List workspace files
@@ -138,6 +138,7 @@ jobs:
           echo "🗂️  Files in workspace:"
           ls -al .
 
+      # 4. Ensure deploy.sh is executable & present
       - name: Ensure deploy.sh is executable
         run: chmod 755 scripts/deploy.sh
 
@@ -146,25 +147,27 @@ jobs:
           ls -al scripts/deploy.sh
           file scripts/deploy.sh
 
+      # 5. Debug manual tar packaging (optional)
       - name: Debug tar packaging
         run: |
           echo "Creating manual tar of build.zip and script:"
           tar cvf tmp.tar build.zip scripts/deploy.sh
-          ls -lh tmp.tar
-          tar tvf tmp.tar
+          echo "tmp.tar size:" && ls -lh tmp.tar
+          echo "Contents of tmp.tar:" && tar tvf tmp.tar
 
+      # 6. Upload via SCP (now non-empty!)
       - name: Upload build.zip & deploy.sh
         uses: appleboy/scp-action@v0.1.5
         with:
-          host:     ${{ secrets.HOST }}
+          host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          key:      ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           source:
             - build.zip
             - scripts/deploy.sh
           target: /tmp
 
-      # 5. SSH in and kick off your deploy.sh
+      # 7. SSH in & invoke your script
       - name: Execute remote deploy script
         uses: appleboy/ssh-action@v1
         with:
@@ -175,4 +178,5 @@ jobs:
           script: |
             chmod +x /tmp/deploy.sh
             bash /tmp/deploy.sh /tmp/build.zip
+
 
