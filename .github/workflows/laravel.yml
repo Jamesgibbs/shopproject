@@ -119,133 +119,26 @@ jobs:
         with:
           name: vite-assets
 
-      - name: Unzip assets
-        run: unzip build.zip
-
-      - name: Create .ssh directory
-        run: mkdir -p ~/.ssh
-
-      - name: Add SSH key to known_hosts
-        run: ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
-
-      - name: Deploy to production
-        uses: appleboy/ssh-action@v0.1.7
-        env:
-          DEPLOY_PATH: /var/www/laravel-app
-          MYSQL_USER: ${{ secrets.DB_USERNAME }}
-          MYSQL_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          MYSQL_DATABASE: ${{ secrets.DB_DATABASE }}
-          APP_URL: ${{ secrets.APP_URL }}
+      - name: Upload build and script to server
+        uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          envs: DEPLOY_PATH,MYSQL_USER,MYSQL_PASSWORD,MYSQL_ROOT_PASSWORD,MYSQL_DATABASE,APP_URL
-#          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          source: |
+            build.zip
+            scripts/deploy.sh
+          target: /tmp
+
+      - name: Execute remote deploy script
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          envs: DEPLOY_PATH,DB_USERNAME,DB_PASSWORD,DB_DATABASE,APP_URL
           script: |
-            ssh -o BatchMode=yes -o ConnectTimeout=5 ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'echo "✅ SSH connection successful"' || (echo "❌ SSH connection failed" && exit 1)
-            sudo mkdir -p ${DEPLOY_PATH}
-            sudo chown -R $USER:$USER ${DEPLOY_PATH}
-            cd ${DEPLOY_PATH}
+            chmod +x /tmp/deploy.sh
+            bash /tmp/deploy.sh /tmp/build.zip
 
-            git config --global --add safe.directory /var/www
-
-            # Configure git globally for this deployment
-            git config --global --add safe.directory ${DEPLOY_PATH}
-
-            # Install latest Docker Compose V2
-            if ! command -v docker-compose &> /dev/null; then
-              sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-              sudo chmod +x /usr/local/bin/docker-compose
-            fi
-
-            # Configure directory
-            mkdir -p ${DEPLOY_PATH}
-            cd ${DEPLOY_PATH}
-
-            # Fix permissions
-            sudo chown -R $USER:$USER .
-            git config --global --add safe.directory ${DEPLOY_PATH}
-
-            # Pull latest code
-            if [ -d .git ]; then
-              git fetch --all
-              git reset --hard origin/main
-            else
-              git clone https://github.com/Jamesgibbs/shopproject.git .
-            fi
-
-            # Setup storage directories with correct permissions
-            sudo mkdir -p storage/logs storage/framework/{sessions,views,cache}
-            sudo chown -R $USER:www-data storage bootstrap/cache
-            sudo chmod -R 775 storage bootstrap/cache
-
-            # Environment setup
-            rm -f .env  # Force remove any existing .env
-            cp .env.example .env
-            sed -i "s|DB_CONNECTION=.*|DB_CONNECTION=mysql|g" .env
-            sed -i "s|#* *DB_HOST=.*|DB_HOST=laravel-db|g" .env
-            sed -i "s|#* *DB_PORT=.*|DB_PORT=3306|g" .env
-            sed -i "s|#* *DB_DATABASE=.*|DB_DATABASE=${MYSQL_DATABASE}|g" .env
-            sed -i "s|#* *DB_USERNAME=.*|DB_USERNAME=${MYSQL_USER}|g" .env
-            sed -i "s|#* *DB_PASSWORD=.*|DB_PASSWORD=${MYSQL_PASSWORD}|g" .env
-            sed -i "s|APP_ENV=.*|APP_ENV=production|g" .env
-            sed -i "s|APP_DEBUG=.*|APP_DEBUG=false|g" .env
-            sed -i "s|APP_URL=.*|APP_URL=${APP_URL}|g" .env
-            sed -i "s|VITE_APP_URL=.*|VITE_APP_URL=\"${APP_URL}\"|g" .env
-            sed -i "s|ASSET_URL=.*|ASSET_URL=\"${APP_URL}\"|g" .env
-            # Add Vite production settings
-            sed -i "s|VITE_DEV_SERVER_URL=.*|VITE_DEV_SERVER_URL=|g" .env
-
-            docker run --rm php:8.3-cli-alpine php -r "echo 'base64:'.base64_encode(random_bytes(32));" > app_key.txt
-            sed -i "s|APP_KEY=.*|APP_KEY=$(cat app_key.txt)|g" .env
-            rm app_key.txt
-
-            ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
-            unzip /tmp/build.zip -d /tmp/build
-
-            # Copy contents into Laravel public/build
-            mkdir -p ${DEPLOY_PATH}/public/build
-            cp -r /tmp/build/public/build/* ${DEPLOY_PATH}/public/build/
-
-            # Move manifest.json where Laravel expects it
-            if [ -f "${DEPLOY_PATH}/public/build/.vite/manifest.json" ]; then
-              mv ${DEPLOY_PATH}/public/build/.vite/manifest.json ${DEPLOY_PATH}/public/build/manifest.json
-              echo "Moved manifest.json ✅"
-            else
-              echo "manifest.json not found ❌"
-            fi
-
-            rm -rf /tmp/build /tmp/build.zip
-            EOF
-
-
-            # Docker cleanup and restart
-            docker-compose -f docker-compose.prod.yml down --remove-orphans
-            docker system prune -f
-            docker-compose -f docker-compose.prod.yml build --no-cache
-            docker-compose -f docker-compose.prod.yml up -d
-
-
-            # Wait for services
-            echo "Waiting for services to be ready..."
-            sleep 15
-
-            # Fix permissions inside container
-            docker-compose -f docker-compose.prod.yml exec -T app chown -R laravel:www-data /var/www
-            docker-compose -f docker-compose.prod.yml exec -T app chmod -R 755 /var/www
-            docker-compose -f docker-compose.prod.yml exec -T app chmod -R 775 /var/www/storage /var/www/bootstrap/cache
-
-            # Application setup
-            docker-compose -f docker-compose.prod.yml exec -T app php artisan config:clear
-            docker-compose -f docker-compose.prod.yml exec -T app php artisan migrate --force
-            docker-compose -f docker-compose.prod.yml exec -T app php artisan config:cache
-            docker-compose -f docker-compose.prod.yml exec -T app php artisan route:cache
-            docker-compose -f docker-compose.prod.yml exec -T app php artisan view:cache
-
-            # Verify APP_KEY is set
-            echo "Verifying APP_KEY..."
-            docker-compose -f docker-compose.prod.yml exec -T app php artisan tinker --execute="echo config('app.key');"
-
-            echo "Deployment completed successfully"
