@@ -152,8 +152,15 @@ jobs:
               scripts/deploy.sh \
               ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/tmp/
 
-      - name: Execute remote deploy script
+      - name: Execute remote deploy script with secrets
         run: |
           ssh -o StrictHostKeyChecking=no \
-              ${{ secrets.USERNAME }}@${{ secrets.HOST }} \
-              'chmod +x /tmp/deploy.sh && bash /tmp/deploy.sh /tmp/build.zip'
+            ${{ secrets.USERNAME }}@${{ secrets.HOST }} \
+            "APP_ENV=production \
+             DB_PASSWORD='${{ secrets.DB_PASSWORD }}' \
+             DB_USERNAME='${{ secrets.DB_USERNAME }}' \
+             DB_DATABASE='${{ secrets.DB_DATABASE }}' \
+             API_TOKEN='${{ secrets.API_TOKEN }}' \
+             chmod +x /tmp/deploy.sh && \
+             bash /tmp/deploy.sh /tmp/build.zip"
+
