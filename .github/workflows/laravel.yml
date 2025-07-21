@@ -142,7 +142,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           envs: DEPLOY_PATH,MYSQL_USER,MYSQL_PASSWORD,MYSQL_ROOT_PASSWORD,MYSQL_DATABASE,APP_URL
-          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+#          known_hosts: ${{ secrets.KNOWN_HOSTS }}
           script: |
             ssh -o BatchMode=yes -o ConnectTimeout=5 ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'echo "✅ SSH connection successful"' || (echo "❌ SSH connection failed" && exit 1)
             sudo mkdir -p ${DEPLOY_PATH}
