@@ -131,7 +131,11 @@ jobs:
           echo "🗂️  Files in workspace:"
           ls -al .
 
-      # 4. Upload via SCP (now non-empty!)
+      - name: Ensure deploy.sh is executable
+        run: chmod 755 scripts/deploy.sh
+
+
+    # 4. Upload via SCP (now non-empty!)
       - name: Upload build.zip & deploy.sh
         uses: appleboy/scp-action@v0.1.5
         with:
