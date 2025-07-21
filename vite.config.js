@@ -10,14 +10,9 @@ export default defineConfig({
         }),
         react(),
     ],
-    server: {
-        host: '0.0.0.0',
-        hmr: {
-            host: process.env.VITE_DEV_SERVER_URL ? 'localhost' : null
-        },
-        watch: {
-            usePolling: true,
-        },
+    build: {
+        outDir: 'public/build',
+        emptyOutDir: true,
+        manifest: true,
     },
-
 });
