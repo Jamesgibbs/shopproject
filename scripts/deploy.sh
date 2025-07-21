@@ -43,9 +43,14 @@ if ! grep -q "^APP_KEY=base64" "$ENV_FILE"; then
   php -r "echo 'APP_KEY=base64:'.base64_encode(random_bytes(32));" >> "$ENV_FILE"
 fi
 
+
 echo "DB_PASSWORD=$DB_PASSWORD" >> "$ENV_FILE"
-echo "DB_DATABASE=$DB_DATABASE" >> "$ENV_FILE"
 echo "DB_USERNAME=$DB_USERNAME" >> "$ENV_FILE"
+
+echo "APP_ENV=production" >> "$ENV_FILE"
+echo "DB_DATABASE=$DB_DATABASE" >> "$ENV_FILE"
+echo "APP_DEBUG=false" >> "$ENV_FILE"
+echo "APP_URL=$HOST" >> "$ENV_FILE"
 
 # 5. Permissions
 echo "🔐 Applying directory permissions…"
