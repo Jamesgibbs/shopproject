@@ -73,7 +73,10 @@ jobs:
         env:
           VITE_DEV_SERVER_URL: ""
           NODE_ENV: production
-        run: npm run build
+        run: |
+          npm run build
+          echo "Listing build contents:"
+          ls -la public/build
 
       - name: Check manifest presence
         run: ls -la public/build/manifest.json
