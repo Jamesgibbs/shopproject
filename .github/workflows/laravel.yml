@@ -191,10 +191,21 @@ jobs:
 
             scp build.zip ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/tmp/build.zip
             ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
-              unzip /tmp/build.zip -d /tmp/build
-              mkdir -p ${DEPLOY_PATH}/public/build
-              cp -r /tmp/build/public/build ${DEPLOY_PATH}/public/
-              rm -rf /tmp/build /tmp/build.zip
+            unzip /tmp/build.zip -d /tmp/build
+            mkdir -p ${DEPLOY_PATH}/public/build
+
+            # Move assets
+            cp -r /tmp/build/public/build ${DEPLOY_PATH}/public/
+
+            # Move manifest.json where Laravel expects it
+            if [ -f "${DEPLOY_PATH}/public/build/.vite/manifest.json" ]; then
+            mv ${DEPLOY_PATH}/public/build/.vite/manifest.json ${DEPLOY_PATH}/public/build/manifest.json
+            echo "Moved manifest.json into correct position ✅"
+            else
+            echo "manifest.json not found inside .vite ❌"
+            fi
+
+            rm -rf /tmp/build /tmp/build.zip
             EOF
 
 
