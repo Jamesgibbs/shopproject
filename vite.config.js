@@ -13,7 +13,7 @@ export default defineConfig({
     server: {
         host: '0.0.0.0',
         hmr: {
-            host: 'localhost'
+            host: process.env.VITE_DEV_SERVER_URL ? 'localhost' : null
         },
         watch: {
             usePolling: true,
