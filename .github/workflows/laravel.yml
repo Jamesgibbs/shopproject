@@ -156,12 +156,12 @@ jobs:
       - name: Upload build.zip & deploy.sh
         uses: appleboy/scp-action@v0.1.5
         with:
-          host:     ${{ secrets.HOST }}
+          host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          key:      ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: |
-            ${{ github.workspace }}/build.zip
-            ${{ github.workspace }}/scripts/deploy.sh
+            build.zip
+            scripts/deploy.sh
           target: /tmp
 
       # 5. SSH in and kick off your deploy.sh
