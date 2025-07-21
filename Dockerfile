@@ -40,6 +40,9 @@ RUN chown -R laravel:www-data /var/www && \
     chmod -R 755 /var/www && \
     chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
+ENV VITE_APP_URL=${APP_URL}
+ENV ASSET_URL=${APP_URL}
+
 # Install npm dependencies and build assets
 RUN which npm && \
     npm ci && \
