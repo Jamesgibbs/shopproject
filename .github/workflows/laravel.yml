@@ -75,6 +75,15 @@ jobs:
           NODE_ENV: production
         run: npm run build
 
+      - name: Archive built assets
+        run: zip -r build.zip public/build
+
+      - name: Upload build.zip as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: vite-assets
+          path: build.zip
+
       - name: Execute tests (Unit and Feature tests) via PHPUnit
         env:
           DB_CONNECTION: mysql
@@ -93,6 +102,14 @@ jobs:
     if: github.ref == 'refs/heads/main'
 
     steps:
+      - name: Download frontend assets
+        uses: actions/download-artifact@v3
+        with:
+          name: vite-assets
+
+      - name: Unzip assets
+        run: unzip build.zip
+
       - name: Deploy to production
         uses: appleboy/ssh-action@master
         env:
@@ -162,6 +179,14 @@ jobs:
             docker run --rm php:8.3-cli-alpine php -r "echo 'base64:'.base64_encode(random_bytes(32));" > app_key.txt
             sed -i "s|APP_KEY=.*|APP_KEY=$(cat app_key.txt)|g" .env
             rm app_key.txt
+
+            scp build.zip ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/tmp/build.zip
+            ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
+              unzip /tmp/build.zip -d /tmp/build
+              mkdir -p ${DEPLOY_PATH}/public/build
+              cp -r /tmp/build/public/build ${DEPLOY_PATH}/public/
+              rm -rf /tmp/build /tmp/build.zip
+            EOF
 
 
             # Docker cleanup and restart
