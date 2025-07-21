@@ -51,8 +51,6 @@ jobs:
       - name: Copy .env.ci
         run: cp .env.ci .env
 
-
-
       - name: Install Composer Dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
 
@@ -139,6 +137,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           envs: DEPLOY_PATH,MYSQL_USER,MYSQL_PASSWORD,MYSQL_ROOT_PASSWORD,MYSQL_DATABASE,APP_URL
           script: |
+            ssh -o BatchMode=yes -o ConnectTimeout=5 ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'echo "✅ SSH connection successful"' || (echo "❌ SSH connection failed" && exit 1)
             sudo mkdir -p ${DEPLOY_PATH}
             sudo chown -R $USER:$USER ${DEPLOY_PATH}
             cd ${DEPLOY_PATH}
