@@ -121,62 +121,39 @@ jobs:
     if: github.ref == 'refs/heads/main'
 
     steps:
-      # 1. Checkout your repo (so scripts/deploy.sh is present)
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      # 2. Download the build.zip artifact into the workspace root
       - name: Download frontend assets
         uses: actions/download-artifact@v4
         with:
           name: vite-assets
           path: .
 
-      # 3. Sanity-check that both files exist
-      - name: List workspace files
+      - name: Verify files exist
         run: |
-          echo "🗂️  Files in workspace:"
-          ls -al .
+          ls -lh build.zip scripts/deploy.sh
 
-      # 4. Ensure deploy.sh is executable & present
-      - name: Ensure deploy.sh is executable
-        run: chmod 755 scripts/deploy.sh
+      - name: Install SSH client
+        run: sudo apt-get update && sudo apt-get install -y openssh-client
 
-      - name: Confirm deploy script exists
+      - name: Configure SSH keys
         run: |
-          ls -al scripts/deploy.sh
-          file scripts/deploy.sh
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
 
-      # 5. Debug manual tar packaging (optional)
-      - name: Debug tar packaging
+      - name: Copy build.zip & deploy.sh to server
         run: |
-          echo "Creating manual tar of build.zip and script:"
-          tar cvf tmp.tar build.zip scripts/deploy.sh
-          echo "tmp.tar size:" && ls -lh tmp.tar
-          echo "Contents of tmp.tar:" && tar tvf tmp.tar
+          scp -o StrictHostKeyChecking=no \
+              build.zip \
+              scripts/deploy.sh \
+              ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/tmp/
 
-      # 6. Upload via SCP (now non-empty!)
-      - name: Upload build.zip & deploy.sh
-        uses: appleboy/scp-action@v0.1.5
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: |
-            build.zip
-            scripts/deploy.sh
-          target: /tmp
-
-      # 7. SSH in & invoke your script
       - name: Execute remote deploy script
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          known_hosts: ${{ secrets.KNOWN_HOSTS }}
-          script: |
-            chmod +x /tmp/deploy.sh
-            bash /tmp/deploy.sh /tmp/build.zip
-
-
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+              ${{ secrets.USERNAME }}@${{ secrets.HOST }} \
+              'chmod +x /tmp/deploy.sh && bash /tmp/deploy.sh /tmp/build.zip'
