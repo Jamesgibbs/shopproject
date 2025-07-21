@@ -163,10 +163,10 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no \
             ${{ secrets.USERNAME }}@${{ secrets.HOST }} \
-            "APP_ENV=production \
-             DB_PASSWORD='${{ secrets.DB_PASSWORD }}' \
-             DB_USERNAME='${{ secrets.DB_USERNAME }}' \
-             DB_DATABASE='${{ secrets.DB_DATABASE }}' \
+            "export APP_ENV=production && \
+             export DB_PASSWORD='${{ secrets.DB_PASSWORD }}' && \
+             export DB_USERNAME='${{ secrets.DB_USERNAME }}' && \
+             export DB_DATABASE='${{ secrets.DB_DATABASE }}' && \
              chmod +x /tmp/deploy.sh && \
              bash /tmp/deploy.sh /tmp/build.zip"
 
