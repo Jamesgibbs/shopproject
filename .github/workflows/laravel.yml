@@ -212,10 +212,10 @@ jobs:
 
 
             # Docker cleanup and restart
-            docker compose -f docker-compose.prod.yml down --remove-orphans
+            docker-compose -f docker-compose.prod.yml down --remove-orphans
             docker system prune -f
-            docker compose -f docker-compose.prod.yml build --no-cache
-            docker compose -f docker-compose.prod.yml up -d
+            docker-compose -f docker-compose.prod.yml build --no-cache
+            docker-compose -f docker-compose.prod.yml up -d
 
 
             # Wait for services
@@ -224,19 +224,19 @@ jobs:
 
             # Fix permissions inside container
             # Fix permissions inside container
-            docker compose -f docker-compose.prod.yml exec -T app chown -R laravel:www-data /var/www
-            docker compose -f docker-compose.prod.yml exec -T app chmod -R 755 /var/www
-            docker compose -f docker-compose.prod.yml exec -T app chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+            docker-compose -f docker-compose.prod.yml exec -T app chown -R laravel:www-data /var/www
+            docker-compose -f docker-compose.prod.yml exec -T app chmod -R 755 /var/www
+            docker-compose -f docker-compose.prod.yml exec -T app chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
             # Application setup
-            docker compose -f docker-compose.prod.yml exec -T app php artisan config:clear
-            docker compose -f docker-compose.prod.yml exec -T app php artisan migrate --force
-            docker compose -f docker-compose.prod.yml exec -T app php artisan config:cache
-            docker compose -f docker-compose.prod.yml exec -T app php artisan route:cache
-            docker compose -f docker-compose.prod.yml exec -T app php artisan view:cache
+            docker-compose -f docker-compose.prod.yml exec -T app php artisan config:clear
+            docker-compose -f docker-compose.prod.yml exec -T app php artisan migrate --force
+            docker-compose -f docker-compose.prod.yml exec -T app php artisan config:cache
+            docker-compose -f docker-compose.prod.yml exec -T app php artisan route:cache
+            docker-compose -f docker-compose.prod.yml exec -T app php artisan view:cache
 
             # Verify APP_KEY is set
             echo "Verifying APP_KEY..."
-            docker compose -f docker-compose.prod.yml exec -T app php artisan tinker --execute="echo config('app.key');"
+            docker-compose -f docker-compose.prod.yml exec -T app php artisan tinker --execute="echo config('app.key');"
 
             echo "Deployment completed successfully"
