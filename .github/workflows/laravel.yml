@@ -114,22 +114,24 @@ jobs:
     if: github.ref == 'refs/heads/main'
 
     steps:
-      # 1) Grab your code (so scripts/deploy.sh is present)
+      # 1. Bring in your repo (so scripts/deploy.sh is present)
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      # 2) Download the build.zip into the root
+      # 2. Download the build.zip artifact into the workspace root
       - name: Download frontend assets
         uses: actions/download-artifact@v4
         with:
-          name: vite-assets
-          path: .
+          name: vite-assets      # must match your 'upload-artifact' name
+          path: .                # drops build.zip in the root
 
-      # 3) Debug: verify both files are here
-      - name: List workspace
-        run: ls -al .
+      # 3. Sanity-check that both files exist
+      - name: List workspace files
+        run: |
+          echo "🗂️  Files in workspace:"
+          ls -al .
 
-      # 4) Upload both the artifact and your deploy script
+      # 4. Upload via SCP (now non-empty!)
       - name: Upload build.zip & deploy.sh
         uses: appleboy/scp-action@v0.1.5
         with:
@@ -141,7 +143,7 @@ jobs:
             scripts/deploy.sh
           target: /tmp
 
-      # 5) SSH in & invoke your script
+      # 5. SSH in and kick off your deploy.sh
       - name: Execute remote deploy script
         uses: appleboy/ssh-action@v1
         with:
@@ -152,3 +154,4 @@ jobs:
           script: |
             chmod +x /tmp/deploy.sh
             bash /tmp/deploy.sh /tmp/build.zip
+
