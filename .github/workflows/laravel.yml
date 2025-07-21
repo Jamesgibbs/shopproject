@@ -75,15 +75,6 @@ jobs:
           NODE_ENV: production
         run: npm run build
 
-      - name: Archive built assets
-        run: cd public/build && zip -r ../../build.zip .
-
-      - name: Upload build.zip as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: vite-assets
-          path: build.zip
-
       - name: Execute tests (Unit and Feature tests) via PHPUnit
         env:
           DB_CONNECTION: mysql
@@ -95,6 +86,15 @@ jobs:
           REDIS_HOST: 127.0.0.1
           REDIS_PORT: 6379
         run: php artisan test
+
+      - name: Archive built assets
+        run: cd public/build && zip -r ../../build.zip .
+
+      - name: Upload build.zip as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vite-assets
+          path: build.zip
 
   deploy:
     needs: test
