@@ -99,6 +99,9 @@ jobs:
       - name: Archive built assets
         run: cd public/build && zip -r ../../build.zip .
 
+      - name: List contents of build.zip before upload
+        run: unzip -l build.zip
+
       - name: Upload build.zip as artifact
         uses: actions/upload-artifact@v4
         with:
