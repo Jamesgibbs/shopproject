@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Arguments
-ARTIFACT_PATH="$1"                     # e.g. /tmp/build.zip
+ARTIFACT_PATH="$1"
 DEPLOY_PATH="${DEPLOY_PATH:-/var/www/laravel-app}"
 REPO_URL="git@github.com:Jamesgibbs/shopproject.git"
 ENV_FILE=".env"
@@ -37,24 +37,34 @@ echo "⚙️  Setting up environment file…"
 cd "$DEPLOY_PATH"
 cp .env.example "$ENV_FILE"
 
-# (Optional) generate a new APP_KEY if none exists
+# Helper: inject or update key=value in .env
+inject_env_var() {
+  local key="$1"
+  local value="$2"
+  if grep -q "^${key}=" "$ENV_FILE"; then
+    sed -i "s|^${key}=.*|${key}=${value}|" "$ENV_FILE"
+  else
+    echo "${key}=${value}" >> "$ENV_FILE"
+  fi
+}
+
+# Generate APP_KEY if missing
 if ! grep -q "^APP_KEY=base64" "$ENV_FILE"; then
   echo "🔑 Generating APP_KEY…"
   php -r "echo 'APP_KEY=base64:'.base64_encode(random_bytes(32)).\"\n\";" >> "$ENV_FILE"
 fi
 
-echo "DB_PASSWORD=$DB_PASSWORD" >> "$ENV_FILE"
-echo "DB_USERNAME=$DB_USERNAME" >> "$ENV_FILE"
-
-echo "APP_ENV=production" >> "$ENV_FILE"
-echo "DB_DATABASE=$DB_DATABASE" >> "$ENV_FILE"
-echo "APP_DEBUG=false" >> "$ENV_FILE"
-echo "APP_URL=$HOST" >> "$ENV_FILE"
-echo "DB_HOST=$DB_CONTAINER" >> "$ENV_FILE"
-
-echo "MYSQL_USER=$DB_USERNAME" >> "$ENV_FILE"
-echo "MYSQL_PASSWORD=$DB_PASSWORD" >> "$ENV_FILE"
-echo "MYSQL_ROOT_PASSWORD=$DB_PASSWORD" >> "$ENV_FILE"
+# Inject required values
+inject_env_var "APP_ENV" "production"
+inject_env_var "APP_DEBUG" "false"
+inject_env_var "APP_URL" "$HOST"
+inject_env_var "DB_HOST" "$DB_CONTAINER"
+inject_env_var "DB_DATABASE" "$DB_DATABASE"
+inject_env_var "DB_USERNAME" "$DB_USERNAME"
+inject_env_var "DB_PASSWORD" "$DB_PASSWORD"
+inject_env_var "MYSQL_USER" "$DB_USERNAME"
+inject_env_var "MYSQL_PASSWORD" "$DB_PASSWORD"
+inject_env_var "MYSQL_ROOT_PASSWORD" "$DB_PASSWORD"
 
 # 5. Permissions
 echo "🔐 Applying directory permissions…"
