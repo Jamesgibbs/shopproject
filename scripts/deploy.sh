@@ -7,11 +7,15 @@ DEPLOY_PATH="${DEPLOY_PATH:-/var/www/laravel-app}"
 REPO_URL="git@github.com:Jamesgibbs/shopproject.git"
 ENV_FILE=".env"
 
-HOST_UID=$(id -u)
-HOST_GID=$(id -g)
+ARG PUID=1000
+ARG PGID=1000
 
-#export UID=$HOST_UID
-#export GID=$HOST_GID
+# Prevent reserved UID/GID
+RUN if [ "$PGID" -eq 0 ] || [ "$PUID" -eq 0 ]; then \
+      echo "Do not use 0 for PUID or PGID"; exit 1; \
+    fi && \
+    groupadd -g ${PGID} laravel && \
+    useradd -m -u ${PUID} -g laravel laravel
 
 echo "🛠  Starting deployment script"
 echo "    Artifact: $ARTIFACT_PATH"
