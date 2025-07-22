@@ -10,12 +10,12 @@ ENV_FILE=".env"
 PUID=1000
 PGID=1000
 
-# Prevent reserved UID/GID
-RUN if [ "$PGID" -eq 0 ] || [ "$PUID" -eq 0 ]; then \
-      echo "Do not use 0 for PUID or PGID"; exit 1; \
-    fi && \
-    groupadd -g ${PGID} laravel && \
-    useradd -m -u ${PUID} -g laravel laravel
+if [ "$PGID" -eq 0 ] || [ "$PUID" -eq 0 ]; then
+  echo "Do not use 0 for PUID or PGID"
+  exit 1
+fi
+groupadd -g ${PGID} laravel
+useradd -m -u ${PUID} -g laravel laravel
 
 echo "🛠  Starting deployment script"
 echo "    Artifact: $ARTIFACT_PATH"
