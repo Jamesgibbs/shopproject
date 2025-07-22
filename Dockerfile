@@ -49,7 +49,9 @@ COPY --from=nodebuilder --chown=laravel:www-data \
      /var/www/public/build /var/www/public/build
 
 # 6) Install PHP packages
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+RUN composer install --no-dev --optimize-autoloader --no-interaction \
+ && mkdir -p storage bootstrap/cache \
+ && chown -R laravel:www-data storage bootstrap/cache
 
 # 7) Ensure storage & cache are writable
 RUN mkdir -p storage bootstrap/cache \

@@ -145,8 +145,9 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository_owner }}/laravel-app:latest
             ghcr.io/${{ github.repository_owner }}/laravel-app:${{ github.sha }}
-
-
+          build-args: |
+            PUID=1000
+            PGID=1000
 
   deploy:
     needs: test
@@ -178,8 +179,8 @@ jobs:
             ghcr.io/your-org/laravel-app:latest
             ghcr.io/your-org/laravel-app:${{ github.sha }}
           build-args: |
-            PUID=${{ runner.uid }}
-            PGID=${{ runner.gid }}
+            PUID=1000
+            PGID=1000
 
       - name: Deploy to Server
         uses: appleboy/ssh-action@v0.1.8
