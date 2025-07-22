@@ -14,8 +14,14 @@ if [ "$PGID" -eq 0 ] || [ "$PUID" -eq 0 ]; then
   echo "Do not use 0 for PUID or PGID"
   exit 1
 fi
-groupadd -g ${PGID} laravel
-useradd -m -u ${PUID} -g laravel laravel
+
+if ! getent group ${PGID} >/dev/null; then
+  groupadd -g ${PGID} laravel
+fi
+
+if ! id -u ${PUID} >/dev/null 2>&1 && ! id -u laravel >/dev/null 2>&1; then
+  useradd -m -u ${PUID} -g laravel laravel
+fi
 
 echo "🛠  Starting deployment script"
 echo "    Artifact: $ARTIFACT_PATH"
