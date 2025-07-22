@@ -66,7 +66,7 @@ inject_env_var "MYSQL_USER" "$DB_USERNAME"
 inject_env_var "MYSQL_PASSWORD" "$DB_PASSWORD"
 inject_env_var "MYSQL_ROOT_PASSWORD" "$DB_PASSWORD"
 inject_env_var "ASSET_URL" "$HOST"
-inject_env_var "VITE_APP_NAME" "$APP_NAME"
+inject_env_var "VITE_APP_NAME" "Laravel"
 
 # 5. Permissions
 echo "🔐 Applying directory permissions…"
