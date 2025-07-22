@@ -3,7 +3,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        PUID: ${UID}
+        PGID: ${GID}
     image: laravel-app
+    user: "${UID}:${GID}"
     container_name: laravel-app
     restart: unless-stopped
     working_dir: /var/www
@@ -12,6 +16,7 @@ services:
       VITE_APP_URL: ${APP_URL}
       ASSET_URL: ${APP_URL}
     volumes:
+      - ./:/var/www
       - ./storage:/var/www/storage
       - ./bootstrap/cache:/var/www/bootstrap/cache
       - ./public/build:/var/www/public/build

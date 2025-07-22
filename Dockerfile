@@ -1,5 +1,12 @@
 FROM php:8.3-fpm
 
+ARG PUID=1000
+ARG PGID=1000
+
+# Create the group and user with matching IDs
+RUN groupadd -g ${PGID} laravel \
+ && useradd -m -u ${PUID} -g laravel laravel \
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
@@ -37,6 +44,8 @@ RUN mkdir -p /home/laravel/.composer && \
 WORKDIR /var/www
 
 COPY . /var/www
+RUN chown -R laravel:laravel /var/www
+
 RUN chown -R laravel:www-data /var/www && \
     chmod -R 755 /var/www && \
     chmod -R 775 /var/www/storage /var/www/bootstrap/cache
