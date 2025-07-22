@@ -1,54 +1,60 @@
 # ──────────────────────────────────────────────────────────────────────────────
 # Stage 1: Build assets with Node
 # ──────────────────────────────────────────────────────────────────────────────
-FROM node:20-alpine AS builder
+FROM node:20-alpine AS nodebuilder
 
 WORKDIR /var/www
 
-# 1) Copy just package files to install deps
+# Install JS deps
 COPY package.json package-lock.json ./
-
-# 2) Install JS deps
 RUN npm ci
 
-# 3) Copy the rest of your frontend code & build
+# Build your frontend
 COPY . .
-RUN npm run build   # writes to /var/www/public/build
+RUN npm run build   # outputs into /var/www/public/build
 
-ARG PUID=1000
-ARG PGID=1000
-
-RUN groupadd -g ${PGID} www-data \
- && useradd -u ${PUID} -g www-data -m laravel \
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Stage 2: PHP runtime
 # ──────────────────────────────────────────────────────────────────────────────
 FROM php:8.3-fpm
 
-# 2) Install system & PHP deps
+# Allow overriding the UID/GID at build time
+ARG PUID=1000
+ARG PGID=1000
+
+# 1) Create laravel:www-data
+RUN groupadd -g ${PGID} www-data \
+ && useradd -u ${PUID} -g www-data -m laravel
+
+# 2) System & PHP extensions
 RUN apt-get update \
- && apt-get install -y git curl zip unzip libpng-dev libxml2-dev libonig-dev libicu-dev default-mysql-client \
+ && apt-get install -y \
+      git curl zip unzip \
+      libpng-dev libxml2-dev libonig-dev libicu-dev \
+      default-mysql-client \
  && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd intl \
- && apt-get clean && rm -rf /var/lib/apt/lists/*
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
 # 3) Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# 4) Set working dir & copy your PHP app (excluding node_modules & public/build)
+# 4) Copy PHP code (minus node_modules & public/build)
 WORKDIR /var/www
 COPY --chown=laravel:www-data . .
 
-# 5) Pull in the built assets from the builder stage
-COPY --from=builder --chown=laravel:www-data /var/www/public/build /var/www/public/build
+# 5) Pull in built frontend assets
+COPY --from=nodebuilder --chown=laravel:www-data \
+     /var/www/public/build /var/www/public/build
 
 # 6) Install PHP packages
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# 7) Fix permissions on storage & cache
+# 7) Ensure storage & cache are writable
 RUN mkdir -p storage bootstrap/cache \
  && chown -R laravel:www-data storage bootstrap/cache
 
-# 8) Switch to the laravel user and launch FPM
+# 8) Run as non-root
 USER laravel
 CMD ["php-fpm", "--nodaemonize"]

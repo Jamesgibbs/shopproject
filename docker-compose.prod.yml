@@ -15,8 +15,6 @@ services:
     volumes:
       - storage_data:/var/www/storage
       - cache_data:/var/www/bootstrap/cache
-    networks:
-      - laravel-network
 
   nginx:
     image: nginx:alpine

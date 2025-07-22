@@ -1,37 +1,31 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ARTIFACT_PATH="$1"      # no longer used
-DEPLOY_PATH="${DEPLOY_PATH:-/var/www/laravel-app}"
-REPO_URL="git@github.com:Jamesgibbs/shopproject.git"
+REPO="git@github.com:Jamesgibbs/shopproject.git"
+DEST="/var/www/laravel-app"
 
-echo "🛠  Starting deploy"
-
-# 1) Clone or update your PHP repo
-if [ -d "$DEPLOY_PATH/.git" ]; then
-  git -C "$DEPLOY_PATH" fetch --all
-  git -C "$DEPLOY_PATH" reset --hard origin/main
+# 1. Sync code
+if [ -d "$DEST/.git" ]; then
+  git -C "$DEST" fetch --all
+  git -C "$DEST" reset --hard origin/main
 else
-  git clone "$REPO_URL" "$DEPLOY_PATH"
+  git clone "$REPO" "$DEST"
 fi
 
-# 2) Inject .env (same as before)
-cd "$DEPLOY_PATH"
+# 2. Env file
+cd "$DEST"
 cp .env.example .env
-# … your inject_env_var() logic …
+# (run your inject_env_var function here)
 
-# 3) Build & launch your multi-stage image
-export UID=$(id -u)
-export GID=$(id -g)
-
+# 3. Build & deploy containers
 docker-compose -f docker-compose.prod.yml down --remove-orphans
 docker-compose -f docker-compose.prod.yml build --no-cache app
-docker-compose -f docker-compose.prod.yml up -d
+docker-compose -f docker-compose.prod.yml up -d app nginx
 
-# 4) Run migrations & caches
-docker-compose exec -T app php artisan migrate --force
+# 4. Artisan commands
+docker-compose exec -T app php artisan migrate --force --no-interaction
 docker-compose exec -T app php artisan config:cache
 docker-compose exec -T app php artisan route:cache
 docker-compose exec -T app php artisan view:cache
 
-echo "✅ Deployment finished"
+echo "✅ Deployment complete"
