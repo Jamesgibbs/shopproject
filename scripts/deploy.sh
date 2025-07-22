@@ -7,8 +7,8 @@ DEPLOY_PATH="${DEPLOY_PATH:-/var/www/laravel-app}"
 REPO_URL="git@github.com:Jamesgibbs/shopproject.git"
 ENV_FILE=".env"
 
-ARG PUID=1000
-ARG PGID=1000
+PUID=1000
+PGID=1000
 
 # Prevent reserved UID/GID
 RUN if [ "$PGID" -eq 0 ] || [ "$PUID" -eq 0 ]; then \
