@@ -74,12 +74,16 @@ mkdir -p storage/logs storage/framework/{sessions,views,cache}
 chown -R "$USER":www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
 
+
 # 6. Docker Compose (build & deploy containers)
 echo "🐳 Building and restarting Docker services…"
 docker-compose -f docker-compose.prod.yml down --remove-orphans
 docker system prune -f
 docker-compose -f docker-compose.prod.yml build --no-cache
 docker-compose -f docker-compose.prod.yml up -d
+
+docker-compose exec app chown -R laravel:www-data /var/www
+docker-compose exec app chmod -R 775 /var/www
 
 # 7. Post-deploy housekeeping
 echo "⏱  Waiting for containers to start…"
