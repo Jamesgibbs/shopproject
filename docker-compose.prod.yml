@@ -1,3 +1,5 @@
+version: '3.9'
+
 services:
   app:
     build:
@@ -6,90 +8,51 @@ services:
       args:
         PUID: ${UID:-1000}
         PGID: ${GID:-1000}
-    image: laravel-app
-    user: "${UID}:${GID}"
-    container_name: laravel-app
+    image: laravel-app:latest
     restart: unless-stopped
-    working_dir: /var/www
-    environment:
-      APP_URL: ${APP_URL}
-      VITE_APP_URL: ${APP_URL}
-      ASSET_URL: ${APP_URL}
+    env_file:
+      - .env
     volumes:
-      - ./:/var/www
-      - ./storage:/var/www/storage
-      - ./bootstrap/cache:/var/www/bootstrap/cache
-      - ./public/build:/var/www/public/build
-
+      - storage_data:/var/www/storage
+      - cache_data:/var/www/bootstrap/cache
     networks:
       - laravel-network
-    deploy:
-      resources:
-        limits:
-          cpus: '0.75'
-          memory: 512M
 
   nginx:
     image: nginx:alpine
-    container_name: laravel-nginx
     restart: unless-stopped
     ports:
       - "${NGINX_PORT:-80}:80"
     volumes:
-      - ./:/var/www
-      - ./app.conf:/etc/nginx/conf.d/default.conf
-    networks:
-      - laravel-network
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 128M
+      - storage_data:/var/www/storage:ro
+      - cache_data:/var/www/bootstrap/cache:ro
+      - ./docker/nginx/app.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - app
+    networks:
+      - laravel-network
 
   db:
     image: mysql:8.0
-    container_name: laravel-db
     restart: unless-stopped
-    command: --default-authentication-plugin=mysql_native_password
-    environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_USER: ${MYSQL_USER}
+    env_file:
+      - .env
     volumes:
       - dbdata:/var/lib/mysql
     networks:
       - laravel-network
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 1G
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
 
   redis:
     image: redis:alpine
-    container_name: laravel-redis
     restart: unless-stopped
     networks:
       - laravel-network
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 256M
+
+volumes:
+  dbdata:
+  storage_data:
+  cache_data:
 
 networks:
   laravel-network:
     driver: bridge
-
-volumes:
-  dbdata:
-    driver: local

@@ -1,75 +1,54 @@
-FROM php:8.3-fpm
+# ──────────────────────────────────────────────────────────────────────────────
+# Stage 1: Build assets with Node
+# ──────────────────────────────────────────────────────────────────────────────
+FROM node:20-alpine AS builder
+
+WORKDIR /var/www
+
+# 1) Copy just package files to install deps
+COPY package.json package-lock.json ./
+
+# 2) Install JS deps
+RUN npm ci
+
+# 3) Copy the rest of your frontend code & build
+COPY . .
+RUN npm run build   # writes to /var/www/public/build
 
 ARG PUID=1000
 ARG PGID=1000
 
-# Create the group and user with matching IDs
-RUN if [ "${PGID}" != "0" ]; then groupadd -g ${PGID} laravel; fi \
- && if [ "${PUID}" != "0" ]; then useradd -m -u ${PUID} -g laravel laravel; fi
+RUN groupadd -g ${PGID} www-data \
+ && useradd -u ${PUID} -g www-data -m laravel \
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    unzip \
-    libicu-dev \
-    default-mysql-client
+# ──────────────────────────────────────────────────────────────────────────────
+# Stage 2: PHP runtime
+# ──────────────────────────────────────────────────────────────────────────────
+FROM php:8.3-fpm
 
-# Install Node.js
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
-    apt-get install -y nodejs && \
-    node --version && \
-    npm --version
+# 2) Install system & PHP deps
+RUN apt-get update \
+ && apt-get install -y git curl zip unzip libpng-dev libxml2-dev libonig-dev libicu-dev default-mysql-client \
+ && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd intl \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd intl
-
-# Get latest Composer
+# 3) Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Create system user to run Composer and Artisan Commands
-RUN useradd -G www-data,root -u 1000 -d /home/laravel laravel
-RUN mkdir -p /home/laravel/.composer && \
-    chown -R laravel:laravel /home/laravel
-
-# Set working directory
+# 4) Set working dir & copy your PHP app (excluding node_modules & public/build)
 WORKDIR /var/www
+COPY --chown=laravel:www-data . .
 
-COPY . /var/www
-RUN chown -R laravel:laravel /var/www
+# 5) Pull in the built assets from the builder stage
+COPY --from=builder --chown=laravel:www-data /var/www/public/build /var/www/public/build
 
-RUN chown -R laravel:www-data /var/www && \
-    chmod -R 755 /var/www && \
-    chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+# 6) Install PHP packages
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-ENV VITE_APP_URL=${APP_URL}
-ENV ASSET_URL=${APP_URL}
+# 7) Fix permissions on storage & cache
+RUN mkdir -p storage bootstrap/cache \
+ && chown -R laravel:www-data storage bootstrap/cache
 
-# Install npm dependencies and build assets
-RUN which npm && \
-    npm ci && \
-    npm run build && \
-    ls -la /var/www/public/build
-
-RUN composer install --no-interaction --optimize-autoloader --no-dev
-
-# Configure PHP-FPM
-RUN mkdir -p /var/run/php-fpm && \
-    chown -R laravel:www-data /var/run/php-fpm
-
-# Copy custom php-fpm.conf
-COPY php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
-
-# Switch to non-root user
+# 8) Switch to the laravel user and launch FPM
 USER laravel
-
-# Start PHP-FPM in foreground
 CMD ["php-fpm", "--nodaemonize"]
