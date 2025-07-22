@@ -40,9 +40,8 @@ cp .env.example "$ENV_FILE"
 # (Optional) generate a new APP_KEY if none exists
 if ! grep -q "^APP_KEY=base64" "$ENV_FILE"; then
   echo "🔑 Generating APP_KEY…"
-  php -r "echo 'APP_KEY=base64:'.base64_encode(random_bytes(32));" >> "$ENV_FILE"
+  php -r "echo 'APP_KEY=base64:'.base64_encode(random_bytes(32)).\"\n\";" >> "$ENV_FILE"
 fi
-
 
 echo "DB_PASSWORD=$DB_PASSWORD" >> "$ENV_FILE"
 echo "DB_USERNAME=$DB_USERNAME" >> "$ENV_FILE"
@@ -52,6 +51,10 @@ echo "DB_DATABASE=$DB_DATABASE" >> "$ENV_FILE"
 echo "APP_DEBUG=false" >> "$ENV_FILE"
 echo "APP_URL=$HOST" >> "$ENV_FILE"
 echo "DB_HOST=$DB_CONTAINER" >> "$ENV_FILE"
+
+echo "MYSQL_USER=$DB_USERNAME" >> "$ENV_FILE"
+echo "MYSQL_PASSWORD=$DB_PASSWORD" >> "$ENV_FILE"
+echo "MYSQL_ROOT_PASSWORD=$DB_PASSWORD" >> "$ENV_FILE"
 
 # 5. Permissions
 echo "🔐 Applying directory permissions…"
