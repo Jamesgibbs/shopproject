@@ -4,8 +4,8 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        PUID: ${UID}
-        PGID: ${GID}
+        PUID: ${UID:-1000}
+        PGID: ${GID:-1000}
     image: laravel-app
     user: "${UID}:${GID}"
     container_name: laravel-app

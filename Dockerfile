@@ -4,8 +4,8 @@ ARG PUID=1000
 ARG PGID=1000
 
 # Create the group and user with matching IDs
-RUN groupadd -g ${PGID} laravel \
- && useradd -m -u ${PUID} -g laravel laravel \
+RUN if [ "${PGID}" != "0" ]; then groupadd -g ${PGID} laravel; fi \
+ && if [ "${PUID}" != "0" ]; then useradd -m -u ${PUID} -g laravel laravel; fi
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
