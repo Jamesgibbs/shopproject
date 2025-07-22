@@ -42,16 +42,16 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # 4) Copy PHP code (minus node_modules & public/build)
 WORKDIR /var/www
-COPY --chown=laravel:www-data . .
+COPY --chown=www-data . .
 
 # 5) Pull in built frontend assets
-COPY --from=nodebuilder --chown=laravel:www-data \
+COPY --from=nodebuilder --chown=www-data \
      /var/www/public/build /var/www/public/build
 
 # 6) Install PHP packages
 RUN composer install --no-dev --optimize-autoloader --no-interaction \
  && mkdir -p storage bootstrap/cache \
- && chown -R laravel:www-data storage bootstrap/cache
+ && chown -R www-data storage bootstrap/cache
 
 # 7) Ensure storage & cache are writable
 RUN mkdir -p storage bootstrap/cache \
