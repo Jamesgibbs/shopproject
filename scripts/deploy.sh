@@ -7,6 +7,9 @@ DEPLOY_PATH="${DEPLOY_PATH:-/var/www/laravel-app}"
 REPO_URL="git@github.com:Jamesgibbs/shopproject.git"
 ENV_FILE=".env"
 
+HOST_UID=$(id -u)
+HOST_GID=$(id -g)
+
 echo "🛠  Starting deployment script"
 echo "    Artifact: $ARTIFACT_PATH"
 echo "    Deploy path: $DEPLOY_PATH"
@@ -79,7 +82,9 @@ chmod -R 775 storage bootstrap/cache
 echo "🐳 Building and restarting Docker services…"
 docker-compose -f docker-compose.prod.yml down --remove-orphans
 docker system prune -f
-docker-compose -f docker-compose.prod.yml build --no-cache
+docker-compose -f docker-compose.prod.yml build --no-cache \
+  --build-arg PUID=$HOST_UID \
+  --build-arg PGID=$HOST_GID
 docker-compose -f docker-compose.prod.yml up -d
 
 docker-compose exec app chown -R laravel:www-data /var/www
