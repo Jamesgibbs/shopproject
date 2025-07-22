@@ -24,8 +24,8 @@ ARG PUID=1000
 ARG PGID=1000
 
 # 1) Create laravel:www-data
-RUN groupadd -g ${PGID} www-data \
- && useradd -u ${PUID} -g www-data -m laravel
+#RUN groupadd -g ${PGID} www-data \
+# && useradd -u ${PUID} -g www-data -m laravel
 
 # 2) System & PHP extensions
 RUN apt-get update \
@@ -55,8 +55,8 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction \
 
 # 7) Ensure storage & cache are writable
 RUN mkdir -p storage bootstrap/cache \
- && chown -R laravel:www-data storage bootstrap/cache
+ && chown -R www-data storage bootstrap/cache
 
 # 8) Run as non-root
-USER laravel
+USER www-data
 CMD ["php-fpm", "--nodaemonize"]
