@@ -51,6 +51,9 @@ jobs:
       - name: Copy .env.ci
         run: cp .env.ci .env
 
+      - name: Trust /var/www for Git
+        run: git config --global --add safe.directory /var/www
+
       - name: Install Composer Dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
 
