@@ -157,7 +157,7 @@ jobs:
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}"
           echo "DB_DATABASE=${{ secrets.DB_DATABASE }}"
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}"
-          echo "APP_URL=${{ secrets.HOST }}"
+          echo "APP_URL=${{ secrets.DB_CONTAINER }}"
 
       - name: Execute remote deploy script with secrets
         run: |
@@ -167,6 +167,8 @@ jobs:
              export DB_PASSWORD='${{ secrets.DB_PASSWORD }}' && \
              export DB_USERNAME='${{ secrets.DB_USERNAME }}' && \
              export DB_DATABASE='${{ secrets.DB_DATABASE }}' && \
+             export DB_CONTAINER='${{ secrets.DB_CONTAINER }}' && \
+             export HOST='${{ secrets.HOST }}' && \
              chmod +x /tmp/deploy.sh && \
              bash /tmp/deploy.sh /tmp/build.zip"
 

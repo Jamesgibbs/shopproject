@@ -51,6 +51,7 @@ echo "APP_ENV=production" >> "$ENV_FILE"
 echo "DB_DATABASE=$DB_DATABASE" >> "$ENV_FILE"
 echo "APP_DEBUG=false" >> "$ENV_FILE"
 echo "APP_URL=$HOST" >> "$ENV_FILE"
+echo "DB_HOST=$DB_CONTAINER" >> "$ENV_FILE"
 
 # 5. Permissions
 echo "🔐 Applying directory permissions…"
