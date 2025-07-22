@@ -10,6 +10,9 @@ ENV_FILE=".env"
 HOST_UID=$(id -u)
 HOST_GID=$(id -g)
 
+export UID=$HOST_UID
+export GID=$HOST_GID
+
 echo "🛠  Starting deployment script"
 echo "    Artifact: $ARTIFACT_PATH"
 echo "    Deploy path: $DEPLOY_PATH"
