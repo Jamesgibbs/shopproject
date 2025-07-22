@@ -56,7 +56,7 @@ fi
 
 # Inject required values
 inject_env_var "APP_ENV" "production"
-inject_env_var "APP_DEBUG" "false"
+inject_env_var "APP_DEBUG" "true"
 inject_env_var "APP_URL" "$HOST"
 inject_env_var "DB_HOST" "$DB_CONTAINER"
 inject_env_var "DB_DATABASE" "$DB_DATABASE"
