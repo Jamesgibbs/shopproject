@@ -171,13 +171,15 @@ jobs:
 
       - name: Build & push image
         uses: docker/build-push-action@v4
+        env:
+          REPO_OWNER: ${{ github.repository_owner }}
         with:
           context: .
           file: Dockerfile
           push: true
           tags: |
-            ghcr.io/your-org/laravel-app:latest
-            ghcr.io/your-org/laravel-app:${{ github.sha }}
+             ghcr.io/${{ github.repository_owner.toLower() }}/laravel-app:latest
+             ghcr.io/${{ github.repository_owner.toLower() }}/laravel-app:${{ github.sha }}
           build-args: |
             PUID=1000
             PGID=1000
