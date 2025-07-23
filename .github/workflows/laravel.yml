@@ -178,8 +178,8 @@ jobs:
           file: Dockerfile
           push: true
           tags: |
-             ghcr.io/${{ github.repository_owner.toLower() }}/laravel-app:latest
-             ghcr.io/${{ github.repository_owner.toLower() }}/laravel-app:${{ github.sha }}
+            ghcr.io/${{ toLower(github.repository_owner) }}/laravel-app:latest
+            ghcr.io/${{ toLower(github.repository_owner) }}/laravel-app:${{ github.sha }}
           build-args: |
             PUID=1000
             PGID=1000
