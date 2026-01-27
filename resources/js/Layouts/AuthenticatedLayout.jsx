@@ -15,6 +15,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { DarkModeProvider } from '@/Contexts/DarkModeContext'
 import DarkModeToggle from '@/Components/DarkMode/DarkModeToggle'
+import Footer from "@/Components/Footer.jsx";
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user
@@ -231,6 +232,7 @@ export default function AuthenticatedLayout({ header, children }) {
                 </main>
             </div>
             {children}
+            <Footer />
         </DarkModeProvider>
     )
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SupplierDashboardController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -107,6 +108,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::delete('/{product}', 'delete')->name('delete');
             Route::post('/update/{product}', 'update')->name('update');
         });
+
+        Route::get('/supplier/dashboard', [SupplierDashboardController::class, 'index'])
+            ->name('supplier.dashboard');
 
         // Sales History
         Route::get('/orders/sales-history', [OrderController::class, 'salesHistory'])->name('orders.salesHistory');

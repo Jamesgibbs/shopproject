@@ -1,0 +1,86 @@
+.form {
+    max-width: 380px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.status-message {
+    max-width: 380px;
+    margin: 1rem auto;
+    padding: 0.75rem 1rem;
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    text-align: center;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.input {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input:focus {
+    outline: none;
+    border-color: #666;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+}
+
+.error {
+    color: #d33;
+    font-size: 0.85rem;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.checkbox-text {
+    font-size: 0.9rem;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.link {
+    font-size: 0.9rem;
+    color: #333;
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+
+.link:hover {
+    color: #000;
+}
+
+.submit-btn {
+    padding: 0.7rem 1.2rem;
+    font-size: 1rem;
+    border-radius: 6px;
+}

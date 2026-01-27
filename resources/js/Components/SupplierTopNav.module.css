@@ -1,0 +1,30 @@
+.topnav {
+    height: 60px;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.brand {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #222;
+    text-decoration: none;
+}
+
+.right a {
+    margin-left: 1rem;
+    color: #333;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.right a:hover {
+    color: #000;
+}

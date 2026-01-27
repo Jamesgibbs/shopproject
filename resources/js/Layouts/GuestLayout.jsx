@@ -3,6 +3,7 @@ import CategoriesDropdown from '@/Components/CategoriesDropdown.jsx'
 import { usePage } from '@inertiajs/react'
 import styles from './GuestLayout.module.css'
 import Logo from "@/Components/Logo.jsx";
+import Footer from "@/Components/Footer.jsx";
 
 
 export default function GuestLayout({ header, children }) {
@@ -59,6 +60,8 @@ export default function GuestLayout({ header, children }) {
             )}
 
             <main className="page-content">{children}</main>
+            <Footer />
         </div>
+
     )
 }

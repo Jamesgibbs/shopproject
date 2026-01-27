@@ -5,6 +5,7 @@ import PrimaryButton from '@/Components/PrimaryButton'
 import TextInput from '@/Components/TextInput'
 import GuestLayout from '@/Layouts/GuestLayout'
 import { Head, Link, useForm } from '@inertiajs/react'
+import styles from './Login.module.css'
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -25,10 +26,10 @@ export default function Login({ status, canResetPassword }) {
         <GuestLayout>
             <Head title="Log in" />
 
-            {status && <div className="status-message">{status}</div>}
+            {status && <div className={styles.statusMessage}>{status}</div>}
 
-            <form onSubmit={submit} className="form">
-                <div className="form-group">
+            <form onSubmit={submit} className={styles.form}>
+                <div className={styles.formGroup}>
                     <InputLabel htmlFor="email" value="Email" />
 
                     <TextInput
@@ -36,16 +37,16 @@ export default function Login({ status, canResetPassword }) {
                         type="email"
                         name="email"
                         value={data.email}
-                        className="input"
+                        className={styles.input}
                         autoComplete="username"
                         isFocused={true}
                         onChange={(e) => setData('email', e.target.value)}
                     />
 
-                    <InputError message={errors.email} className="error" />
+                    <InputError message={errors.email} className={styles.error} />
                 </div>
 
-                <div className="form-group">
+                <div className={styles.formGroup}>
                     <InputLabel htmlFor="password" value="Password" />
 
                     <TextInput
@@ -53,33 +54,33 @@ export default function Login({ status, canResetPassword }) {
                         type="password"
                         name="password"
                         value={data.password}
-                        className="input"
+                        className={styles.input}
                         autoComplete="current-password"
                         onChange={(e) => setData('password', e.target.value)}
                     />
 
-                    <InputError message={errors.password} className="error" />
+                    <InputError message={errors.password} className={styles.error} />
                 </div>
 
-                <div className="checkbox-group">
-                    <label className="checkbox-label">
+                <div className={styles.checkboxGroup}>
+                    <label className={styles.checkboxLabel}>
                         <Checkbox
                             name="remember"
                             checked={data.remember}
                             onChange={(e) => setData('remember', e.target.checked)}
                         />
-                        <span className="checkbox-text">Remember me</span>
+                        <span className={styles.checkboxText}>Remember me</span>
                     </label>
                 </div>
 
-                <div className="form-actions">
+                <div className={styles.formActions}>
                     {canResetPassword && (
-                        <Link href={route('password.request')} className="link">
+                        <Link href={route('password.request')} className={styles.link}>
                             Forgot your password?
                         </Link>
                     )}
 
-                    <PrimaryButton className="submit-btn" disabled={processing}>
+                    <PrimaryButton className={styles.submitBtn} disabled={processing}>
                         Log in
                     </PrimaryButton>
                 </div>
