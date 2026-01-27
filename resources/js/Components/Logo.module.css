@@ -1,0 +1,29 @@
+.logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #222;
+    font-weight: 700;
+    font-size: 1.25rem;
+    gap: 0.5rem;
+}
+
+/* Three-line icon */
+.icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 18px;
+    height: 14px;
+}
+
+.icon div {
+    height: 2px;
+    background: #222;
+    border-radius: 2px;
+}
+
+/* Wordmark */
+.text {
+    letter-spacing: 0.5px;
+}

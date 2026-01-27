@@ -3,8 +3,9 @@ import CartTable from './CartTable.jsx'
 import { Link, router } from '@inertiajs/react'
 import { usePage, useForm } from '@inertiajs/react'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.jsx'
+import GuestLayout from "@/Layouts/GuestLayout.jsx";
 
-export default function ViewCart() {
+export default function ViewCart({ auth}) {
     const { cartItems = [] } = usePage().props
     const { post } = useForm()
 
@@ -12,7 +13,11 @@ export default function ViewCart() {
         router.post(route('cart.checkout'))
     }
 
+    const Layout = auth?.user ? AuthenticatedLayout : GuestLayout
+    console.log(Layout)
+
     return (
+        <Layout>
         <div className="min-h-screen bg-gray-50">
             <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
                 <div className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -58,7 +63,7 @@ export default function ViewCart() {
                 </div>
             </div>
         </div>
+        </Layout>
     )
 }
 
-ViewCart.layout = (page) => <AuthenticatedLayout children={page} />

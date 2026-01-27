@@ -1,0 +1,15 @@
+.card {
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fafafa;
+    transition: 0.2s;
+}
+
+.hover {
+    cursor: pointer;
+}
+
+.hover:hover {
+    background: #f0f0f0;
+}

@@ -1,10 +1,9 @@
-import ApplicationLogo from '@/Components/ApplicationLogo'
-import NavLink from '@/Components/NavLink'
 import { Link } from '@inertiajs/react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBox } from '@fortawesome/free-solid-svg-icons'
 import CategoriesDropdown from '@/Components/CategoriesDropdown.jsx'
 import { usePage } from '@inertiajs/react'
+import styles from './GuestLayout.module.css'
+import Logo from "@/Components/Logo.jsx";
+
 
 export default function GuestLayout({ header, children }) {
     const { categories } = usePage().props
@@ -16,24 +15,23 @@ export default function GuestLayout({ header, children }) {
                     <div className="navbar-inner">
                         {/* Left navigation */}
                         <div className="navbar-left">
-                            {/*<div className="logo-container">*/}
-                            {/*    <Link href="/">*/}
-                            {/*        <ApplicationLogo className="logo" />*/}
-                            {/*    </Link>*/}
-                            {/*</div>*/}
-
-                            {/*<div className="nav-links">*/}
-                            {/*    <NavLink*/}
-                            {/*        href={route('products.index')}*/}
-                            {/*        active={route().current('products.index')}*/}
-                            {/*    >*/}
-                            {/*        Categories <FontAwesomeIcon icon={faBox} />*/}
-                            {/*    </NavLink>*/}
-                            {/*</div>*/}
 
                             <div className="nav-links">
+                                <Logo />
                                 <CategoriesDropdown categories={categories} />
                             </div>
+
+                            <div className={styles.searchWrapper}>
+                                <form method="GET" action="/search" className={styles.searchForm}>
+                                    <input
+                                        type="text"
+                                        name="q"
+                                        placeholder="Search products…"
+                                        className={styles.searchInput}
+                                    />
+                                </form>
+                            </div>
+
                         </div>
 
                         {/* Right side */}
