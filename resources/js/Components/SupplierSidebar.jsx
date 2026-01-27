@@ -18,12 +18,10 @@ export default function SupplierSidebar() {
                     Dashboard
                 </Link>
 
-                <Link
-                    href="/supplier/products"
-                    className={isActive('/supplier/products') ? styles.active : ''}
-                >
+                <Link href="/supplier/products" className={isActive('/supplier/products') ? styles.active : ''}>
                     Products
                 </Link>
+
 
                 <Link
                     href="/supplier/orders"

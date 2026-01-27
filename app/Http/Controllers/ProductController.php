@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
-use App\Enums\Role;
-use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -13,6 +13,17 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
+
+    public function supplierIndex()
+    {
+        $products = Product::where('supplier_id', auth()->id())->paginate(20);
+
+        return Inertia::render('Products/SupplierIndex', [
+            'products' => $products,
+        ]);
+    }
+
+
     public function index()
     {
         $query = Product::with('supplier')
@@ -94,21 +105,32 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'stock_quantity' => 'required|integer|min:0',
+            'name' => 'required',
+            'description' => 'required',
+            'price' => 'required|numeric',
+            'stock_quantity' => 'required|integer',
+            'categories' => 'array',
+            'categories.*' => 'exists:categories,id',
         ]);
 
         $product->update($validated);
 
-        return redirect()->back()->with('success', 'Product updated!');
+        // Sync pivot table
+        $product->categories()->sync($validated['categories'] ?? []);
+
+        return redirect()->route('supplier.products.index')->with('success', 'Product updated.');
     }
+
 
     public function edit(Product $product)
     {
-        return Inertia::render('Products/Edit', ['product' => $product]);
+        return Inertia::render('Products/Edit', [
+            'product' => $product->load('categories'),
+            'categories' => Category::all(),
+            'selectedCategory' => $product->categories->pluck('id'),
+        ]);
     }
+
 
     public function delete(Product $product)
     {

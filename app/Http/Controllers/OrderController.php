@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Mail\OrderConfirmation;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
@@ -25,6 +28,15 @@ class OrderController extends Controller
         return Inertia::render('Orders/Index', [
             'pendingOrders' => $pendingOrders->map(fn($order) => $this->transformOrder($order)),
             'previousOrders' => $otherOrders->map(fn($order) => $this->transformOrder($order)),
+        ]);
+    }
+
+    public function supplierIndex()
+    {
+        $orders = Order::where('supplier_id', auth()->id())->paginate(20);
+
+        return Inertia::render('Orders/SupplierIndex', [
+            'orders' => $orders,
         ]);
     }
 

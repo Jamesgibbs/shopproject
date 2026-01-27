@@ -19,6 +19,10 @@ return new class extends Migration
             $table->string('billing_address')->nullable();
             $table->string('email_address')->nullable();
             $table->string('phone_number')->nullable();
+            $table->foreignId('supplier_id')
+                ->nullable()
+                ->constrained('users')
+                ->cascadeOnDelete();
             $table->enum('status', ['pending', 'paid', 'shipped', 'cancelled'])->default('pending');
             $table->timestamps();
         });

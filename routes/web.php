@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Role;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrderController;
@@ -27,12 +28,19 @@ use Inertia\Inertia;
 |--------------------------------------------------------------------------
 */
 Route::get('/dashboard', function () {
+    $user = Auth::user();
+
+    if ($user && $user->role === Role::SUPPLIER->value) {
+        return redirect()->route('supplier.dashboard');
+    }
+
     return Inertia::render('Dashboard', [
         'auth' => [
-            'user' => Auth::user(),
+            'user' => $user,
         ],
     ]);
 })->name('dashboard');
+
 
 
 Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
@@ -44,6 +52,8 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('/products', 'index')->name('products.index');
     Route::get('/products/{product}', 'view')->name('products.view');
 });
+
+
 
 // Categories(Public View)
 Route::controller(CategoryController::class)->group(function () {
@@ -101,12 +111,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
     */
 
     Route::middleware('supplier')->group(function () {
+
+        Route::get('/supplier/products', [ProductController::class, 'supplierIndex'])
+            ->name('supplier.products.index');
+
+        Route::get('/supplier/orders', [OrderController::class, 'supplierIndex'])
+            ->name('supplier.orders.index');
         // Product Management
         Route::controller(ProductController::class)->prefix('products')->name('products.')->group(function () {
             Route::post('/', 'store')->name('store');
             Route::get('/edit-product/{product}', 'edit')->name('edit');
             Route::delete('/{product}', 'delete')->name('delete');
             Route::post('/update/{product}', 'update')->name('update');
+
+            Route::get('/supplier/products', [ProductController::class, 'supplierIndex'])
+                ->name('supplier.products.index');
         });
 
         Route::get('/supplier/dashboard', [SupplierDashboardController::class, 'index'])

@@ -1,0 +1,61 @@
+.editProductPage {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.editTitle {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+.editForm {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.editSubtitle {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.formErrors {
+    color: #b00000;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.btnPrimary {
+    display: block;
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 1rem;
+    background: #0055cc;
+    color: white;
+    border-radius: 4px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.btnSecondary {
+    display: block;
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 1rem;
+    background: #444;
+    color: white;
+    border-radius: 4px;
+    text-align: center;
+    cursor: pointer;
+}
