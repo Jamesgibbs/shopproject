@@ -1,43 +1,45 @@
-import { useState } from 'react';
-import { Head, useForm } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import { router } from '@inertiajs/react';
+import { useState } from 'react'
+import { Head, useForm } from '@inertiajs/react'
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
+import InputError from '@/Components/InputError'
+import InputLabel from '@/Components/InputLabel'
+import PrimaryButton from '@/Components/PrimaryButton'
+import TextInput from '@/Components/TextInput'
+import { router } from '@inertiajs/react'
 
 export default function PaymentForm({ auth }) {
-
     const { data, setData, processing, reset } = useForm({
         cardNumber: '',
         expiryDate: '',
         cvv: '',
-        cardName: ''
-    });
+        cardName: '',
+    })
 
-    const [message, setMessage] = useState('');
+    const [message, setMessage] = useState('')
 
     const handleSubmit = (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
         // Demo card validation
         if (data.cardNumber === '4242424242424242') {
-            setMessage('Payment processed successfully! (Demo Mode)');
+            setMessage('Payment processed successfully! (Demo Mode)')
             // Optional: reset form
             setTimeout(() => {
-                router.post(route('payment.process'));
-            }, 1500);
-
+                router.post(route('payment.process'))
+            }, 1500)
         } else {
-            setMessage('For demo, use test card: 4242 4242 4242 4242');
+            setMessage('For demo, use test card: 4242 4242 4242 4242')
         }
-    };
+    }
 
     return (
         <AuthenticatedLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Payment Information</h2>}
+            header={
+                <h2 className="font-semibold text-xl text-gray-800 leading-tight">
+                    Payment Information
+                </h2>
+            }
         >
             <Head title="Payment Information" />
 
@@ -46,7 +48,9 @@ export default function PaymentForm({ auth }) {
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6">
                             {message && (
-                                <div className={`mb-4 p-4 rounded ${message.includes('successfully') ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                                <div
+                                    className={`mb-4 p-4 rounded ${message.includes('successfully') ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}
+                                >
                                     {message}
                                 </div>
                             )}
@@ -72,7 +76,9 @@ export default function PaymentForm({ auth }) {
                                         type="text"
                                         value={data.cardNumber}
                                         className="mt-1 block w-full"
-                                        onChange={(e) => setData('cardNumber', e.target.value.replace(/\s/g, ''))}
+                                        onChange={(e) =>
+                                            setData('cardNumber', e.target.value.replace(/\s/g, ''))
+                                        }
                                         required
                                         maxLength="16"
                                         placeholder="4242 4242 4242 4242"
@@ -129,5 +135,5 @@ export default function PaymentForm({ auth }) {
                 </div>
             </div>
         </AuthenticatedLayout>
-    );
+    )
 }

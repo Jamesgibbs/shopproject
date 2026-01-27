@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Link } from '@inertiajs/react'
 
 export default function Pagination({ links }) {
     return (
@@ -21,9 +21,8 @@ export default function Pagination({ links }) {
                         }`}
                         dangerouslySetInnerHTML={{ __html: link.label }}
                     />
-                );
+                )
             })}
         </div>
-    );
-
+    )
 }

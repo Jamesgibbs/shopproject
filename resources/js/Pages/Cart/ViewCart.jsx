@@ -1,17 +1,16 @@
-import React from 'react';
-import CartTable from "./CartTable.jsx";
-import { Link, router } from '@inertiajs/react';
-import { usePage, useForm } from "@inertiajs/react";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
-
+import React from 'react'
+import CartTable from './CartTable.jsx'
+import { Link, router } from '@inertiajs/react'
+import { usePage, useForm } from '@inertiajs/react'
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.jsx'
 
 export default function ViewCart() {
-    const { cartItems = [] } = usePage().props;
-    const { post } = useForm();
+    const { cartItems = [] } = usePage().props
+    const { post } = useForm()
 
     const handleCheckout = () => {
-        router.post(route('cart.checkout'));
-    };
+        router.post(route('cart.checkout'))
+    }
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -19,14 +18,12 @@ export default function ViewCart() {
                 <div className="bg-white rounded-lg shadow-lg overflow-hidden">
                     <div className="p-6 border-b border-gray-200">
                         <div className="flex justify-between items-center">
-                            <h1 className="text-3xl font-extrabold text-gray-900">
-                                Shopping Cart
-                            </h1>
+                            <h1 className="text-3xl font-extrabold text-gray-900">Shopping Cart</h1>
                         </div>
                     </div>
 
                     <div className="p-6">
-                        <CartTable cartItems={cartItems}/>
+                        <CartTable cartItems={cartItems} />
 
                         <div className="mt-6">
                             {Array.isArray(cartItems) && cartItems.length > 0 ? (
@@ -61,7 +58,7 @@ export default function ViewCart() {
                 </div>
             </div>
         </div>
-    );
+    )
 }
 
-ViewCart.layout = page => <AuthenticatedLayout children={page} />;
+ViewCart.layout = (page) => <AuthenticatedLayout children={page} />

@@ -1,0 +1,134 @@
+/* Global */
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: #f3f4f6;
+    color: #111827;
+}
+
+.page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header */
+.header {
+    background: #1f2937;
+    color: white;
+    padding: 20px 30px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer */
+.footer {
+    background: #1f2937;
+    color: #d1d5db;
+    padding: 15px 30px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+/* Middle layout */
+.content {
+    display: flex;
+    flex: 1;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    background: #111827;
+    color: #e5e7eb;
+    padding: 25px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.sidebar h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #f9fafb;
+}
+
+.sidebar a {
+    color: #d1d5db;
+    text-decoration: none;
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px; /* space between icon + text */
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.sidebar a:hover {
+    color: white;
+}
+
+/* Main content */
+.main {
+    flex: 1;
+    padding: 30px;
+    background: #f9fafb;
+}
+
+/* Example button */
+.btn {
+    padding: 12px 20px;
+    background: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn:hover {
+    background: #4338ca;
+}
+
+/* Container for each menu group */
+.menu-item {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Main clickable row */
+.menu-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    color: #d1d5db;
+    cursor: pointer;
+}
+
+/* Submenu container */
+.submenu {
+    display: none;
+    flex-direction: column;
+    padding-left: 25px;
+    gap: 8px;
+}
+
+.submenu a {
+    color: #9ca3af;
+    font-size: 0.9rem;
+}
+
+.submenu a:hover {
+    color: white;
+}
+
+/* Rotate arrow when open */
+.menu-item.open .arrow {
+    transform: rotate(180deg);
+}

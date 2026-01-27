@@ -1,7 +1,7 @@
-import { useDarkMode } from '@/Contexts/DarkModeContext';
+import { useDarkMode } from '@/Contexts/DarkModeContext'
 
 export default function DarkModeToggle() {
-    const { darkMode, toggleDarkMode } = useDarkMode();
+    const { darkMode, toggleDarkMode } = useDarkMode()
 
     return (
         <button
@@ -29,5 +29,5 @@ export default function DarkModeToggle() {
                 </svg>
             )}
         </button>
-    );
+    )
 }

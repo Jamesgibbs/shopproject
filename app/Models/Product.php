@@ -19,6 +19,7 @@ class Product extends Model
         'price',
         'supplier_id',
         'stock_quantity',
+        'image',
     ];
 
     public function supplier()
@@ -57,6 +58,4 @@ class Product extends Model
     {
         return $this->belongsToMany(Category::class);
     }
-
-
 }

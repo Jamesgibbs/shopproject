@@ -1,6 +1,6 @@
 ## Project Info
 
-Shop application built using Php 8.3/Laravel ReactJS MySql breeze Inertia 
+Shop application built using Php 8.3/Laravel ReactJS MySql breeze Inertia
 
 The Application has a login section with registration, where you can select a role type of Customer or Supplier.
 
@@ -23,19 +23,19 @@ Make sure the following are installed and properly configured:
 - clone to working dir and setup as usual
 - copy the .env.example to .env and change vars according your system
 - composer install
-- Create a new Mysql Database  
+- Create a new Mysql Database
 - copy variables from .env.example and create .env in the same directory
 - Replace the values for the DB with your Mysql Database credentials
-  - DB_DATABASE=your_database_name
-  - DB_USERNAME=your_mysql_username
-  - DB_PASSWORD=your_mysql_password
-  
+    - DB_DATABASE=your_database_name
+    - DB_USERNAME=your_mysql_username
+    - DB_PASSWORD=your_mysql_password
 - php artisan key:generate
 - php artisan optimize
 - php artisan migrate
 - php artisan db:seed
 
 Install Front end Dependencies
+
 - npm install
 - npm run build (or npm run dev on local)
 

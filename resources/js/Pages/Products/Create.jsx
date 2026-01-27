@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { useForm, router } from '@inertiajs/react';
-import MultiSelect from '@/Components/Multiselect';
-
+import React, { useState } from 'react'
+import { useForm, router } from '@inertiajs/react'
+import MultiSelect from '@/Components/Multiselect'
 
 export default function Create({ categories, onSuccess }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -11,46 +10,50 @@ export default function Create({ categories, onSuccess }) {
         stock_quantity: '',
         image: null,
         categories: [],
-    });
+    })
 
-    const [submitted, setSubmitted] = useState(false);
-    const [imagePreview, setImagePreview] = useState(null);
+    const [submitted, setSubmitted] = useState(false)
+    const [imagePreview, setImagePreview] = useState(null)
 
     const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        setData('image', file);
+        const file = e.target.files[0]
+        setData('image', file)
 
         // Create preview URL
         if (file) {
-            const reader = new FileReader();
+            const reader = new FileReader()
             reader.onloadend = () => {
-                setImagePreview(reader.result);
-            };
-            reader.readAsDataURL(file);
+                setImagePreview(reader.result)
+            }
+            reader.readAsDataURL(file)
         } else {
-            setImagePreview(null);
+            setImagePreview(null)
         }
-    };
-
+    }
 
     const handleSubmit = (e) => {
-        e.preventDefault();
+        e.preventDefault()
         post('/products', {
             onSuccess: () => {
-                reset();
-                if (onSuccess) onSuccess(); // Close form in parent
-            }
-        });
-    };
+                reset()
+                if (onSuccess) onSuccess() // Close form in parent
+            },
+        })
+    }
 
     return (
         <>
             {!submitted && (
-                <form onSubmit={handleSubmit} className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md space-y-6">
+                <form
+                    onSubmit={handleSubmit}
+                    className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md space-y-6"
+                >
                     <h1 className="text-xl font-bold text-gray-800">Add Product</h1>
 
                     <div className="flex flex-col">
-                        <label htmlFor="name" className="mb-1 font-medium text-gray-700">Name</label>
+                        <label htmlFor="name" className="mb-1 font-medium text-gray-700">
+                            Name
+                        </label>
                         <input
                             id="name"
                             type="text"
@@ -62,7 +65,9 @@ export default function Create({ categories, onSuccess }) {
                     </div>
 
                     <div className="flex flex-col">
-                        <label htmlFor="description" className="mb-1 font-medium text-gray-700">Description</label>
+                        <label htmlFor="description" className="mb-1 font-medium text-gray-700">
+                            Description
+                        </label>
                         <textarea
                             id="description"
                             placeholder="Product description"
@@ -73,7 +78,9 @@ export default function Create({ categories, onSuccess }) {
                     </div>
 
                     <div className="flex flex-col">
-                        <label htmlFor="price" className="mb-1 font-medium text-gray-700">Price</label>
+                        <label htmlFor="price" className="mb-1 font-medium text-gray-700">
+                            Price
+                        </label>
                         <input
                             id="price"
                             type="number"
@@ -85,7 +92,9 @@ export default function Create({ categories, onSuccess }) {
                     </div>
 
                     <div className="flex flex-col">
-                        <label htmlFor="stock" className="mb-1 font-medium text-gray-700">Stock Quantity</label>
+                        <label htmlFor="stock" className="mb-1 font-medium text-gray-700">
+                            Stock Quantity
+                        </label>
                         <input
                             id="stock"
                             type="number"
@@ -113,7 +122,9 @@ export default function Create({ categories, onSuccess }) {
                                     hover:file:bg-indigo-100"
                                     accept="image/*"
                                 />
-                                {errors.image && <div className="text-red-500 text-sm">{errors.image}</div>}
+                                {errors.image && (
+                                    <div className="text-red-500 text-sm">{errors.image}</div>
+                                )}
                             </div>
                         </div>
                         {imagePreview && (
@@ -128,19 +139,22 @@ export default function Create({ categories, onSuccess }) {
                     </div>
 
                     <div>
-                        <label htmlFor="categories" className="block text-sm font-medium text-gray-700">
+                        <label
+                            htmlFor="categories"
+                            className="block text-sm font-medium text-gray-700"
+                        >
                             Categories
                         </label>
                         <MultiSelect
                             options={categories}
                             value={data.categories}
-                            onChange={value => setData('categories', value)}
+                            onChange={(value) => setData('categories', value)}
                             className="mt-1"
                         />
-                        {errors.categories && <div className="text-red-500 text-sm mt-1">{errors.categories}</div>}
+                        {errors.categories && (
+                            <div className="text-red-500 text-sm mt-1">{errors.categories}</div>
+                        )}
                     </div>
-
-
 
                     {errors && (
                         <div className="text-red-600 font-medium">
@@ -158,6 +172,5 @@ export default function Create({ categories, onSuccess }) {
                 </form>
             )}
         </>
-    );
-
+    )
 }

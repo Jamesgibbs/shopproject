@@ -3,11 +3,12 @@
 namespace Database\Factories;
 
 use App\Enums\Role;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
+ * @extends Factory<Product>
  */
 class ProductFactory extends Factory
 {
@@ -24,6 +25,7 @@ class ProductFactory extends Factory
             'supplier_id' => User::where('role', Role::SUPPLIER->value)->inRandomOrder()->first()?->id ?? User::factory(),
             'description' => $this->faker->words(5, true),
             'stock_quantity' => $this->faker->numberBetween(1, 100),
+            'image' => "https://picsum.photos/seed/product-{$this->faker->unique()->numberBetween(1,9999)}/600/300",
         ];
     }
 }

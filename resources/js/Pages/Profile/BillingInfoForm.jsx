@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { Head, useForm } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
+import { useState } from 'react'
+import { Head, useForm } from '@inertiajs/react'
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
+import InputError from '@/Components/InputError'
+import InputLabel from '@/Components/InputLabel'
+import PrimaryButton from '@/Components/PrimaryButton'
+import TextInput from '@/Components/TextInput'
 
 export default function BillingInfoForm({ auth, billingInfo }) {
     const { data, setData, post, processing, errors } = useForm({
@@ -12,19 +12,19 @@ export default function BillingInfoForm({ auth, billingInfo }) {
         billing_address: billingInfo ? billingInfo.billing_address : '',
         email_address: billingInfo ? billingInfo.email_address : '',
         phone_number: billingInfo ? billingInfo.phone_number : '',
-    });
+    })
 
     const submit = (e) => {
-        e.preventDefault();
-        post(route('profile.savebillinginfo'));
-    };
+        e.preventDefault()
+        post(route('profile.savebillinginfo'))
+    }
 
     return (
         <AuthenticatedLayout
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    { billingInfo ? 'Update Billing Information' : 'Add Billing Information' }
+                    {billingInfo ? 'Update Billing Information' : 'Add Billing Information'}
                 </h2>
             }
         >
@@ -102,5 +102,5 @@ export default function BillingInfoForm({ auth, billingInfo }) {
                 </div>
             </div>
         </AuthenticatedLayout>
-    );
+    )
 }

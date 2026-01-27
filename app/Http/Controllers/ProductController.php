@@ -16,18 +16,17 @@ class ProductController extends Controller
     public function index()
     {
         $query = Product::with('supplier')
-            ->when(auth()->user()->role === 'supplier', function ($query) {
-                $query->where('supplier_id', auth()->id());
-            })
+//            ->when(auth()?->user()?->role === Role::SUPPLIER->value, function ($query) {
+//                $query->where('supplier_id', auth()->id());
+//            })
             ->orderBy('created_at', 'desc');
+
+
 
         $products = $query->paginate(10);
 
-        $categorires = Category::all();
-
         return Inertia::render('Products/Index', [
             'products' => $products,
-            'categories' => $categorires,
         ]);
     }
 

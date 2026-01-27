@@ -1,58 +1,58 @@
 version: '3.9'
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        PUID: ${UID:-1000}
-        PGID: ${GID:-1000}
-    image: laravel-app:latest
-    restart: unless-stopped
-    env_file:
-      - .env
-    volumes:
-      - storage_data:/var/www/storage
-      - cache_data:/var/www/bootstrap/cache
-    networks:
-      - laravel-network
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            args:
+                PUID: ${UID:-1000}
+                PGID: ${GID:-1000}
+        image: laravel-app:latest
+        restart: unless-stopped
+        env_file:
+            - .env
+        volumes:
+            - storage_data:/var/www/storage
+            - cache_data:/var/www/bootstrap/cache
+        networks:
+            - laravel-network
 
-  nginx:
-    image: nginx:alpine
-    restart: unless-stopped
-    ports:
-      - "${NGINX_PORT:-80}:80"
-    volumes:
-      - storage_data:/var/www/storage:ro
-      - cache_data:/var/www/bootstrap/cache:ro
-      - ./docker/nginx/app.conf:/etc/nginx/conf.d/default.conf:ro
-    depends_on:
-      - app
-    networks:
-      - laravel-network
+    nginx:
+        image: nginx:alpine
+        restart: unless-stopped
+        ports:
+            - '${NGINX_PORT:-80}:80'
+        volumes:
+            - storage_data:/var/www/storage:ro
+            - cache_data:/var/www/bootstrap/cache:ro
+            - ./docker/nginx/app.conf:/etc/nginx/conf.d/default.conf:ro
+        depends_on:
+            - app
+        networks:
+            - laravel-network
 
-  db:
-    image: mysql:8.0
-    restart: unless-stopped
-    env_file:
-      - .env
-    volumes:
-      - dbdata:/var/lib/mysql
-    networks:
-      - laravel-network
+    db:
+        image: mysql:8.0
+        restart: unless-stopped
+        env_file:
+            - .env
+        volumes:
+            - dbdata:/var/lib/mysql
+        networks:
+            - laravel-network
 
-  redis:
-    image: redis:alpine
-    restart: unless-stopped
-    networks:
-      - laravel-network
+    redis:
+        image: redis:alpine
+        restart: unless-stopped
+        networks:
+            - laravel-network
 
 volumes:
-  dbdata:
-  storage_data:
-  cache_data:
+    dbdata:
+    storage_data:
+    cache_data:
 
 networks:
-  laravel-network:
-    driver: bridge
+    laravel-network:
+        driver: bridge

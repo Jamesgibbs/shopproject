@@ -1,23 +1,23 @@
-import { useEffect, useState } from 'react';
-import { usePage } from '@inertiajs/react';
+import { useEffect, useState } from 'react'
+import { usePage } from '@inertiajs/react'
 
 const FlashMessage = () => {
-    const { props } = usePage();
-    const flash = props.flash || {};
-    const [visible, setVisible] = useState(true);
+    const { props } = usePage()
+    const flash = props.flash || {}
+    const [visible, setVisible] = useState(true)
 
     useEffect(() => {
         if (flash.success || flash.error) {
-            setVisible(true);
-            const timeout = setTimeout(() => setVisible(false), 3000);
-            return () => clearTimeout(timeout);
+            setVisible(true)
+            const timeout = setTimeout(() => setVisible(false), 3000)
+            return () => clearTimeout(timeout)
         }
-    }, [flash.success, flash.error]);
+    }, [flash.success, flash.error])
 
-    if (!visible || (!flash.success && !flash.error)) return null;
+    if (!visible || (!flash.success && !flash.error)) return null
 
-    const message = flash.success || flash.error;
-    const isSuccess = !!flash.success;
+    const message = flash.success || flash.error
+    const isSuccess = !!flash.success
 
     return (
         <div
@@ -27,9 +27,7 @@ const FlashMessage = () => {
         >
             {message}
         </div>
-    );
-};
+    )
+}
 
-export default FlashMessage;
-
-
+export default FlashMessage

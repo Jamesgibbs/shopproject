@@ -1,17 +1,19 @@
-import { Head } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { Head } from '@inertiajs/react'
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
+import GuestLayout from '@/Layouts/GuestLayout.jsx'
 
 const StarRating = ({ rating }) => {
     return (
-        <div className="flex items-center">
+        <div style={{ display: 'flex', alignItems: 'center' }}>
             {[1, 2, 3, 4, 5].map((star) => (
                 <svg
                     key={star}
-                    className={`w-5 h-5 ${
-                        star <= Math.round(rating)
-                            ? 'text-yellow-400'
-                            : 'text-gray-300'
-                    }`}
+                    style={{
+                        width: '20px',
+                        height: '20px',
+                        color: star <= Math.round(rating) ? '#facc15' : '#d1d5db',
+                        marginRight: '2px',
+                    }}
                     fill="currentColor"
                     viewBox="0 0 20 20"
                 >
@@ -19,70 +21,163 @@ const StarRating = ({ rating }) => {
                 </svg>
             ))}
         </div>
-    );
-};
+    )
+}
 
 const ReviewCard = ({ review }) => {
     return (
-        <div className="bg-white p-4 rounded-lg shadow mb-4">
-            <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center">
-                    <span className="font-semibold text-gray-800">{review.user.name}</span>
-                    <span className="text-gray-400 text-sm ml-2">
+        <div
+            style={{
+                background: '#fff',
+                padding: '1rem',
+                borderRadius: '8px',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                marginBottom: '1rem',
+            }}
+        >
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginBottom: '0.5rem',
+                }}
+            >
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <span style={{ fontWeight: '600', color: '#1f2937' }}>{review.user.name}</span>
+                    <span
+                        style={{
+                            color: '#9ca3af',
+                            fontSize: '0.875rem',
+                            marginLeft: '0.5rem',
+                        }}
+                    >
                         {new Date(review.created_at).toLocaleDateString()}
                     </span>
                 </div>
+
                 <StarRating rating={review.rating} />
             </div>
-            <p className="text-gray-600">{review.comment}</p>
+
+            <p style={{ color: '#4b5563' }}>{review.comment}</p>
         </div>
-    );
-};
+    )
+}
 
-export default function Product({ product }) {
+export default function Product({ product, auth }) {
+    const Layout = auth?.user ? AuthenticatedLayout : GuestLayout
+
     return (
-        <AuthenticatedLayout
-            header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    {product.name}
-                </h2>
-            }
-        >
-            <Head title={product.name} />
+        <Layout>
+            <div style={{ padding: '3rem 0' }}>
+                <div
+                    style={{
+                        maxWidth: '1100px',
+                        margin: '0 auto',
+                        padding: '0 1rem',
+                    }}
+                >
+                    <div
+                        style={{
+                            background: '#fff',
+                            borderRadius: '8px',
+                            overflow: 'hidden',
+                            boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                        }}
+                    >
+                        <div style={{ padding: '1.5rem' }}>
+                            {/* Product Details */}
+                            <div style={{ marginBottom: '2rem' }}>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        gap: '2rem',
+                                        alignItems: 'flex-start',
+                                    }}
+                                >
+                                    <img
+                                        src={product.image}
+                                        alt={product.name}
+                                        style={{
+                                            width: '300px',
+                                            height: '300px',
+                                            objectFit: 'cover',
+                                            borderRadius: '8px',
+                                            flexShrink: 0,
+                                        }}
+                                    />
 
-            <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6">
-                            {/* Product Details Section */}
-                            <div className="mb-8">
-                                <div className="flex justify-between items-start">
                                     <div>
-                                        <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-                                        <div className="flex items-center mb-4">
+                                        <h1
+                                            style={{
+                                                fontSize: '2rem',
+                                                fontWeight: '700',
+                                                marginBottom: '0.5rem',
+                                            }}
+                                        >
+                                            {product.name}
+                                        </h1>
+
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                marginBottom: '1rem',
+                                            }}
+                                        >
                                             <StarRating rating={product.average_rating} />
-                                            <span className="ml-2 text-gray-600">
-                                                {product.average_rating.toFixed(1)} ({product.reviews_count} reviews)
+
+                                            <span
+                                                style={{
+                                                    marginLeft: '0.5rem',
+                                                    color: '#4b5563',
+                                                }}
+                                            >
+                                                {product.average_rating.toFixed(1)} (
+                                                {product.reviews_count} reviews)
                                             </span>
                                         </div>
-                                        <p className="text-2xl font-bold text-gray-900">
+
+                                        <p
+                                            style={{
+                                                fontSize: '1.5rem',
+                                                fontWeight: '700',
+                                                color: '#111827',
+                                            }}
+                                        >
                                             ${product.price}
                                         </p>
-                                        <p className="mt-4 text-gray-600">{product.description}</p>
+
+                                        <p
+                                            style={{
+                                                marginTop: '1rem',
+                                                color: '#4b5563',
+                                            }}
+                                        >
+                                            {product.description}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Reviews Section */}
-                            <div className="mt-8">
-                                <h2 className="text-2xl font-bold mb-4">Customer Reviews</h2>
-                                <div className="space-y-4">
+                            {/* Reviews */}
+                            <div style={{ marginTop: '2rem' }}>
+                                <h2
+                                    style={{
+                                        fontSize: '1.5rem',
+                                        fontWeight: '700',
+                                        marginBottom: '1rem',
+                                    }}
+                                >
+                                    Customer Reviews
+                                </h2>
+
+                                <div>
                                     {product.reviews.length > 0 ? (
                                         product.reviews.map((review) => (
                                             <ReviewCard key={review.id} review={review} />
                                         ))
                                     ) : (
-                                        <p className="text-gray-500">No reviews yet</p>
+                                        <p style={{ color: '#6b7280' }}>No reviews yet</p>
                                     )}
                                 </div>
                             </div>
@@ -90,6 +185,6 @@ export default function Product({ product }) {
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
-    );
+        </Layout>
+    )
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
@@ -15,9 +16,9 @@ use Inertia\Inertia;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
-    return Auth::check() ? redirect()->route('dashboard') : redirect()->route('login');
-})->name('home');
+//Route::get('/', function () {
+//    return Auth::check() ? redirect()->route('dashboard') : redirect()->route('login');
+//})->name('home');
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,21 @@ Route::get('/dashboard', function () {
 })->name('dashboard');
 
 
+Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
+
+
+
+// Products (Public View)
+Route::controller(ProductController::class)->group(function () {
+    Route::get('/products', 'index')->name('products.index');
+    Route::get('/products/{product}', 'view')->name('products.view');
+});
+
+// Categories(Public View)
+Route::controller(CategoryController::class)->group(function () {
+    Route::get('/categories', 'index')->name('categories.index');
+    Route::get('/categories/{category}', 'show')->name('categories.show');
+});
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard
@@ -42,12 +58,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/profile', 'edit')->name('profile.edit');
         Route::patch('/profile', 'update')->name('profile.update');
         Route::delete('/profile', 'destroy')->name('profile.destroy');
-    });
-
-    // Products (Public View)
-    Route::controller(ProductController::class)->group(function () {
-        Route::get('/products', 'index')->name('products.index');
-        Route::get('/products/{product}', 'view')->name('products.view');
     });
 
     /*
@@ -60,7 +70,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Cart Management
         Route::controller(CartController::class)->prefix('cart')->name('cart.')->group(function () {
             Route::post('/', 'addToCart')->name('add');
-            Route::get('/', 'viewCart')->name('view');
             Route::post('/remove', 'removeFromCart')->name('remove');
             Route::post('/checkout', 'checkout')->name('checkout');
             Route::post('/update-quantity', 'updateQuantity')->name('updateQuantity');

@@ -1,9 +1,9 @@
-import React from 'react';
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
-import { useForm, usePage, Link } from '@inertiajs/react';
+import React from 'react'
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.jsx'
+import { useForm, usePage, Link } from '@inertiajs/react'
 
 export default function Edit() {
-    const { product, errors } = usePage().props;
+    const { product, errors } = usePage().props
 
     const { data, setData, post, processing } = useForm({
         id: product.id,
@@ -11,13 +11,12 @@ export default function Edit() {
         description: product.description || '',
         price: product.price || 0,
         stock_quantity: product.stock_quantity || 0,
-    });
+    })
 
     const handleSubmit = (e) => {
-        e.preventDefault();
-        post(`/products/update/${product.id}`);
-
-    };
+        e.preventDefault()
+        post(`/products/update/${product.id}`)
+    }
 
     return (
         <>
@@ -25,11 +24,16 @@ export default function Edit() {
                 <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">Edit Product</h1>
             </div>
 
-            <form onSubmit={handleSubmit} className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md space-y-6">
+            <form
+                onSubmit={handleSubmit}
+                className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md space-y-6"
+            >
                 <h2 className="text-xl font-bold text-gray-800">Edit Product</h2>
 
                 <div className="flex flex-col">
-                    <label htmlFor="name" className="mb-1 font-medium text-gray-700">Name</label>
+                    <label htmlFor="name" className="mb-1 font-medium text-gray-700">
+                        Name
+                    </label>
                     <input
                         id="name"
                         type="text"
@@ -41,7 +45,9 @@ export default function Edit() {
                 </div>
 
                 <div className="flex flex-col">
-                    <label htmlFor="description" className="mb-1 font-medium text-gray-700">Description</label>
+                    <label htmlFor="description" className="mb-1 font-medium text-gray-700">
+                        Description
+                    </label>
                     <textarea
                         id="description"
                         placeholder="Product description"
@@ -52,7 +58,9 @@ export default function Edit() {
                 </div>
 
                 <div className="flex flex-col">
-                    <label htmlFor="price" className="mb-1 font-medium text-gray-700">Price</label>
+                    <label htmlFor="price" className="mb-1 font-medium text-gray-700">
+                        Price
+                    </label>
                     <input
                         id="price"
                         type="number"
@@ -64,7 +72,9 @@ export default function Edit() {
                 </div>
 
                 <div className="flex flex-col">
-                    <label htmlFor="stock_quantity" className="mb-1 font-medium text-gray-700">Stock Quantity</label>
+                    <label htmlFor="stock_quantity" className="mb-1 font-medium text-gray-700">
+                        Stock Quantity
+                    </label>
                     <input
                         id="stock_quantity"
                         type="number"
@@ -96,9 +106,8 @@ export default function Edit() {
                     Back to Products
                 </Link>
             </form>
-
         </>
-    );
+    )
 }
 
-Edit.layout = page => <AuthenticatedLayout children={page} />;
+Edit.layout = (page) => <AuthenticatedLayout children={page} />
