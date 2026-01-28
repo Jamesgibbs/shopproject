@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Test Supplier User',
                 'password' => Hash::make('password'),
                 'role' => 'supplier',
+                'email_verified_at' => now(),
             ]);
 
         User::firstOrCreate(
@@ -31,6 +32,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Test Customer User',
                 'password' => Hash::make('password'),
                 'role' => 'customer',
+                'email_verified_at' => now(),
             ]);
 
         $topLevelNames = [

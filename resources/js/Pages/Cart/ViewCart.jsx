@@ -4,6 +4,7 @@ import { Link, router } from '@inertiajs/react'
 import { usePage, useForm } from '@inertiajs/react'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.jsx'
 import GuestLayout from "@/Layouts/GuestLayout.jsx";
+import SupplierLayout from "@/Layouts/SupplierLayout.jsx";
 
 export default function ViewCart({ auth}) {
     const { cartItems = [] } = usePage().props
@@ -13,7 +14,7 @@ export default function ViewCart({ auth}) {
         router.post(route('cart.checkout'))
     }
 
-    const Layout = auth?.user ? AuthenticatedLayout : GuestLayout
+    const Layout = auth?.user ? SupplierLayout : GuestLayout
     console.log(Layout)
 
     return (

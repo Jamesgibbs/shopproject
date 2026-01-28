@@ -3,13 +3,13 @@ import { Link, usePage } from '@inertiajs/react'
 import CartTable from './CartTable.jsx'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.jsx'
 import GuestLayout from "@/Layouts/GuestLayout.jsx";
+import SupplierLayout from "@/Layouts/SupplierLayout.jsx";
 
 export function Index({ auth }) {
     const { products = [] } = usePage().props
     const [showForm, setShowForm] = useState(false)
 
-    const Layout = auth?.user ? AuthenticatedLayout : GuestLayout
-    console.log(Layout)
+    const Layout = auth?.user ? SupplierLayout : GuestLayout
 
     const toggleForm = () => setShowForm((prev) => !prev)
 

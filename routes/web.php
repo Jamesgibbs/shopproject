@@ -3,6 +3,7 @@
 use App\Enums\Role;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
@@ -17,11 +18,7 @@ use Inertia\Inertia;
 | Public Routes
 |--------------------------------------------------------------------------
 */
-
-// Route::get('/', function () {
-//    return Auth::check() ? redirect()->route('dashboard') : redirect()->route('login');
-// })->name('home');
-
+Route::get('/', [HomeController::class, 'index']);
 /*
 |--------------------------------------------------------------------------
 | Authentication Required Routes
@@ -55,7 +52,7 @@ Route::controller(CategoryController::class)->group(function () {
     Route::get('/categories/{category}', 'show')->name('categories.show');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     // Dashboard
 
     // Profile Management

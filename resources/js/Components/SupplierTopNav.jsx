@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react'
+import {Link, router} from '@inertiajs/react'
 import styles from './SupplierTopNav.module.css'
 import Logo from "@/Components/Logo.jsx";
 
@@ -12,10 +12,7 @@ export default function SupplierTopNav() {
                 </Link>
             </div>
 
-            <div className={styles.right}>
-                <Link href="/supplier/settings">Settings</Link>
-                <Link href="/logout" method="post">Logout</Link>
-            </div>
+            <button onClick={() => router.post(route('logout'))} > Logout </button>
         </header>
     )
 }

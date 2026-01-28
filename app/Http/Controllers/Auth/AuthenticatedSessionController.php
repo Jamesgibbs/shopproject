@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\Role;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
@@ -35,7 +36,7 @@ class AuthenticatedSessionController extends Controller
 
         $user = $request->user();
 
-        if ($user->role === 'supplier') {
+        if ($user->role === Role::SUPPLIER->value) {
             return redirect()->route('supplier.dashboard');
         }
 
