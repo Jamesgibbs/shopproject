@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Throwable;
 
 class ProductController extends Controller
 {
@@ -66,7 +67,7 @@ class ProductController extends Controller
             $validated['supplier_id'] = Auth::id();
 
             Product::create($validated);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             Log::debug('creating Product failed', [$th]);
         }
 

@@ -13,7 +13,7 @@ class OrderDeletedEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $queue = 'order-deleted';
+    public string $queue = 'order-deleted';
 
     /**
      * Create a new event instance.

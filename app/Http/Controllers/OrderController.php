@@ -9,6 +9,7 @@ use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Orders\DataTransferObjects\BaseOrderData;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
@@ -42,13 +43,17 @@ class OrderController extends Controller
     public function submit(Request $request)
     {
         try {
-            $cart = Cart::where('user_id', $request->user()->id);
+            $cart = Cart::where('user_id', $request->user()->id)->first();
+
+            if (! $cart) {
+                return redirect()->back()->with('error', 'Cart not found!');
+            }
 
             $order = Order::create([
                 'user_id' => $request->user()->id,
                 'cart_id' => $cart->id,
                 'status' => 'pending',
-                'total_amount' => $cart->total,
+                'total_amount' => $cart->total ?? 0,
             ]);
 
             Mail::to($request->user()->email)->send(new OrderConfirmation($order));
@@ -64,24 +69,26 @@ class OrderController extends Controller
     {
         $supplierId = auth()->id();
 
+        /** @var Collection<int, OrderItem> $sales */
         $sales = OrderItem::with(['order.user', 'product'])
             ->whereHas('product', fn ($q) => $q->where('supplier_id', $supplierId))
             ->latest()
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'id' => $item->id,
-                    'customer_name' => $item->order?->user?->name ?? '',
-                    'product_name' => $item->product->name,
-                    'quantity' => $item->quantity,
-                    'price' => $item->price_at_time,
-                    'order_id' => $item->order->id,
-                    'ordered_at' => $item->order->created_at->toDateTimeString(),
-                ];
-            });
+            ->get();
+
+        $mappedSales = $sales->map(function (OrderItem $item) {
+            return [
+                'id' => $item->id,
+                'customer_name' => $item->order->user->name,
+                'product_name' => $item->product->name,
+                'quantity' => $item->quantity,
+                'price' => $item->price_at_time,
+                'order_id' => $item->order->id,
+                'ordered_at' => $item->order->created_at->toDateTimeString(),
+            ];
+        });
 
         return Inertia::render('Orders/SalesHistory', [
-            'sales' => $sales,
+            'sales' => $mappedSales,
         ]);
     }
 }

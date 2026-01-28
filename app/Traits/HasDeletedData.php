@@ -1,17 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Traits;
 
 trait HasDeletedData
 {
     public function anonymizePersonalData(): void
     {
-        $fields = method_exists($this, 'getPersonalDataFields')
-            ? $this->getPersonalDataFields()
-            : $this->personalDataFields;
+        $fields = $this->getPersonalDataFields();
 
         foreach ($fields as $field => $type) {
-            if (isset($this->$field)) {
+            if (property_exists($this, $field)) {
                 $this->$field = $this->getAnonymizedValue($type);
             }
         }
@@ -20,6 +20,11 @@ trait HasDeletedData
         $this->anonymized_at = now();
         $this->save();
     }
+
+    /**
+     * @return array<string, string>
+     */
+    abstract protected function getPersonalDataFields(): array;
 
     protected function getAnonymizedValue(string $type): ?string
     {

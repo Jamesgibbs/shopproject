@@ -17,7 +17,8 @@ class UpdateOrderAction
 
     public function execute(OrderId $orderId): void
     {
-        $order = Order::find($orderId->value);
+        /** @var Order|null $order */
+        $order = Order::query()->find($orderId->value);
 
         if (! $order) {
             $this->logger->error('Order not found in ProcessOrderCreated listener', [

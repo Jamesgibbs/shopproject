@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\CartItem;
 use App\Models\Product;
+use App\Services\AddToCartService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Throwable;
 
 class CartController extends Controller
 {
@@ -20,9 +23,9 @@ class CartController extends Controller
         }
 
         // Only show cart items where the product exists and isn't deleted
-        $cartItems = $cart->items->filter(function ($item) {
+        $cartItems = $cart->items->filter(function (CartItem $item) {
             return $item->product !== null;
-        })->map(function ($item) {
+        })->map(function (CartItem $item) {
             return [
                 'id' => $item->id,
                 'product_id' => $item->product->id,
@@ -38,37 +41,27 @@ class CartController extends Controller
 
     }
 
-    public function addToCart(Request $request)
+    /**
+     * @throws Throwable
+     */
+    public function addToCart(Request $request, AddToCartService $service)
     {
         $validated = $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1',
+            'product_id' => ['required', 'integer', 'exists:products,id'],
+            'quantity' => ['required', 'integer', 'min:1'],
         ]);
 
-        $product = Product::findOrFail($validated['product_id']);
-
-        $cart = Cart::firstOrCreate(
-            ['user_id' => auth()->id()],
-            ['created_at' => now()]
-        );
-
-        // Check if item exists in cart
-        $cartItem = $cart->items()->where('product_id', $product->id)->first();
-
-        if ($cartItem) {
-            $cartItem->update([
-                'quantity' => $cartItem->quantity + $validated['quantity'],
-                'price_at_time' => $product->price,
-            ]);
-        } else {
-            $cart->items()->create([
-                'product_id' => $product->id,
-                'quantity' => $validated['quantity'],
-                'price_at_time' => $product->price,
-            ]);
+        try {
+            $service->add(
+                productId: $validated['product_id'],
+                quantity: $validated['quantity'],
+                userId: auth()->id(),
+            );
+        } catch (Throwable) {
+            return back()->with('error', 'Product not added to cart!');
         }
 
-        return redirect()->back()->with('success', 'Product added to cart!');
+        return back()->with('success', 'Product added to cart!');
     }
 
     public function removeFromCart(Request $request)

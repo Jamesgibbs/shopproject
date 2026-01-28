@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use Throwable;
 
 class ProfileController extends Controller
 {
@@ -47,6 +48,8 @@ class ProfileController extends Controller
 
     /**
      * Delete the user's account.
+     *
+     * @throws Throwable
      */
     public function destroy(Request $request): RedirectResponse
     {

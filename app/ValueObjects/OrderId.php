@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\ValueObjects;
 
 use InvalidArgumentException;
 
-class OrderId
+readonly class OrderId
 {
-    public function __construct(public readonly int $value)
+    public function __construct(public int $value)
     {
         if ($this->value <= 0) {
             throw new InvalidArgumentException('Order ID must be a positive integer.');

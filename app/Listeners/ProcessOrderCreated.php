@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Listeners;
 
 use App\Actions\UpdateOrderAction;
@@ -11,7 +13,7 @@ class ProcessOrderCreated implements ShouldQueue
 {
     use InteractsWithQueue;
 
-    public $queue = 'order-created';
+    public string $queue = 'order-created';
 
     public function __construct(protected readonly UpdateOrderAction $action) {}
 

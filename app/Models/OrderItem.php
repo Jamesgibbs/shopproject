@@ -2,8 +2,22 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int $order_id
+ * @property int $product_id
+ * @property int $quantity
+ * @property float $price_at_time
+ * @property string $product_name
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read Order $order
+ * @property-read Product $product
+ */
 class OrderItem extends Model
 {
     protected $fillable = [
@@ -15,12 +29,12 @@ class OrderItem extends Model
         'product_name',
     ];
 
-    public function product()
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class)->withTrashed();
     }
 
-    public function order()
+    public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
     }

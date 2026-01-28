@@ -18,7 +18,7 @@ class AddToCart
         // Check if item exists in cart
         $cartItem = $cart->items()->where('product_id', $product->id)->first();
 
-        if ($cartItem) {
+        if ($cartItem instanceof CartItem) {
             return $cartItem->update([
                 'quantity' => $this->calculateNewQuantity($cartItem, $quantity),
                 'price_at_time' => $product->price,
@@ -32,7 +32,7 @@ class AddToCart
         ]);
     }
 
-    private function calculateNewQuantity(CartItem $cartItem, int $quantity)
+    private function calculateNewQuantity(CartItem $cartItem, int $quantity): int
     {
         return $cartItem->quantity + $quantity;
     }

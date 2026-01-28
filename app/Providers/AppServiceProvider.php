@@ -23,8 +23,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Inertia::share([
-            'categories' => Category::whereNull('parent_id')
-                ->get(['id', 'name', 'slug']),
+            'categories' => function () {
+                return Category::whereNull('parent_id')
+                    ->get(['id', 'name', 'slug']);
+            },
         ]);
 
         Vite::prefetch(concurrency: 3);

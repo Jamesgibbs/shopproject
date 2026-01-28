@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
-use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class UserDataAnonymizer
 {
@@ -12,12 +15,14 @@ class UserDataAnonymizer
      * Models and their relationships that need to be anonymized
      */
     protected array $relatedModels = [
-        \App\Models\Order::class => 'user_id',
-        \App\Models\Product::class => 'supplier_id',
+        Order::class => 'user_id',
+        Product::class => 'supplier_id',
     ];
 
     /**
      * Anonymize all personal data related to a user
+     *
+     * @throws Throwable
      */
     public function anonymizeUserData(int $userId): void
     {

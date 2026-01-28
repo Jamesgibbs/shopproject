@@ -3,8 +3,21 @@
 namespace App\Models;
 
 use App\Traits\HasDeletedData;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property string $billing_name
+ * @property string $billing_address
+ * @property string $email_address
+ * @property string $phone_number
+ * @property bool $is_default
+ * @property bool $is_anonymized
+ * @property Carbon|null $anonymized_at
+ */
 class BillingAddress extends Model
 {
     use HasDeletedData;
@@ -28,7 +41,7 @@ class BillingAddress extends Model
         ];
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

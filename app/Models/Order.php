@@ -3,10 +3,25 @@
 namespace App\Models;
 
 use App\Traits\HasDeletedData;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property string $status
+ * @property float $total_amount
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property bool $is_anonymized
+ * @property Carbon|null $anonymized_at
+ * @property-read User $user
+ * @property-read Collection<int, \App\Models\OrderItem> $items
+ */
 class Order extends Model
 {
     use HasDeletedData, SoftDeletes;
@@ -31,12 +46,12 @@ class Order extends Model
         ];
     }
 
-    public function items()
+    public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class); // the buyer
     }

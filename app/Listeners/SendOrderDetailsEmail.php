@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Listeners;
 
 use App\Events\OrderShipped;
@@ -24,6 +26,6 @@ class SendOrderDetailsEmail implements ShouldQueue
     {
         $order = $event->order;
 
-        Mail::to($order?->user?->email)->send(new OrderConfirmation($order));
+        Mail::to($order->user->email)->send(new OrderConfirmation($order));
     }
 }

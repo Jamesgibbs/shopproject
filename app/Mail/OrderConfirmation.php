@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mail;
 
 use App\Models\Order;
@@ -24,7 +26,7 @@ class OrderConfirmation extends Mailable
             view: 'emails.orders.confirmation',
             with: [
                 'order' => $this->order,
-                'customerName' => $this->order?->user?->name,
+                'customerName' => $this->order->user->name,
             ],
         );
     }
