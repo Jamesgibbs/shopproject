@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -40,15 +41,19 @@ class ProductController extends Controller
 
     public function view(Product $product)
     {
-        $product->load(['reviews' => function ($query) {
-            $query->with('user:id,name')
-                ->latest();
-        }]);
+        $product->load([
+            'supplier:id,name', // supplier
+             'reviews' => function ($query) {
+            $query->with('user:id,name')->latest();
+            },
+        ]);
 
         return Inertia::render('Products/Product', [
             'product' => array_merge($product->toArray(), [
                 'average_rating' => $product->average_rating,
                 'reviews_count' => $product->reviews_count,
+                'supplier_id' => $product->supplier_id,
+                'supplier_name' => $product->supplier?->name,
             ]),
         ]);
     }
@@ -138,5 +143,21 @@ class ProductController extends Controller
         $product->delete();
 
         return redirect()->back()->with('success', 'Product Deleted!');
+    }
+
+    public function supplierProducts(User $user)
+    {
+        $products = Product::where('supplier_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(12);
+
+        return Inertia::render('Products/SupplierProducts', [
+            'supplier' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'supplier_overview' => $user->supplier_overview
+            ],
+            'products' => $products,
+        ]);
     }
 }

@@ -1,8 +1,8 @@
 import React from 'react'
 import { useForm, usePage, Link } from '@inertiajs/react'
-import type { PageProps as InertiaPageProps } from '@inertiajs/core'
-import SupplierLayout from "@/Layouts/SupplierLayout.jsx"
+import SupplierLayout from "@/Layouts/SupplierLayout.tsx"
 import styles from './Edit.module.css'
+import { PageProps, Category } from '../../types'
 
 interface Product {
     id: number
@@ -12,19 +12,14 @@ interface Product {
     stock_quantity: number
 }
 
-interface Category {
-    id: number
-    name: string
-}
-
-interface EditPageProps extends InertiaPageProps {
+interface EditPageProps extends Record<string, unknown> {
     product: Product
     categories: Category[]
     selectedCategory: number | null
 }
 
 export default function Edit() {
-    const { product, categories, selectedCategory, errors } = usePage<EditPageProps>().props
+    const { product, categories, selectedCategory, errors } = usePage<PageProps<EditPageProps>>().props
 
     const { data, setData, post, processing } = useForm({
         id: product.id,

@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { Link, usePage } from '@inertiajs/react'
 import CartTable from './CartTable.jsx'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.jsx'
-import GuestLayout from "@/Layouts/GuestLayout.jsx";
-import SupplierLayout from "@/Layouts/SupplierLayout.jsx";
+import GuestLayout from "@/Layouts/GuestLayout.tsx";
+import SupplierLayout from "@/Layouts/SupplierLayout.tsx";
 
 export function Index({ auth }) {
     const { products = [] } = usePage().props

@@ -3,8 +3,8 @@ import CartTable from './CartTable.jsx'
 import { Link, router } from '@inertiajs/react'
 import { usePage, useForm } from '@inertiajs/react'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.jsx'
-import GuestLayout from "@/Layouts/GuestLayout.jsx";
-import SupplierLayout from "@/Layouts/SupplierLayout.jsx";
+import GuestLayout from "@/Layouts/GuestLayout.tsx";
+import SupplierLayout from "@/Layouts/SupplierLayout.tsx";
 
 export default function ViewCart({ auth}) {
     const { cartItems = [] } = usePage().props

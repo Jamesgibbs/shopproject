@@ -1,4 +1,4 @@
-import SupplierLayout from '@/Layouts/SupplierLayout'
+import SupplierLayout from '@/Layouts/SupplierLayout.tsx'
 import SupplierProductsTable from "@/Components/SupplierProductsTable.jsx";
 import {Link} from "@inertiajs/react";
 import styles from "@/Pages/Auth/Login.module.css";

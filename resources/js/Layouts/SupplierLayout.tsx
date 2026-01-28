@@ -1,6 +1,7 @@
 import SupplierSidebar from '@/Components/SupplierSidebar'
 import SupplierTopNav from '@/Components/SupplierTopNav'
 import styles from './SupplierLayout.module.css'
+import React from "react"
 
 export default function SupplierLayout({ children }) {
     return (

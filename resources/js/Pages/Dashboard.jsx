@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import GuestLayout from '@/Layouts/GuestLayout'
+import GuestLayout from '@/Layouts/GuestLayout.tsx'
 import { Head } from '@inertiajs/react'
 
 export default function Dashboard({ auth }) {

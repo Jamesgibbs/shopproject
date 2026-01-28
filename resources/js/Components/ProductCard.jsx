@@ -3,7 +3,7 @@ import Card from './Card'
 
 export default function ProductCard({ product }) {
     return (
-        <Link href={`/products/${product.slug}`} style={{ textDecoration: 'none', color: '#333' }}>
+        <Link href={`/products/${product.id}`} style={{ textDecoration: 'none', color: '#333' }}>
             <Card>
                 <img
                     src={product.image}

@@ -69,4 +69,9 @@ class Product extends Model
     {
         return $this->belongsToMany(Category::class);
     }
+
+    public function scopeFeatured($query)
+    {
+        return $query->where('is_featured', true);
+    }
 }

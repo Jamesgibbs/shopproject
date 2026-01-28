@@ -5,7 +5,7 @@ import ProductsTable from './ProductsTable.jsx'
 import CreateProduct from './Create.jsx'
 import PageCard from '@/Components/PageCard.jsx'
 import Pagination from '@/Components/Pagination/Pagination.jsx'
-import GuestLayout from '@/Layouts/GuestLayout.jsx'
+import GuestLayout from '@/Layouts/GuestLayout.tsx'
 
 export default function Index() {
     const { products, auth, categories = [] } = usePage().props

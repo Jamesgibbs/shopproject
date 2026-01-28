@@ -95,4 +95,19 @@ class ProductControllerTest extends TestCase
         $response = $this->get(route('products.edit', $product));
         $response->assertStatus(403);
     }
+
+    public function test_guest_can_view_supplier_products()
+    {
+        $supplier = User::factory()->create(['role' => Role::SUPPLIER->value]);
+        Product::factory()->count(5)->create(['supplier_id' => $supplier->id]);
+
+        $response = $this->get(route('suppliers.products', $supplier));
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => $page->component('Products/SupplierProducts')
+            ->has('supplier')
+            ->where('supplier.name', $supplier->name)
+            ->has('products.data', 5)
+        );
+    }
 }

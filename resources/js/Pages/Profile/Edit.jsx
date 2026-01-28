@@ -3,8 +3,8 @@ import { Head, Link } from '@inertiajs/react'
 import DeleteUserForm from './Partials/DeleteUserForm'
 import UpdatePasswordForm from './Partials/UpdatePasswordForm'
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm'
-import GuestLayout from "@/Layouts/GuestLayout.jsx";
-import SupplierLayout from "@/Layouts/SupplierLayout.jsx";
+import GuestLayout from "@/Layouts/GuestLayout.tsx";
+import SupplierLayout from "@/Layouts/SupplierLayout.tsx";
 
 export default function Edit({ mustVerifyEmail, status, auth }) {
 

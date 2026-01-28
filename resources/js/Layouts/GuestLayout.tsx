@@ -4,10 +4,16 @@ import { usePage } from '@inertiajs/react'
 import styles from './GuestLayout.module.css'
 import Logo from "@/Components/Logo.jsx";
 import Footer from "@/Components/Footer.jsx";
+import React from "react";
+import { PageProps } from '@/types';
 
+interface GuestLayoutProps {
+    header?: React.ReactNode
+    children?: React.ReactNode
+}
 
-export default function GuestLayout({ header, children }) {
-    const { categories } = usePage().props
+export default function GuestLayout({ header, children }: GuestLayoutProps) {
+    const { categories } = usePage<PageProps>().props
 
     return (
         <div className="layout">

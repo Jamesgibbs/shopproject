@@ -23,13 +23,13 @@ export default function Create() {
                     error={errors.product_id}
                 />
 
-                <TextInput
-                    label="Quantity"
-                    type="number"
-                    value={data.quantity}
-                    onChange={(e) => setData('quantity', e.target.value)}
-                    error={errors.quantity}
-                />
+                {/*<TextInput*/}
+                {/*    label="Quantity"*/}
+                {/*    type="number"*/}
+                {/*    value={data.quantity}*/}
+                {/*    onChange={(e) => setData('quantity', e.target.value)}*/}
+                {/*    error={errors.quantity}*/}
+                {/*/>*/}
 
                 <button type="submit">Create Order</button>
             </form>

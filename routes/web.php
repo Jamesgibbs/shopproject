@@ -43,6 +43,7 @@ Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
 // Products (Public View)
 Route::controller(ProductController::class)->group(function () {
     Route::get('/products', 'index')->name('products.index');
+    Route::get('/suppliers/{user}/products', 'supplierProducts')->name('suppliers.products');
     Route::get('/products/{product}', 'view')->name('products.view');
 });
 

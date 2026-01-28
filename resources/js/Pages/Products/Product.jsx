@@ -1,19 +1,17 @@
-import { Head } from '@inertiajs/react'
+import { Head, Link } from '@inertiajs/react'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import GuestLayout from '@/Layouts/GuestLayout.jsx'
+import GuestLayout from '@/Layouts/GuestLayout.tsx'
+import styles from './Product.module.css'
 
 const StarRating = ({ rating }) => {
     return (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div className={styles.starRow}>
             {[1, 2, 3, 4, 5].map((star) => (
                 <svg
                     key={star}
-                    style={{
-                        width: '20px',
-                        height: '20px',
-                        color: star <= Math.round(rating) ? '#facc15' : '#d1d5db',
-                        marginRight: '2px',
-                    }}
+                    className={`${styles.star} ${
+                        star <= Math.round(rating) ? styles.starActive : ''
+                    }`}
                     fill="currentColor"
                     viewBox="0 0 20 20"
                 >
@@ -26,31 +24,11 @@ const StarRating = ({ rating }) => {
 
 const ReviewCard = ({ review }) => {
     return (
-        <div
-            style={{
-                background: '#fff',
-                padding: '1rem',
-                borderRadius: '8px',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                marginBottom: '1rem',
-            }}
-        >
-            <div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    marginBottom: '0.5rem',
-                }}
-            >
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <span style={{ fontWeight: '600', color: '#1f2937' }}>{review.user.name}</span>
-                    <span
-                        style={{
-                            color: '#9ca3af',
-                            fontSize: '0.875rem',
-                            marginLeft: '0.5rem',
-                        }}
-                    >
+        <div className={styles.reviewCard}>
+            <div className={styles.reviewHeader}>
+                <div className={styles.reviewUser}>
+                    <span className={styles.reviewUserName}>{review.user.name}</span>
+                    <span className={styles.reviewDate}>
                         {new Date(review.created_at).toLocaleDateString()}
                     </span>
                 </div>
@@ -58,7 +36,7 @@ const ReviewCard = ({ review }) => {
                 <StarRating rating={review.rating} />
             </div>
 
-            <p style={{ color: '#4b5563' }}>{review.comment}</p>
+            <p className={styles.reviewComment}>{review.comment}</p>
         </div>
     )
 }
@@ -66,110 +44,51 @@ const ReviewCard = ({ review }) => {
 export default function Product({ product, auth }) {
     const Layout = auth?.user ? AuthenticatedLayout : GuestLayout
 
+    console.log(product)
+
     return (
         <Layout>
-            <div style={{ padding: '3rem 0' }}>
-                <div
-                    style={{
-                        maxWidth: '1100px',
-                        margin: '0 auto',
-                        padding: '0 1rem',
-                    }}
-                >
-                    <div
-                        style={{
-                            background: '#fff',
-                            borderRadius: '8px',
-                            overflow: 'hidden',
-                            boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                        }}
-                    >
-                        <div style={{ padding: '1.5rem' }}>
-                            {/* Product Details */}
-                            <div style={{ marginBottom: '2rem' }}>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        gap: '2rem',
-                                        alignItems: 'flex-start',
-                                    }}
-                                >
+            <div className={styles.pageWrapper}>
+                <div className={styles.container}>
+                    <div className={styles.card}>
+                        <div className={styles.inner}>
+                            <div className={styles.productSection}>
+                                <div className={styles.productLayout}>
                                     <img
                                         src={product.image}
                                         alt={product.name}
-                                        style={{
-                                            width: '300px',
-                                            height: '300px',
-                                            objectFit: 'cover',
-                                            borderRadius: '8px',
-                                            flexShrink: 0,
-                                        }}
+                                        className={styles.productImage}
                                     />
 
                                     <div>
-                                        <h1
-                                            style={{
-                                                fontSize: '2rem',
-                                                fontWeight: '700',
-                                                marginBottom: '0.5rem',
-                                            }}
-                                        >
-                                            {product.name}
-                                        </h1>
+                                        <h1 className={styles.productTitle}>{product.name}</h1>
 
-                                        <div
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                marginBottom: '1rem',
-                                            }}
-                                        >
+                                        <div className={styles.ratingRow}>
                                             <StarRating rating={product.average_rating} />
 
-                                            <span
-                                                style={{
-                                                    marginLeft: '0.5rem',
-                                                    color: '#4b5563',
-                                                }}
-                                            >
+                                            <span className={styles.ratingText}>
                                                 {product.average_rating.toFixed(1)} (
                                                 {product.reviews_count} reviews)
                                             </span>
                                         </div>
 
-                                        <p
-                                            style={{
-                                                fontSize: '1.5rem',
-                                                fontWeight: '700',
-                                                color: '#111827',
-                                            }}
-                                        >
-                                            ${product.price}
+                                        <p className={styles.price}>£ {product.price}</p>
+                                        <p className={styles.description}>
+                                            Supplier: {' '}
+                                            <Link
+                                                href={`/suppliers/${product.supplier_id}/products`}
+                                                className="text-blue-600 hover:text-blue-800 underline"
+                                            >
+                                                {product.supplier_name}
+                                            </Link>
                                         </p>
-
-                                        <p
-                                            style={{
-                                                marginTop: '1rem',
-                                                color: '#4b5563',
-                                            }}
-                                        >
-                                            {product.description}
-                                        </p>
+                                        <p className={styles.description}>{product.description}</p>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Reviews */}
-                            <div style={{ marginTop: '2rem' }}>
-                                <h2
-                                    style={{
-                                        fontSize: '1.5rem',
-                                        fontWeight: '700',
-                                        marginBottom: '1rem',
-                                    }}
-                                >
-                                    Customer Reviews
-                                </h2>
+                            <div className={styles.reviewsSection}>
+                                <h2 className={styles.reviewsTitle}>Customer Reviews</h2>
 
                                 <div>
                                     {product.reviews.length > 0 ? (
@@ -177,7 +96,7 @@ export default function Product({ product, auth }) {
                                             <ReviewCard key={review.id} review={review} />
                                         ))
                                     ) : (
-                                        <p style={{ color: '#6b7280' }}>No reviews yet</p>
+                                        <p className={styles.noReviews}>No reviews yet</p>
                                     )}
                                 </div>
                             </div>
@@ -188,3 +107,4 @@ export default function Product({ product, auth }) {
         </Layout>
     )
 }
+

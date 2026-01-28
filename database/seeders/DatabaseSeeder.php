@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'role' => 'supplier',
                 'email_verified_at' => now(),
+                'supplier_overview' => 'This is the dummy supplier overview text giving a brief description about the supplier.',
             ]);
 
         User::firstOrCreate(

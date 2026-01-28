@@ -2,7 +2,7 @@ import React from 'react'
 import { usePage } from '@inertiajs/react'
 import OrdersTable from './OrdersTable.jsx'
 import PageCard from '@/Components/PageCard.jsx'
-import SupplierLayout from "@/Layouts/SupplierLayout.jsx";
+import SupplierLayout from "@/Layouts/SupplierLayout.tsx";
 
 export default function SupplierIndex() {
     const { previousOrders = [], pendingOrders = [] } = usePage().props
@@ -10,7 +10,7 @@ export default function SupplierIndex() {
     return (
         <PageCard title="Orders">
             <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">Orders</h1>
-            
+
             <OrdersTable orders={previousOrders} />
         </PageCard>
     )

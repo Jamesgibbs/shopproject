@@ -1,5 +1,5 @@
 import React from 'react'
-import GuestLayout from '@/Layouts/GuestLayout.jsx'
+import GuestLayout from '@/Layouts/GuestLayout.tsx'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.jsx'
 import { usePage } from '@inertiajs/react'
 import OrdersTable from './OrdersTable.jsx'
