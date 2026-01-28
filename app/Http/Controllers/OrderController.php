@@ -10,13 +10,15 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Orders\DataTransferObjects\BaseOrderData;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
         $orders = Order::with('items.product')
             ->where('user_id', auth()->id())
@@ -31,7 +33,7 @@ class OrderController extends Controller
         ]);
     }
 
-    public function supplierIndex()
+    public function supplierIndex(): Response
     {
         $orders = Order::where('supplier_id', auth()->id())->paginate(20);
 
@@ -40,7 +42,7 @@ class OrderController extends Controller
         ]);
     }
 
-    public function submit(Request $request)
+    public function submit(Request $request): RedirectResponse
     {
         try {
             $cart = Cart::where('user_id', $request->user()->id)->first();
@@ -65,7 +67,7 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Order Submitted!');
     }
 
-    public function salesHistory()
+    public function salesHistory(): Response
     {
         $supplierId = auth()->id();
 

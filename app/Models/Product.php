@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
+use Database\Factories\ProductFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,6 +25,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Product extends Model
 {
+    /** @use HasFactory<ProductFactory> */
     use HasFactory;
     use SoftDeletes;
 
@@ -33,21 +38,33 @@ class Product extends Model
         'image',
     ];
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(User::class, 'supplier_id');
     }
 
+    /**
+     * @return HasMany<OrderItem, $this>
+     */
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
     }
 
+    /**
+     * @return MorphMany<Image, $this>
+     */
     public function images(): MorphMany
     {
         return $this->morphMany(Image::class, 'imageable');
     }
 
+    /**
+     * @return HasMany<Review, $this>
+     */
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
@@ -65,12 +82,19 @@ class Product extends Model
         return $this->reviews()->count();
     }
 
+    /**
+     * @return BelongsToMany<Category, $this>
+     */
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class);
     }
 
-    public function scopeFeatured($query)
+    /**
+     * @param Builder<Product> $query
+     * @return Builder<Product>
+     */
+    public function scopeFeatured(Builder $query): Builder
     {
         return $query->where('is_featured', true);
     }

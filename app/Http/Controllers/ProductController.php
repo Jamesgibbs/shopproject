@@ -7,15 +7,17 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Inertia\Response;
 use Throwable;
 
 class ProductController extends Controller
 {
-    public function supplierIndex()
+    public function supplierIndex(): Response
     {
         $products = Product::where('supplier_id', auth()->id())->paginate(20);
 
@@ -24,7 +26,7 @@ class ProductController extends Controller
         ]);
     }
 
-    public function index()
+    public function index(): Response
     {
         $query = Product::with('supplier')
 //            ->when(auth()?->user()?->role === Role::SUPPLIER->value, function ($query) {
@@ -39,7 +41,7 @@ class ProductController extends Controller
         ]);
     }
 
-    public function view(Product $product)
+    public function view(Product $product): Response
     {
         $product->load([
             'supplier:id,name', // supplier
@@ -58,7 +60,7 @@ class ProductController extends Controller
         ]);
     }
 
-    public function create(Request $request)
+    public function create(Request $request): RedirectResponse
     {
         try {
 
@@ -79,7 +81,7 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -104,7 +106,7 @@ class ProductController extends Controller
         return redirect()->back()->with('success', 'Product created!');
     }
 
-    public function update(Request $request, Product $product)
+    public function update(Request $request, Product $product): RedirectResponse
     {
         $this->authorize('update', $product);
 
@@ -125,7 +127,7 @@ class ProductController extends Controller
         return redirect()->route('supplier.products.index')->with('success', 'Product updated.');
     }
 
-    public function edit(Product $product)
+    public function edit(Product $product): Response
     {
         $this->authorize('update', $product);
 
@@ -136,7 +138,7 @@ class ProductController extends Controller
         ]);
     }
 
-    public function delete(Product $product)
+    public function delete(Product $product): RedirectResponse
     {
         $this->authorize('delete', $product);
 
@@ -145,7 +147,7 @@ class ProductController extends Controller
         return redirect()->back()->with('success', 'Product Deleted!');
     }
 
-    public function supplierProducts(User $user)
+    public function supplierProducts(User $user): Response
     {
         $products = Product::where('supplier_id', $user->id)
             ->orderBy('created_at', 'desc')

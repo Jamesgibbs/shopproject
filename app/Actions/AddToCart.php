@@ -8,7 +8,7 @@ use App\Models\Product;
 
 class AddToCart
 {
-    public function execute(Product $product, int $quantity)
+    public function execute(Product $product, int $quantity): Cart
     {
         $cart = Cart::firstOrCreate(
             ['user_id' => auth()->id()],
@@ -19,17 +19,21 @@ class AddToCart
         $cartItem = $cart->items()->where('product_id', $product->id)->first();
 
         if ($cartItem instanceof CartItem) {
-            return $cartItem->update([
+            $cartItem->update([
                 'quantity' => $this->calculateNewQuantity($cartItem, $quantity),
                 'price_at_time' => $product->price,
             ]);
+
+            return $cart;
         }
 
-        return $cart->items()->create([
+        $cart->items()->create([
             'product_id' => $product->id,
             'quantity' => $quantity,
             'price_at_time' => $product->price,
         ]);
+
+        return $cart;
     }
 
     private function calculateNewQuantity(CartItem $cartItem, int $quantity): int

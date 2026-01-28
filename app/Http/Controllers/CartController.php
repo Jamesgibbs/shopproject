@@ -8,13 +8,15 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
 use App\Services\AddToCartService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 use Throwable;
 
 class CartController extends Controller
 {
-    public function viewCart()
+    public function viewCart(): Response
     {
         $cart = Cart::with('items.product')->where('user_id', auth()->id())->first();
 
@@ -44,7 +46,7 @@ class CartController extends Controller
     /**
      * @throws Throwable
      */
-    public function addToCart(Request $request, AddToCartService $service)
+    public function addToCart(Request $request, AddToCartService $service): RedirectResponse
     {
         $validated = $request->validate([
             'product_id' => ['required', 'integer', 'exists:products,id'],
@@ -64,7 +66,7 @@ class CartController extends Controller
         return back()->with('success', 'Product added to cart!');
     }
 
-    public function removeFromCart(Request $request)
+    public function removeFromCart(Request $request): RedirectResponse
     {
         $cart = Cart::where('user_id', auth()->id())->first();
 
@@ -83,7 +85,7 @@ class CartController extends Controller
         return redirect()->back()->with('error', 'Item not found in your cart.');
     }
 
-    public function checkout()
+    public function checkout(): RedirectResponse
     {
         $cart = Cart::with('items.product')->where('user_id', auth()->id())->firstOrFail();
 
@@ -94,7 +96,7 @@ class CartController extends Controller
         return redirect()->route('payment.form');
     }
 
-    public function updateQuantity(Request $request)
+    public function updateQuantity(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'cart_item_id' => 'required|exists:cart_items,id',

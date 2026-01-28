@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Services\ProcessPaymentService;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 use Throwable;
@@ -20,7 +21,7 @@ class PaymentController extends Controller
     /**
      * @throws Throwable
      */
-    public function processPayment(ProcessPaymentService $processPaymentService)
+    public function processPayment(ProcessPaymentService $processPaymentService): null| RedirectResponse
     {
         $cart = Cart::with('items.product')->where('user_id', auth()->id())->firstOrFail();
 
@@ -36,6 +37,8 @@ class PaymentController extends Controller
 
         try {
             $processPaymentService->processPayment($cart);
+
+            return redirect()->route('orders.index')->with('success', 'Payment successful!');
         } catch (Throwable $exception) {
             return redirect()->back()->with(
                 'error',

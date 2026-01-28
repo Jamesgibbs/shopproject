@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Carbon\Carbon;
@@ -22,7 +24,7 @@ class Cart extends Model
     ];
 
     /**
-     * @return HasMany<CartItem>
+     * @return HasMany<CartItem, $this>
      */
     public function items(): HasMany
     {

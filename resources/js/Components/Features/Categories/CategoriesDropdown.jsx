@@ -1,11 +1,18 @@
-import { Link } from '@inertiajs/react'
-import { useState } from 'react'
+import {Link, router} from '@inertiajs/react'
+import {useEffect, useState} from 'react'
 import styles from './CategoriesDropdown.module.css'
 
 export default function CategoriesDropdown({ categories }) {
     const [open, setOpen] = useState(false)
 
-    const toggle = () => setOpen(!open)
+    const toggle = () => setOpen(prev => !prev)
+
+    // Close when opening a new page
+    useEffect(() => {
+        return router.on('finish', () => {
+            setOpen(false)
+        })
+    }, [])
 
     return (
         <div className={styles.dropdown}>
@@ -20,7 +27,7 @@ export default function CategoriesDropdown({ categories }) {
 
             {open && (
                 <div className={styles.menu}>
-                    {categories.map((category) => (
+                    {categories.map(category => (
                         <Link
                             key={category.id}
                             href={`/categories/${category.slug}`}
@@ -34,3 +41,4 @@ export default function CategoriesDropdown({ categories }) {
         </div>
     )
 }
+

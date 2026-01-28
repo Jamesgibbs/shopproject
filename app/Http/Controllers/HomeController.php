@@ -6,10 +6,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class HomeController
 {
-    public function index()
+    public function index(): Response
     {
         $featuredProducts = Product::featured()
             ->orderBy('created_at', 'desc')

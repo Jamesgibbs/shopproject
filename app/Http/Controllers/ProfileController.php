@@ -77,7 +77,7 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
-    public function addBillingInfo()
+    public function addBillingInfo(): Response
     {
         $billingInfo = BillingAddress::where('user_id', auth()->id())->first();
 

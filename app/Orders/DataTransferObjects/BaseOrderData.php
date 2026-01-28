@@ -4,25 +4,28 @@ declare(strict_types=1);
 
 namespace App\Orders\DataTransferObjects;
 
+use App\Models\Order;
 use Illuminate\Support\Collection;
 
 readonly class BaseOrderData
 {
-    /** * @param Collection<OrderItemData> $items */
+    /**
+     * @param Collection<int, OrderItemData> $items
+     */
     public function __construct(
         protected readonly int $id,
         protected readonly ?string $customerName,
         protected readonly float $total,
         protected readonly string $status,
-        protected Collection $items,
+        protected readonly Collection $items,
         protected readonly string $orderedAt
     ) {}
 
-    public static function fromModel($order): self
+    public static function fromModel(Order $order): self
     {
         return new self(
             id: $order->id,
-            customerName: $order?->user?->name,
+            customerName: $order->user->name,
             total: $order->total_amount,
             status: $order->status,
             items: $order->items->map(fn ($item) => OrderItemData::fromModel($item)),

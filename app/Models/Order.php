@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Traits\HasDeletedData;
@@ -46,16 +48,25 @@ class Order extends Model
         ];
     }
 
+    /**
+     * @return HasMany<OrderItem, $this>
+     */
     public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class); // the buyer
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(User::class, 'supplier_id');

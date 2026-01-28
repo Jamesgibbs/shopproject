@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Orders\DataTransferObjects;
 
+use App\Models\OrderItem;
+
 readonly class OrderItemData
 {
     public function __construct(
@@ -13,7 +15,8 @@ readonly class OrderItemData
         protected readonly float $price,
     ) {}
 
-    public static function fromModel($item): self
+
+    public static function fromModel(OrderItem $item): self
     {
         return new self(
             id: $item->id,
@@ -23,6 +26,9 @@ readonly class OrderItemData
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return [
