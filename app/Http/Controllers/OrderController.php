@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\DataTransferObjects\SalesHistoryData;
+use App\Enums\OrderStatus;
 use App\Mail\OrderConfirmation;
 use App\Models\Cart;
 use App\Models\Order;
@@ -15,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use Inertia\Response;
+use Throwable;
 
 class OrderController extends Controller
 {
@@ -24,8 +27,8 @@ class OrderController extends Controller
             ->where('user_id', auth()->id())
             ->get();
 
-        $pendingOrders = $orders->filter(fn ($order) => $order->status === 'pending')->values();
-        $otherOrders = $orders->filter(fn ($order) => $order->status !== 'pending')->values();
+        $pendingOrders = $orders->filter(fn ($order) => $order->status === OrderStatus::PENDING->value)->values();
+        $otherOrders = $orders->filter(fn ($order) => $order->status !== OrderStatus::PENDING->value)->values();
 
         return Inertia::render('Orders/Index', [
             'pendingOrders' => $pendingOrders->map(fn ($order) => BaseOrderData::fromModel($order)->toArray()),
@@ -38,7 +41,7 @@ class OrderController extends Controller
         $orders = Order::where('supplier_id', auth()->id())->paginate(20);
 
         return Inertia::render('Orders/SupplierIndex', [
-            'orders' => $orders,
+            'orders' => $orders->through(fn (Order $order) => BaseOrderData::fromModel($order)->toArray()),
         ]);
     }
 
@@ -60,7 +63,7 @@ class OrderController extends Controller
 
             Mail::to($request->user()->email)->send(new OrderConfirmation($order));
 
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return redirect()->back()->with('error', 'Error creating Order!');
         }
 
@@ -77,20 +80,8 @@ class OrderController extends Controller
             ->latest()
             ->get();
 
-        $mappedSales = $sales->map(function (OrderItem $item) {
-            return [
-                'id' => $item->id,
-                'customer_name' => $item->order->user->name,
-                'product_name' => $item->product->name,
-                'quantity' => $item->quantity,
-                'price' => $item->price_at_time,
-                'order_id' => $item->order->id,
-                'ordered_at' => $item->order->created_at->toDateTimeString(),
-            ];
-        });
-
         return Inertia::render('Orders/SalesHistory', [
-            'sales' => $mappedSales,
+            'sales' => $sales->map(fn (OrderItem $item) => SalesHistoryData::fromModel($item)->toArray()),
         ]);
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\DataTransferObjects\ProductData;
 use App\Models\Product;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -18,7 +19,7 @@ class HomeController
             ->get();
 
         return Inertia::render('Welcome', [
-            'featuredProducts' => $featuredProducts
+            'featuredProducts' => $featuredProducts->map(fn (Product $product) => ProductData::fromModel($product)->toArray())
         ]);
     }
 }

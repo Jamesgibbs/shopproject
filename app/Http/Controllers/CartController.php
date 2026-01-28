@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\DataTransferObjects\CartItemData;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
@@ -28,13 +29,7 @@ class CartController extends Controller
         $cartItems = $cart->items->filter(function (CartItem $item) {
             return $item->product !== null;
         })->map(function (CartItem $item) {
-            return [
-                'id' => $item->id,
-                'product_id' => $item->product->id,
-                'name' => $item->product->name,
-                'price' => $item->product->price,
-                'quantity' => $item->quantity,
-            ];
+            return CartItemData::fromModel($item)->toArray();
         })->values()->all();
 
         return Inertia::render('Cart/ViewCart', [

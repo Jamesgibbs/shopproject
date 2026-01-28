@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\DataTransferObjects\ProductData;
 use App\Http\Requests\StoreProductRequest;
 use App\Models\Category;
 use App\Models\Product;
@@ -23,7 +24,7 @@ class ProductController extends Controller
         $products = Product::where('supplier_id', auth()->id())->paginate(20);
 
         return Inertia::render('Products/SupplierIndex', [
-            'products' => $products,
+            'products' => $products->through(fn (Product $product) => ProductData::fromModel($product)->toArray()),
         ]);
     }
 
@@ -38,7 +39,7 @@ class ProductController extends Controller
         $products = $query->paginate(10);
 
         return Inertia::render('Products/Index', [
-            'products' => $products,
+            'products' => $products->through(fn (Product $product) => ProductData::fromModel($product)->toArray()),
         ]);
     }
 
@@ -52,12 +53,7 @@ class ProductController extends Controller
         ]);
 
         return Inertia::render('Products/Product', [
-            'product' => array_merge($product->toArray(), [
-                'average_rating' => $product->average_rating,
-                'reviews_count' => $product->reviews_count,
-                'supplier_id' => $product->supplier_id,
-                'supplier_name' => $product->supplier?->name,
-            ]),
+            'product' => ProductData::fromModel($product)->toArray(),
         ]);
     }
 
@@ -155,7 +151,7 @@ class ProductController extends Controller
                 'name' => $user->name,
                 'supplier_overview' => $user->supplier_overview
             ],
-            'products' => $products,
+            'products' => $products->through(fn (Product $product) => ProductData::fromModel($product)->toArray()),
         ]);
     }
 }
