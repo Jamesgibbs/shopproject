@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react'
 import React from 'react'
-import Card from '@/Components/Card.jsx'
+import Card from '@/Components/Common/Card.jsx'
 
 export default function CategoryTile({ category }) {
     if (!category?.children?.length) {

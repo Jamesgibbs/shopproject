@@ -3,7 +3,7 @@ import GuestLayout from '@/Layouts/GuestLayout.tsx'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.jsx'
 import { usePage } from '@inertiajs/react'
 import OrdersTable from './OrdersTable.jsx'
-import PageCard from '@/Components/PageCard.jsx'
+import PageCard from '@/Components/Common/PageCard.jsx'
 
 export default function Index() {
     const { previousOrders = [], pendingOrders = [] } = usePage().props

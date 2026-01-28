@@ -1,6 +1,6 @@
 import {Link, router} from '@inertiajs/react'
 import styles from './SupplierTopNav.module.css'
-import Logo from "@/Components/Logo.jsx";
+import Logo from "@/Components/Layout/Logo.jsx";
 
 export default function SupplierTopNav() {
     return (

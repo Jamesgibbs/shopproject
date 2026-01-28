@@ -17,4 +17,14 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
         user: User | null;
     };
     categories: Category[];
+    featuredProducts?: FeaturedProduct[]
 };
+
+export interface FeaturedProduct {
+    id: number
+    name: string
+    price: number
+    image: string
+    average_rating: number
+    reviews_count: number
+}

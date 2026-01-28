@@ -1,7 +1,7 @@
 import React from 'react'
 import { usePage } from '@inertiajs/react'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.jsx'
-import PageCard from '@/Components/PageCard.jsx'
+import PageCard from '@/Components/Common/PageCard.jsx'
 
 export default function SalesHistory() {
     const { sales = [] } = usePage().props

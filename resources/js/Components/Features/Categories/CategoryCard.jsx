@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react'
-import Card from './Card'
+import Card from '@/Components/Common/Card.jsx'
 
 export default function CategoryCard({ category }) {
     return (

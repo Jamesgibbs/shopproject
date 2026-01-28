@@ -1,9 +1,9 @@
 import React from 'react'
 import { Head } from '@inertiajs/react'
 import GuestLayout from '@/Layouts/GuestLayout.tsx'
-import PageCard from '@/Components/PageCard'
-import ProductCard from '@/Components/ProductCard'
-import CardGrid from '@/Components/CardGrid'
+import PageCard from '@/Components/Common/PageCard'
+import ProductCard from '@/Components/Features/Products/ProductCard'
+import CardGrid from '@/Components/Common/CardGrid'
 import Pagination from '@/Components/Pagination/Pagination'
 
 export default function SupplierProducts({ supplier, products }) {

@@ -1,5 +1,5 @@
-import SupplierSidebar from '@/Components/SupplierSidebar'
-import SupplierTopNav from '@/Components/SupplierTopNav'
+import SupplierSidebar from '@/Components/Layout/SupplierSidebar'
+import SupplierTopNav from '@/Components/Layout/SupplierTopNav'
 import styles from './SupplierLayout.module.css'
 import React from "react"
 

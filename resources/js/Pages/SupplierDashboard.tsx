@@ -1,4 +1,5 @@
-import SupplierLayout from '@/Layouts/SupplierLayout.tsx'
+import SupplierLayout from '@/Layouts/SupplierLayout'
+import React from "react"
 
 export default function SupplierDashboard() {
     return <div>Welcome Supplier</div>

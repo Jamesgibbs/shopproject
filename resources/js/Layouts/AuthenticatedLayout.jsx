@@ -1,10 +1,8 @@
-import ApplicationLogo from '@/Components/ApplicationLogo'
-import Dropdown from '@/Components/Dropdown'
-import NavLink from '@/Components/NavLink'
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink'
+import Dropdown from '@/Components/Common/Dropdown'
+import NavLink from '@/Components/Layout/NavLink'
+import ResponsiveNavLink from '@/Components/Layout/ResponsiveNavLink'
 import { Link, usePage } from '@inertiajs/react'
 import { useState } from 'react'
-import FlashMessage from '@/Components/FlashMessage.jsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faShoppingCart,
@@ -15,7 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { DarkModeProvider } from '@/Contexts/DarkModeContext'
 import DarkModeToggle from '@/Components/DarkMode/DarkModeToggle'
-import Footer from "@/Components/Footer.jsx";
+import Footer from "@/Components/Layout/Footer.jsx";
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user

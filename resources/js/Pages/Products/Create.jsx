@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useForm, router } from '@inertiajs/react'
-import MultiSelect from '@/Components/Multiselect'
+import MultiSelect from '@/Components/Common/Multiselect'
 
 export default function Create({ categories, onSuccess }) {
     const { data, setData, post, processing, errors, reset } = useForm({

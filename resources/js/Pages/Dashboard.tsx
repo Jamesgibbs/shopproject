@@ -1,6 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import GuestLayout from '@/Layouts/GuestLayout.tsx'
+import GuestLayout from '@/Layouts/GuestLayout'
 import { Head } from '@inertiajs/react'
+import React from "react"
 
 export default function Dashboard({ auth }) {
     const Layout = auth.user ? AuthenticatedLayout : GuestLayout

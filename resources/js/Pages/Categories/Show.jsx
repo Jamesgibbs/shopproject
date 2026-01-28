@@ -1,9 +1,9 @@
 import React from 'react'
 import { usePage, Link } from '@inertiajs/react'
 import GuestLayout from '@/Layouts/GuestLayout.tsx'
-import PageCard from '@/Components/PageCard.jsx'
-import CategoryCard from '@/Components/CategoryCard.jsx'
-import CardGrid from '@/Components/CardGrid.jsx'
+import PageCard from '@/Components/Common/PageCard.jsx'
+import CategoryCard from '@/Components/Features/Categories/CategoryCard.jsx'
+import CardGrid from '@/Components/Common/CardGrid.jsx'
 import styles from './Show.module.css'
 
 export default function Show() {

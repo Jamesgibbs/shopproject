@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Head, useForm } from '@inertiajs/react'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import InputError from '@/Components/InputError'
-import InputLabel from '@/Components/InputLabel'
-import PrimaryButton from '@/Components/PrimaryButton'
-import TextInput from '@/Components/TextInput'
+import InputError from '@/Components/Common/InputError'
+import InputLabel from '@/Components/Common/InputLabel'
+import PrimaryButton from '@/Components/Common/PrimaryButton'
+import TextInput from '@/Components/Common/TextInput'
 import { router } from '@inertiajs/react'
 
 export default function PaymentForm({ auth }) {

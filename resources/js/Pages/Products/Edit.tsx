@@ -1,8 +1,8 @@
 import React from 'react'
 import { useForm, usePage, Link } from '@inertiajs/react'
-import SupplierLayout from "@/Layouts/SupplierLayout.tsx"
+import SupplierLayout from "@/Layouts/SupplierLayout"
 import styles from './Edit.module.css'
-import { PageProps, Category } from '../../types'
+import { PageProps, Category } from '@/types'
 
 interface Product {
     id: number

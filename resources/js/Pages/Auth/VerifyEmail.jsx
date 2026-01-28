@@ -1,4 +1,4 @@
-import PrimaryButton from '@/Components/PrimaryButton'
+import PrimaryButton from '@/Components/Common/PrimaryButton'
 import GuestLayout from '@/Layouts/GuestLayout.tsx'
 import { Head, Link, useForm } from '@inertiajs/react'
 

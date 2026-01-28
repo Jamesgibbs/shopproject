@@ -1,7 +1,7 @@
 import React from 'react'
 import { usePage } from '@inertiajs/react'
 import OrdersTable from './OrdersTable.jsx'
-import PageCard from '@/Components/PageCard.jsx'
+import PageCard from '@/Components/Common/PageCard.jsx'
 import SupplierLayout from "@/Layouts/SupplierLayout.tsx";
 
 export default function SupplierIndex() {
