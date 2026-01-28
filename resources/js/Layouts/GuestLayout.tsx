@@ -2,8 +2,8 @@ import { Link } from '@inertiajs/react'
 import CategoriesDropdown from '@/Components/Features/Categories/CategoriesDropdown.jsx'
 import { usePage } from '@inertiajs/react'
 import styles from './GuestLayout.module.css'
-import Logo from "@/Components/Layout/Logo.jsx";
-import Footer from "@/Components/Layout/Footer.jsx";
+import Logo from "@/Components/Layout/Logo";
+import Footer from "@/Components/Layout/Footer";
 import React from "react";
 import { PageProps } from '@/types';
 

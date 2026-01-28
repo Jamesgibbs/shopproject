@@ -1,7 +1,8 @@
+import React, {JSX} from "react"
 import styles from './Footer.module.css'
 import { Link } from '@inertiajs/react'
 
-export default function Footer() {
+export default function Footer(): JSX.Element {
     return (
         <footer className={styles.footer}>
             <div className={styles.container}>

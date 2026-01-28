@@ -40,7 +40,6 @@ class CartController extends Controller
         return Inertia::render('Cart/ViewCart', [
             'cartItems' => $cartItems,
         ]);
-
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
@@ -81,15 +82,9 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreProductRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'stock_quantity' => 'required|integer|min:0',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        $validated = $request->validated();
 
         $validated['supplier_id'] = Auth::id();
 
@@ -103,8 +98,9 @@ class ProductController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Product created!');
+        return back()->with('success', 'Product created!');
     }
+
 
     public function update(Request $request, Product $product): RedirectResponse
     {

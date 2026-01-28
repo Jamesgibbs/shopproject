@@ -1,18 +1,34 @@
-import React, {useState} from 'react'
+import React from 'react'
 import { Link, router } from '@inertiajs/react'
 import Pagination from '@/Components/Pagination/Pagination.jsx'
 
-export default function SupplierProductsTable({ products }) {
 
-    if (!products || !products.data || products.data.length === 0) {
-        return <p>No products found.</p>
+interface PaginationLink {
+    url: string | null
+    label: string
+    active: boolean
+}
+
+interface PaginatedProducts {
+    data: Product[]
+    links: PaginationLink[]
+}
+
+interface SupplierProductsTableProps {
+    products: PaginatedProducts
+}
+
+export default function SupplierProductsTable({ products } : SupplierProductsTableProps) {
+
+    if (!products?.data?.length) {
+        return <p>No products found.</p>;
     }
 
-    const handleDelete = (productId) => {
-        if (confirm('Are you sure you want to delete this product?')) {
-            router.delete(`/products/${productId}`)
+    const handleDelete = (productId: number) => {
+        if (confirm("Are you sure you want to delete this product?")) {
+            router.delete(`/products/${productId}`);
         }
-    }
+    };
 
     const headers = ['Name', 'Description', 'Price', 'Stock', 'Actions']
 
