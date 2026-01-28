@@ -3,7 +3,7 @@ import { Link } from '@inertiajs/react'
 
 export default function Logo() {
     return (
-        <Link href="/" className={styles.logo}>
+        <Link href="/dashboard" className={styles.logo}>
             <span className={styles.icon}>
                 <div></div>
                 <div></div>

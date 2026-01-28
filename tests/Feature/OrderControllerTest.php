@@ -4,8 +4,6 @@ namespace Tests\Feature;
 
 use App\Enums\Role;
 use App\Models\Cart;
-use App\Models\Product;
-use App\Models\Review;
 use App\Models\User;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -26,19 +24,17 @@ class OrderControllerTest extends TestCase
     {
         Event::fake();
 
-        $user = User::factory()->create([     'role' => Role::CUSTOMER->value,]);
+        $user = User::factory()->create(['role' => Role::CUSTOMER->value]);
         $cart = Cart::factory()->create(['user_id' => $user->id]);
         $this->actingAs($user);
 
         $response = $this->call('POST', route('orders.submit'));
 
-
-//        $this->assertDatabaseHas('orders', [
-//            'user_id'      => $user->id,
-//            'status'       => 'pending',
-//            'total_amount' => 123.45,
-//        ]);
-
+        //        $this->assertDatabaseHas('orders', [
+        //            'user_id'      => $user->id,
+        //            'status'       => 'pending',
+        //            'total_amount' => 123.45,
+        //        ]);
 
         dump($response->getContent());
 
@@ -46,5 +42,4 @@ class OrderControllerTest extends TestCase
             ->assertRedirect()
             ->assertSessionHas('success', 'Order Submitted!');
     }
-
 }

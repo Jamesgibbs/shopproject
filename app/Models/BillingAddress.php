@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasDeletedData;
+use Illuminate\Database\Eloquent\Model;
 
 class BillingAddress extends Model
 {
@@ -15,7 +15,7 @@ class BillingAddress extends Model
         'billing_address',
         'email_address',
         'phone_number',
-        'is_default'
+        'is_default',
     ];
 
     protected function getPersonalDataFields(): array
@@ -24,7 +24,7 @@ class BillingAddress extends Model
             'billing_name' => 'text',
             'billing_address' => 'address',
             'email_address' => 'email',
-            'phone_number' => 'phone'
+            'phone_number' => 'phone',
         ];
     }
 

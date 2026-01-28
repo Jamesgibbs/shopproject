@@ -17,7 +17,7 @@ class Order extends Model
         'created_at',
         'total_amount',
         'is_anonymized',
-        'anonymized_at'
+        'anonymized_at',
     ];
 
     protected function getPersonalDataFields(): array
@@ -27,7 +27,7 @@ class Order extends Model
             'billing_address' => 'address',
             'email_address' => 'email',
             'phone_number' => 'phone',
-            'user_id' => 'foreign_key'
+            'user_id' => 'foreign_key',
         ];
     }
 
@@ -45,5 +45,4 @@ class Order extends Model
     {
         return $this->belongsTo(User::class, 'supplier_id');
     }
-
 }

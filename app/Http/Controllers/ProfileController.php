@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
@@ -64,7 +66,6 @@ class ProfileController extends Controller
             }
         });
 
-
         $user->delete();
 
         $request->session()->invalidate();
@@ -76,6 +77,7 @@ class ProfileController extends Controller
     public function addBillingInfo()
     {
         $billingInfo = BillingAddress::where('user_id', auth()->id())->first();
+
         return Inertia::render('Profile/BillingInfoForm', ['billingInfo' => $billingInfo ?? '']);
     }
 
@@ -94,14 +96,11 @@ class ProfileController extends Controller
             ['is_default' => true],
             [
                 ...$validated,
-                'is_default' => true
+                'is_default' => true,
             ]
         );
-
 
         return Redirect::route('dashboard')
             ->with('status', 'billing-information-updated');
     }
-
-
 }

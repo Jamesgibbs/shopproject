@@ -5,7 +5,6 @@ namespace App\Listeners;
 use App\Events\OrderShipped;
 use App\Mail\OrderConfirmation;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
 
 class SendOrderDetailsEmail implements ShouldQueue

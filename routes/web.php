@@ -18,9 +18,9 @@ use Inertia\Inertia;
 |--------------------------------------------------------------------------
 */
 
-//Route::get('/', function () {
+// Route::get('/', function () {
 //    return Auth::check() ? redirect()->route('dashboard') : redirect()->route('login');
-//})->name('home');
+// })->name('home');
 
 /*
 |--------------------------------------------------------------------------
@@ -41,19 +41,13 @@ Route::get('/dashboard', function () {
     ]);
 })->name('dashboard');
 
-
-
 Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
-
-
 
 // Products (Public View)
 Route::controller(ProductController::class)->group(function () {
     Route::get('/products', 'index')->name('products.index');
     Route::get('/products/{product}', 'view')->name('products.view');
 });
-
-
 
 // Categories(Public View)
 Route::controller(CategoryController::class)->group(function () {
@@ -101,7 +95,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Payment
         Route::get('/payment', [PaymentController::class, 'showPaymentForm'])->name('payment.form');
-        Route::post('/payment', [PaymentController::class, 'processPayment'])->name('payment.process');;
+        Route::post('/payment', [PaymentController::class, 'processPayment'])->name('payment.process');
     });
 
     /*

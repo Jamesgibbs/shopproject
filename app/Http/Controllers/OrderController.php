@@ -8,7 +8,7 @@ use App\Mail\OrderConfirmation;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Models\Product;
+use App\Orders\DataTransferObjects\BaseOrderData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
@@ -21,13 +21,12 @@ class OrderController extends Controller
             ->where('user_id', auth()->id())
             ->get();
 
-
-        $pendingOrders = $orders->filter(fn($order) => $order->status === 'pending')->values();
-        $otherOrders = $orders->filter(fn($order) => $order->status !== 'pending')->values();
+        $pendingOrders = $orders->filter(fn ($order) => $order->status === 'pending')->values();
+        $otherOrders = $orders->filter(fn ($order) => $order->status !== 'pending')->values();
 
         return Inertia::render('Orders/Index', [
-            'pendingOrders' => $pendingOrders->map(fn($order) => $this->transformOrder($order)),
-            'previousOrders' => $otherOrders->map(fn($order) => $this->transformOrder($order)),
+            'pendingOrders' => $pendingOrders->map(fn ($order) => BaseOrderData::fromModel($order)->toArray()),
+            'previousOrders' => $otherOrders->map(fn ($order) => BaseOrderData::fromModel($order)->toArray()),
         ]);
     }
 
@@ -38,23 +37,6 @@ class OrderController extends Controller
         return Inertia::render('Orders/SupplierIndex', [
             'orders' => $orders,
         ]);
-    }
-
-    private function transformOrder($order): array
-    {
-        return [
-            'id' => $order->id,
-            'customer_name' => $order?->user?->name,
-            'total' => $order->total_amount,
-            'status' => $order->status,
-            'items' => $order->items->map(fn($item) => [
-                'id' => $item->id,
-                'name' => $item->product->name ?? 'Unknown Product',
-                'quantity' => $item->quantity,
-                'price' => $item->price_at_time,
-            ]),
-            'ordered_at' => $order->created_at->toDateTimeString(),
-        ];
     }
 
     public function submit(Request $request)
@@ -83,7 +65,7 @@ class OrderController extends Controller
         $supplierId = auth()->id();
 
         $sales = OrderItem::with(['order.user', 'product'])
-            ->whereHas('product', fn($q) => $q->where('supplier_id', $supplierId))
+            ->whereHas('product', fn ($q) => $q->where('supplier_id', $supplierId))
             ->latest()
             ->get()
             ->map(function ($item) {
@@ -102,5 +84,4 @@ class OrderController extends Controller
             'sales' => $sales,
         ]);
     }
-
 }

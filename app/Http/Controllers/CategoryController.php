@@ -9,14 +9,12 @@ use Inertia\Inertia;
 
 class CategoryController extends Controller
 {
-
     public function show(string $slug)
     {
         $category = Category::where('slug', $slug)->firstOrFail();
 
         return Inertia::render('Categories/Show', [
-            'category' => $category->load(['children', 'products']),
+            'category' => $category->load(['children', 'products', 'parent']),
         ]);
     }
-
 }

@@ -13,7 +13,6 @@ class OrderCreatedEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-
     public $queue = 'order-created';
 
     /**

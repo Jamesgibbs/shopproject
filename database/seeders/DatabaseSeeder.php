@@ -68,7 +68,7 @@ class DatabaseSeeder extends Seeder
         Product::factory()->count(200)
             ->create()
             ->each(function ($product) use ($allCategories) {
-                $product->categories()->attach( $allCategories->random(rand(1, 3))->pluck('id') );
+                $product->categories()->attach($allCategories->random(rand(1, 3))->pluck('id'));
             });
     }
 }

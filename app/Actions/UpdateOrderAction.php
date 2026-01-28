@@ -6,7 +6,6 @@ namespace App\Actions;
 
 use App\Models\Order;
 use App\ValueObjects\OrderId;
-use Illuminate\Support\Facades\Log;
 use Psr\Log\LoggerInterface;
 
 class UpdateOrderAction
@@ -14,18 +13,17 @@ class UpdateOrderAction
     public function __construct(
         public Order $order,
         public LoggerInterface $logger
-    ){
-
-    }
+    ) {}
 
     public function execute(OrderId $orderId): void
     {
         $order = Order::find($orderId->value);
 
-        if (!$order) {
+        if (! $order) {
             $this->logger->error('Order not found in ProcessOrderCreated listener', [
                 'order_id' => $orderId->value,
             ]);
+
             return;
         }
 

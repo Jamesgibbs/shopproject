@@ -3,10 +3,17 @@ import { Head, Link } from '@inertiajs/react'
 import DeleteUserForm from './Partials/DeleteUserForm'
 import UpdatePasswordForm from './Partials/UpdatePasswordForm'
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm'
+import GuestLayout from "@/Layouts/GuestLayout.jsx";
+import SupplierLayout from "@/Layouts/SupplierLayout.jsx";
 
-export default function Edit({ mustVerifyEmail, status }) {
+export default function Edit({ mustVerifyEmail, status, auth }) {
+
+    const user = auth.user
+    const isSupplier = user && user.role === 'supplier'
+    const Layout = isSupplier ? SupplierLayout : GuestLayout;
+
     return (
-        <AuthenticatedLayout
+        <Layout
             header={<h2 className="text-xl font-semibold leading-tight text-gray-800">Profile</h2>}
         >
             <Head title="Profile" />
@@ -39,6 +46,6 @@ export default function Edit({ mustVerifyEmail, status }) {
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </Layout>
     )
 }

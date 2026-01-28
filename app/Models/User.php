@@ -22,7 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role'
+        'role',
     ];
 
     /**
@@ -62,6 +62,4 @@ class User extends Authenticatable
     {
         return $this->hasMany(Review::class);
     }
-
-
 }

@@ -2,8 +2,6 @@
 
 namespace App\Traits;
 
-use App\Models\User;
-
 trait HasDeletedData
 {
     public function anonymizePersonalData(): void
@@ -23,10 +21,10 @@ trait HasDeletedData
         $this->save();
     }
 
-    protected function getAnonymizedValue(string $type): string|null
+    protected function getAnonymizedValue(string $type): ?string
     {
         return match ($type) {
-            'text' => 'ANONYMIZED_' . substr(md5(uniqid()), 0, 8),
+            'text' => 'ANONYMIZED_'.substr(md5(uniqid()), 0, 8),
             'email' => sprintf('anonymous_%s@redacted.invalid', substr(md5(uniqid()), 0, 8)),
             'phone' => preg_replace('/[0-9]/', '*', '+00000000000'),
             'address' => 'ANONYMIZED_ADDRESS',
@@ -34,5 +32,4 @@ trait HasDeletedData
             default => 'ANONYMIZED',
         };
     }
-
 }

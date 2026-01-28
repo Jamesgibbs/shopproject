@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-
     public function up(): void
     {
         Schema::create('billing_addresses', function (Blueprint $table) {
@@ -22,7 +21,6 @@ return new class extends Migration
             $table->unique('user_id');
         });
     }
-
 
     /**
      * Reverse the migrations.

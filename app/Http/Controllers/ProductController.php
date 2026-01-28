@@ -7,13 +7,12 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
-
     public function supplierIndex()
     {
         $products = Product::where('supplier_id', auth()->id())->paginate(20);
@@ -23,7 +22,6 @@ class ProductController extends Controller
         ]);
     }
 
-
     public function index()
     {
         $query = Product::with('supplier')
@@ -31,8 +29,6 @@ class ProductController extends Controller
 //                $query->where('supplier_id', auth()->id());
 //            })
             ->orderBy('created_at', 'desc');
-
-
 
         $products = $query->paginate(10);
 
@@ -43,16 +39,16 @@ class ProductController extends Controller
 
     public function view(Product $product)
     {
-        $product->load(['reviews' => function($query) {
+        $product->load(['reviews' => function ($query) {
             $query->with('user:id,name')
-            ->latest();
+                ->latest();
         }]);
 
         return Inertia::render('Products/Product', [
             'product' => array_merge($product->toArray(), [
                 'average_rating' => $product->average_rating,
                 'reviews_count' => $product->reviews_count,
-            ])
+            ]),
         ]);
     }
 
@@ -63,8 +59,8 @@ class ProductController extends Controller
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
                 'description' => 'nullable|string',
-                'price' => 'nullable|',
-                'stock_quantity' => 'nullable|',
+                'price' => 'required|numeric|min:0|max:999999.99',
+                'stock_quantity' => 'required|integer|min:0|max:1000000',
             ]);
 
             $validated['supplier_id'] = Auth::id();
@@ -79,23 +75,23 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-       $validated =  $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'stock_quantity' => 'required|integer|min:0',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
-       ]);
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
 
-       $validated['supplier_id'] = Auth::id();
+        $validated['supplier_id'] = Auth::id();
 
-       $product = Product::create($validated);
+        $product = Product::create($validated);
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('products', 'public');
             $product->images()->create([
                 'path' => $path,
-                'alt' => $validated['name']
+                'alt' => $validated['name'],
             ]);
         }
 
@@ -104,6 +100,8 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
+        $this->authorize('update', $product);
+
         $validated = $request->validate([
             'name' => 'required',
             'description' => 'required',
@@ -121,9 +119,10 @@ class ProductController extends Controller
         return redirect()->route('supplier.products.index')->with('success', 'Product updated.');
     }
 
-
     public function edit(Product $product)
     {
+        $this->authorize('update', $product);
+
         return Inertia::render('Products/Edit', [
             'product' => $product->load('categories'),
             'categories' => Category::all(),
@@ -131,16 +130,12 @@ class ProductController extends Controller
         ]);
     }
 
-
     public function delete(Product $product)
     {
-        if ($product->supplier_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
-        }
+        $this->authorize('delete', $product);
 
         $product->delete();
 
         return redirect()->back()->with('success', 'Product Deleted!');
     }
-
 }

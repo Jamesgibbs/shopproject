@@ -9,12 +9,8 @@ export default function SupplierIndex() {
 
     return (
         <PageCard title="Orders">
-            <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">My Orders</h1>
-
-            <h2>Pending Orders</h2>
-            <OrdersTable orders={pendingOrders} />
-
-            <h2 style={{ marginTop: '3rem' }}>Previous Orders</h2>
+            <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">Orders</h1>
+            
             <OrdersTable orders={previousOrders} />
         </PageCard>
     )

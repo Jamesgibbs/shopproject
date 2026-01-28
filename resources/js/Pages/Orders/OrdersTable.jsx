@@ -1,9 +1,8 @@
 import React from 'react'
-import { Link } from '@inertiajs/react'
 
 export default function OrdersTable({ orders }) {
     if (!Array.isArray(orders) || orders.length === 0) {
-        return <p></p>
+        return <p>No Previous Orders</p>
     }
 
     return (

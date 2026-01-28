@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
-use App\Models\Order;
-use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,7 +15,7 @@ class CartController extends Controller
     {
         $cart = Cart::with('items.product')->where('user_id', auth()->id())->first();
 
-        if (!$cart) {
+        if (! $cart) {
             return Inertia::render('Cart/ViewCart', ['cartItems' => []]);
         }
 
@@ -33,7 +33,7 @@ class CartController extends Controller
         })->values()->all();
 
         return Inertia::render('Cart/ViewCart', [
-            'cartItems' => $cartItems
+            'cartItems' => $cartItems,
         ]);
 
     }
@@ -73,17 +73,17 @@ class CartController extends Controller
 
     public function removeFromCart(Request $request)
     {
-       $cart = Cart::where('user_id', auth()->id())->first();
+        $cart = Cart::where('user_id', auth()->id())->first();
 
-       if (!$cart) {
-           return redirect()->back()->with('error', 'No cart found.');
-       }
+        if (! $cart) {
+            return redirect()->back()->with('error', 'No cart found.');
+        }
 
-
-       $cartItem = $cart->items()->where('id', $request->id)->first();
+        $cartItem = $cart->items()->where('id', $request->id)->first();
 
         if ($cartItem) {
             $cartItem->delete();
+
             return redirect()->back()->with('success', 'Product removed from cart!');
         }
 
@@ -118,10 +118,9 @@ class CartController extends Controller
         $cartItem = $cart->items()->findOrFail($validated['cart_item_id']);
 
         $cartItem->update([
-            'quantity' => $validated['quantity']
+            'quantity' => $validated['quantity'],
         ]);
 
         return redirect()->back()->with('success', 'Quantity updated!');
     }
-
 }

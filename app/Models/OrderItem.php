@@ -12,7 +12,7 @@ class OrderItem extends Model
         'quantity',
         'price_at_time',
         'created_at',
-        'product_name'
+        'product_name',
     ];
 
     public function product()
@@ -24,5 +24,4 @@ class OrderItem extends Model
     {
         return $this->belongsTo(Order::class);
     }
-
 }

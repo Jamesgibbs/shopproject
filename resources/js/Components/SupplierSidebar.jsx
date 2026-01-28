@@ -38,8 +38,8 @@ export default function SupplierSidebar() {
                 </Link>
 
                 <Link
-                    href="/supplier/settings"
-                    className={isActive('/supplier/settings') ? styles.active : ''}
+                    href="/profile"
+                    className={isActive('/profile') ? styles.active : ''}
                 >
                     Settings
                 </Link>

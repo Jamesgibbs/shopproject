@@ -9,10 +9,31 @@ import styles from './Show.module.css'
 export default function Show() {
     const { category } = usePage().props
 
+    const breadcrumb = category.parent
+        ? [
+            { id: category.parent.id, name: category.parent.name },
+            { id: category.id, name: category.name }
+        ]
+        : [
+            { id: category.id, name: category.name }
+        ]
+
+
     return (
         <PageCard title="Category">
             <div className={styles.header}>
                 <h1 className={styles.title}>{category.name}</h1>
+                <p className={styles.breadcrumb}>
+                    {breadcrumb.map((item, index) => (
+                        <span key={item.id}>
+                            <Link href={`/categories/${item.id}`}>
+                                {item.name}
+                            </Link>
+                            {index < breadcrumb.length - 1 && ' / '}
+                        </span>
+                    ))}
+                </p>
+
                 <p className={styles.description}>{category.description}</p>
             </div>
 

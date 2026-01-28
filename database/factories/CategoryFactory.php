@@ -16,7 +16,7 @@ class CategoryFactory extends Factory
             'name' => $this->faker->name(),
             'slug' => $this->faker->slug(),
             'description' => $this->faker->text(),
-            'image' => "https://picsum.photos/seed/category-{$this->faker->unique()->numberBetween(1,9999)}/600/300",
+            'image' => "https://picsum.photos/seed/category-{$this->faker->unique()->numberBetween(1, 9999)}/600/300",
         ];
     }
 
@@ -29,9 +29,8 @@ class CategoryFactory extends Factory
                 'name' => $name,
                 'slug' => Str::slug($name),
                 'parent_id' => $parent->id,
-                'image' => "https://picsum.photos/seed/category-{$this->faker->unique()->numberBetween(1,9999)}/600/300"
+                'image' => "https://picsum.photos/seed/category-{$this->faker->unique()->numberBetween(1, 9999)}/600/300",
             ];
         });
     }
-
 }

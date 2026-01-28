@@ -9,14 +9,12 @@ use Illuminate\Mail\Mailables\Envelope;
 
 class OrderConfirmation extends Mailable
 {
-    public function __construct(private readonly Order $order)
-    {
-    }
+    public function __construct(private readonly Order $order) {}
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Order Confirmation #' . $this->order->id,
+            subject: 'Order Confirmation #'.$this->order->id,
         );
     }
 

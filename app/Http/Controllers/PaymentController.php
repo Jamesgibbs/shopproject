@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Mail\OrderConfirmation;
@@ -23,7 +25,7 @@ class PaymentController extends Controller
 
         foreach ($cart->items as $item) {
             $product = $item->product;
-            if (!$product || $product->stock_quantity < $item->quantity) {
+            if (! $product || $product->stock_quantity < $item->quantity) {
                 return redirect()->back()->with(
                     'error',
                     "Insufficient stock for '{$product->name}'. Please adjust your cart."
@@ -33,7 +35,7 @@ class PaymentController extends Controller
 
         $order = Order::create([
             'user_id' => auth()->id(),
-            'total_amount' => $cart->items->sum(fn($item) => $item->quantity * $item->price_at_time),
+            'total_amount' => $cart->items->sum(fn ($item) => $item->quantity * $item->price_at_time),
             'status' => 'pending',
         ])->load('user');
 
@@ -62,5 +64,4 @@ class PaymentController extends Controller
         $cart->items()->delete();
 
     }
-
 }

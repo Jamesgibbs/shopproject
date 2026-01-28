@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Enums\Role;
 use App\Models\Product;
-use App\Models\Review;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -22,8 +21,7 @@ class ProductControllerTest extends TestCase
 
         $response = $this->get(route('products.index'));
         $response->assertStatus(200);
-        $response->assertInertia(fn ($page) =>
-        $page->component('Products/Index')
+        $response->assertInertia(fn ($page) => $page->component('Products/Index')
             ->has('products.data', 3)  // Check the paginated data array
         );
 
@@ -80,12 +78,10 @@ class ProductControllerTest extends TestCase
         $response = $this->get(route('products.edit', $product));
 
         $response->assertStatus(200);
-        $response->assertInertia(fn ($page) =>
-        $page->component('Products/Edit')
+        $response->assertInertia(fn ($page) => $page->component('Products/Edit')
             ->has('product')
         );
     }
-
 
     public function test_unauthorized_user_cannot_edit_product()
     {
@@ -99,5 +95,4 @@ class ProductControllerTest extends TestCase
         $response = $this->get(route('products.edit', $product));
         $response->assertStatus(403);
     }
-
 }
