@@ -1,6 +1,6 @@
 import React from 'react'
 import { usePage } from '@inertiajs/react'
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.jsx'
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.tsx'
 import PageCard from '@/Components/Common/PageCard.jsx'
 
 export default function SalesHistory() {

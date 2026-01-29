@@ -4,8 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Review;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -73,5 +73,7 @@ class DatabaseSeeder extends Seeder
             ->each(function ($product) use ($allCategories) {
                 $product->categories()->attach($allCategories->random(rand(1, 3))->pluck('id'));
             });
+
+        Review::factory()->count(50)->create();
     }
 }

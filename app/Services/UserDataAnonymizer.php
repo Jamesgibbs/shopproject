@@ -13,6 +13,7 @@ class UserDataAnonymizer
 {
     /**
      * Models and their relationships that need to be anonymized
+     *
      * @var array<class-string, string>
      */
     protected array $relatedModels = [

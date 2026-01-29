@@ -38,6 +38,7 @@ Route::get('/dashboard', function () {
     ]);
 })->name('dashboard');
 
+Route::post('/cart', [CartController::class, 'addToCart'])->name('cart.add');
 Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
 
 // Products (Public View)
@@ -72,7 +73,6 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware('customer')->group(function () {
         // Cart Management
         Route::controller(CartController::class)->prefix('cart')->name('cart.')->group(function () {
-            Route::post('/', 'addToCart')->name('add');
             Route::post('/remove', 'removeFromCart')->name('remove');
             Route::post('/checkout', 'checkout')->name('checkout');
             Route::post('/update-quantity', 'updateQuantity')->name('updateQuantity');

@@ -13,7 +13,7 @@ readonly class SalesHistoryData
         public string $customerName,
         public string $productName,
         public int $quantity,
-        public float $price,
+        public string $price,
         public int $orderId,
         public string $orderedAt,
     ) {}

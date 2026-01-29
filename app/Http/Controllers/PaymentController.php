@@ -21,7 +21,7 @@ class PaymentController extends Controller
     /**
      * @throws Throwable
      */
-    public function processPayment(ProcessPaymentService $processPaymentService): null| RedirectResponse
+    public function processPayment(ProcessPaymentService $processPaymentService): ?RedirectResponse
     {
         $cart = Cart::with('items.product')->where('user_id', auth()->id())->firstOrFail();
 

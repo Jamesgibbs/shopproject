@@ -13,14 +13,21 @@ interface Product {
     description: string;
     price: number;
     stock_quantity: number;
-    [key: string]: any;
+    supplier_name: string | null;
+    average_rating: number | null;
+    reviews_count: number | null;
+    image: string | null;
+    reviews: unknown[];
+}
+
+interface Paginated<T> {
+    data: T[];
+    links: Record<string, string | null>;
+    meta: Record<string, unknown>;
 }
 
 interface IndexProps extends Record<string, unknown> {
-    products: {
-        data: Product[];
-        [key: string]: any;
-    };
+    products: Paginated<Product>;
     categories: Category[];
 }
 

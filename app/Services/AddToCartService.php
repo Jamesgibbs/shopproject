@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
@@ -15,39 +14,35 @@ class AddToCartService
     /**
      * @throws Throwable
      */
-    public function add(int $productId, int $quantity, int $userId): void
+    public function add(int $productId, int $quantity, ?int $userId, ?string $cartToken): void
     {
-        DB::transaction(function () use ($productId, $quantity, $userId) {
+        DB::transaction(function () use ($productId, $quantity, $userId, $cartToken) {
 
-            /** @var Product $product */
-            $product = Product::query()->findOrFail($productId);
+            $product = Product::findOrFail($productId);
 
-            /** @var Cart $cart */
-            $cart = Cart::firstOrCreate(
-                ['user_id' => $userId],
-                ['created_at' => now()]
-            );
+            // Build identifier based on user or guest
+            $identifier = $userId
+                ? ['user_id' => $userId]
+                : ['cart_token' => $cartToken];
 
-            /** @var CartItem|null $cartItem */
-            $cartItem = $cart->items()
-                ->where('product_id', $product->id)
-                ->lockForUpdate() // prevents race conditions
+            // Find existing cart item
+            $cartItem = CartItem::where($identifier)
+                ->where('product_id', $productId)
+                ->lockForUpdate()
                 ->first();
 
-            $payload = [
-                'product_id' => $product->id,
-                'price_at_time' => $product->price,
-            ];
-
             if ($cartItem) {
+                // Update quantity
                 $cartItem->update([
-                    ...$payload,
                     'quantity' => $cartItem->quantity + $quantity,
                 ]);
             } else {
-                $cart->items()->create([
-                    ...$payload,
+                // Create new cart item
+                CartItem::create([
+                    ...$identifier,
+                    'product_id' => $productId,
                     'quantity' => $quantity,
+                    'price_at_time' => $product->price,
                 ]);
             }
         });

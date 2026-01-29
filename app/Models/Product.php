@@ -27,6 +27,7 @@ class Product extends Model
 {
     /** @use HasFactory<ProductFactory> */
     use HasFactory;
+
     use SoftDeletes;
 
     protected $fillable = [
@@ -71,9 +72,9 @@ class Product extends Model
     }
 
     // Helper method to get average rating
-    public function getAverageRatingAttribute(): float
+    public function getAverageRatingAttribute(): string
     {
-        return $this->reviews()->avg('rating') ?? 0.0;
+        return $this->reviews()->avg('rating') ?? '0.00';
     }
 
     // Helper method to get total number of reviews
@@ -91,7 +92,7 @@ class Product extends Model
     }
 
     /**
-     * @param Builder<Product> $query
+     * @param  Builder<Product>  $query
      * @return Builder<Product>
      */
     public function scopeFeatured(Builder $query): Builder

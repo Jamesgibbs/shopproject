@@ -1,6 +1,5 @@
 import React from 'react'
-import GuestLayout from '@/Layouts/GuestLayout.tsx'
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.jsx'
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { usePage } from '@inertiajs/react'
 import OrdersTable from './OrdersTable.jsx'
 import PageCard from '@/Components/Common/PageCard.jsx'

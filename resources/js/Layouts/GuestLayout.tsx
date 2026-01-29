@@ -1,19 +1,17 @@
-import { Link } from '@inertiajs/react'
+import { Link, usePage } from '@inertiajs/react'
 import CategoriesDropdown from '@/Components/Features/Categories/CategoriesDropdown.jsx'
-import { usePage } from '@inertiajs/react'
 import styles from './GuestLayout.module.css'
 import Logo from "@/Components/Layout/Logo";
 import Footer from "@/Components/Layout/Footer";
-import React from "react";
+import React, { PropsWithChildren, ReactNode } from "react";
 import { PageProps } from '@/types';
 
 interface GuestLayoutProps {
-    header?: React.ReactNode
-    children?: React.ReactNode
+    header?: ReactNode
 }
 
-export default function GuestLayout({ header, children }: GuestLayoutProps) {
-    const { categories } = usePage<PageProps>().props
+export default function GuestLayout({ header, children }: PropsWithChildren<GuestLayoutProps>) {
+    const { categories, flash } = usePage<PageProps>().props
 
     return (
         <div className="layout">
@@ -38,7 +36,6 @@ export default function GuestLayout({ header, children }: GuestLayoutProps) {
                                     />
                                 </form>
                             </div>
-
                         </div>
 
                         {/* Right side */}
@@ -65,7 +62,11 @@ export default function GuestLayout({ header, children }: GuestLayoutProps) {
                 </header>
             )}
 
-            <main className="page-content">{children}</main>
+            <main className="page-content">
+                {flash.success && <div className="flash-success">{flash.success}</div>}
+                {flash.error && <div className="flash-error">{flash.error}</div>}
+                {children}
+            </main>
             <Footer />
         </div>
 

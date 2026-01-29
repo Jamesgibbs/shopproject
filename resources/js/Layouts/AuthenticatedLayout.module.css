@@ -1,0 +1,25 @@
+.searchWrapper {
+    flex: 1; /* allows the search bar to stretch nicely */
+    display: flex;
+    justify-content: center;
+}
+
+.searchForm {
+    width: 100%;
+    max-width: 400px;
+}
+
+.searchInput {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.searchInput:focus {
+    outline: none;
+    border-color: #999;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useForm, router } from '@inertiajs/react'
+import { useForm } from '@inertiajs/react'
 import MultiSelect from '@/Components/Common/Multiselect'
 
 export default function Create({ categories, onSuccess }) {
@@ -12,7 +12,7 @@ export default function Create({ categories, onSuccess }) {
         categories: [],
     })
 
-    const [submitted, setSubmitted] = useState(false)
+    const [submitted] = useState(false)
     const [imagePreview, setImagePreview] = useState(null)
 
     const handleImageChange = (e) => {

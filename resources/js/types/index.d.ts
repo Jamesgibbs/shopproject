@@ -17,7 +17,11 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
         user: User | null;
     };
     categories: Category[];
-    featuredProducts?: FeaturedProduct[]
+    featuredProducts?: FeaturedProduct[];
+    flash: {
+        success: string | null;
+        error: string | null;
+    };
 };
 
 export interface FeaturedProduct {

@@ -12,12 +12,13 @@ readonly class ProductData
         protected int $id,
         protected string $name,
         protected string $description,
-        protected float $price,
+        protected string $price,
         protected int $stockQuantity,
         protected ?string $supplierName = null,
         protected ?float $averageRating = null,
         protected ?int $reviewsCount = null,
         protected ?string $image = null,
+        protected array $reviews = [],
     ) {}
 
     public static function fromModel(Product $product): self
@@ -26,12 +27,15 @@ readonly class ProductData
             id: $product->id,
             name: $product->name,
             description: $product->description,
-            price:  $product->price,
-            stockQuantity:  $product->stock_quantity,
+            price: (string) $product->price,
+            stockQuantity: $product->stock_quantity,
             supplierName: $product->relationLoaded('supplier') ? $product->supplier?->name : null,
-            averageRating: $product->average_rating,
+            averageRating: $product->average_rating !== null
+                ? floatval($product->average_rating)
+                : null,
             reviewsCount: $product->reviews_count,
-            image: $product->relationLoaded('images') ? $product->images->first()?->path : null,
+            image: $product->image ?? null,
+            reviews: $product->relationLoaded('reviews') ? $product->reviews->toArray() : [],
         );
     }
 
@@ -50,6 +54,7 @@ readonly class ProductData
             'average_rating' => $this->averageRating,
             'reviews_count' => $this->reviewsCount,
             'image' => $this->image,
+            'reviews' => $this->reviews,
         ];
     }
 }

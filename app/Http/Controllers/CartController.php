@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Services\AddToCartService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 use Throwable;
@@ -19,18 +20,22 @@ class CartController extends Controller
 {
     public function viewCart(): Response
     {
-        $cart = Cart::with('items.product')->where('user_id', auth()->id())->first();
+        $userId = auth()->id();
+        $cartToken = session()->get('cart_token');
 
-        if (! $cart) {
-            return Inertia::render('Cart/ViewCart', ['cartItems' => []]);
-        }
+        // Determine identifier
+        $identifier = $userId
+            ? ['user_id' => $userId]
+            : ['cart_token' => $cartToken];
 
-        // Only show cart items where the product exists and isn't deleted
-        $cartItems = $cart->items->filter(function (CartItem $item) {
-            return $item->product !== null;
-        })->map(function (CartItem $item) {
-            return CartItemData::fromModel($item)->toArray();
-        })->values()->all();
+        // Fetch cart items with products
+        $cartItems = CartItem::where($identifier)
+            ->with('product')
+            ->get()
+            ->filter(fn (CartItem $item) => $item->product !== null)
+            ->map(fn (CartItem $item) => CartItemData::fromModel($item)->toArray())
+            ->values()
+            ->all();
 
         return Inertia::render('Cart/ViewCart', [
             'cartItems' => $cartItems,
@@ -44,14 +49,27 @@ class CartController extends Controller
     {
         $validated = $request->validate([
             'product_id' => ['required', 'integer', 'exists:products,id'],
-            'quantity' => ['required', 'integer', 'min:1'],
         ]);
+
+        // Determine identifier (user or guest)
+        $userId = auth()->id();
+        $cartToken = null;
+
+        if (! $userId) {
+            $cartToken = session()->get('cart_token');
+
+            if (! $cartToken) {
+                $cartToken = Str::uuid()->toString();
+                session()->put('cart_token', $cartToken);
+            }
+        }
 
         try {
             $service->add(
                 productId: $validated['product_id'],
-                quantity: $validated['quantity'],
-                userId: auth()->id(),
+                quantity: 1,
+                userId: $userId,
+                cartToken: $cartToken,
             );
         } catch (Throwable) {
             return back()->with('error', 'Product not added to cart!');
@@ -62,7 +80,7 @@ class CartController extends Controller
 
     public function removeFromCart(Request $request): RedirectResponse
     {
-        $cart = Cart::where('user_id', auth()->id())->first();
+        $cart = CartItem::where('user_id', auth()->id())->first();
 
         if (! $cart) {
             return redirect()->back()->with('error', 'No cart found.');
@@ -81,7 +99,7 @@ class CartController extends Controller
 
     public function checkout(): RedirectResponse
     {
-        $cart = Cart::with('items.product')->where('user_id', auth()->id())->firstOrFail();
+        $cart = CartItem::with('items.product')->where('user_id', auth()->id())->firstOrFail();
 
         if ($cart->items->isEmpty()) {
             return redirect()->back()->with('error', 'Your cart is empty.');
@@ -103,7 +121,7 @@ class CartController extends Controller
             return redirect()->back()->with('error', 'No more stock available!');
         }
 
-        $cart = Cart::where('user_id', auth()->id())->firstOrFail();
+        $cart = CartItem::where('user_id', auth()->id())->firstOrFail();
         $cartItem = $cart->items()->findOrFail($validated['cart_item_id']);
 
         $cartItem->update([

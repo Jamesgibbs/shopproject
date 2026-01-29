@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property float $price_at_time
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property-read Cart $cart
  * @property-read Product|null $product
  */
 class CartItem extends Model
@@ -34,13 +33,5 @@ class CartItem extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
-    }
-
-    /**
-     * @return BelongsTo<Cart, $this>
-     */
-    public function cart(): BelongsTo
-    {
-        return $this->belongsTo(Cart::class);
     }
 }

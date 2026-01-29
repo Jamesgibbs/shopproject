@@ -1,6 +1,6 @@
 import React from 'react'
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.jsx'
-import Index from '@/Pages/Orders/Index.jsx'
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.tsx'
+
 export default function DeliveryInfo() {
     return (
         <div>

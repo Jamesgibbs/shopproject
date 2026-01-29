@@ -1,6 +1,5 @@
-import { useState } from 'react'
 import { Head, useForm } from '@inertiajs/react'
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.tsx'
 import InputError from '@/Components/Common/InputError'
 import InputLabel from '@/Components/Common/InputLabel'
 import PrimaryButton from '@/Components/Common/PrimaryButton'

@@ -1,10 +1,9 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Head, Link } from '@inertiajs/react'
 import DeleteUserForm from './Partials/DeleteUserForm'
 import UpdatePasswordForm from './Partials/UpdatePasswordForm'
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm'
-import GuestLayout from "@/Layouts/GuestLayout.tsx";
-import SupplierLayout from "@/Layouts/SupplierLayout.tsx";
+import GuestLayout from "@/Layouts/GuestLayout";
+import SupplierLayout from "@/Layouts/SupplierLayout";
 
 export default function Edit({ mustVerifyEmail, status, auth }) {
 

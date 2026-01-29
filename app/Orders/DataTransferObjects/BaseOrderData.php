@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
 readonly class BaseOrderData
 {
     /**
-     * @param Collection<int, OrderItemData> $items
+     * @param  Collection<int, OrderItemData>  $items
      */
     public function __construct(
         protected readonly int $id,

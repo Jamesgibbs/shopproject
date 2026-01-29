@@ -5,7 +5,7 @@ import PageCard from '@/Components/Common/PageCard.jsx'
 import SupplierLayout from "@/Layouts/SupplierLayout.tsx";
 
 export default function SupplierIndex() {
-    const { previousOrders = [], pendingOrders = [] } = usePage().props
+    const { previousOrders = [] } = usePage().props
 
     return (
         <PageCard title="Orders">

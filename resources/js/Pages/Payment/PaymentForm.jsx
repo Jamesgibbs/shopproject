@@ -1,14 +1,13 @@
 import { useState } from 'react'
 import { Head, useForm } from '@inertiajs/react'
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import InputError from '@/Components/Common/InputError'
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.tsx'
 import InputLabel from '@/Components/Common/InputLabel'
 import PrimaryButton from '@/Components/Common/PrimaryButton'
 import TextInput from '@/Components/Common/TextInput'
 import { router } from '@inertiajs/react'
 
 export default function PaymentForm({ auth }) {
-    const { data, setData, processing, reset } = useForm({
+    const { data, setData, processing } = useForm({
         cardNumber: '',
         expiryDate: '',
         cvv: '',

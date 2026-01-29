@@ -47,8 +47,8 @@ class ProductController extends Controller
     {
         $product->load([
             'supplier:id,name', // supplier
-             'reviews' => function ($query) {
-            $query->with('user:id,name')->latest();
+            'reviews' => function ($query) {
+                $query->with('user:id,name')->latest();
             },
         ]);
 
@@ -96,7 +96,6 @@ class ProductController extends Controller
 
         return back()->with('success', 'Product created!');
     }
-
 
     public function update(Request $request, Product $product): RedirectResponse
     {
@@ -149,7 +148,7 @@ class ProductController extends Controller
             'supplier' => [
                 'id' => $user->id,
                 'name' => $user->name,
-                'supplier_overview' => $user->supplier_overview
+                'supplier_overview' => $user->supplier_overview,
             ],
             'products' => $products->through(fn (Product $product) => ProductData::fromModel($product)->toArray()),
         ]);

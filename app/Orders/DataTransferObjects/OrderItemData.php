@@ -15,7 +15,6 @@ readonly class OrderItemData
         protected readonly float $price,
     ) {}
 
-
     public static function fromModel(OrderItem $item): self
     {
         return new self(

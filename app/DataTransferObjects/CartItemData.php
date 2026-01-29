@@ -12,7 +12,7 @@ readonly class CartItemData
         protected int $id,
         protected int $productId,
         protected string $name,
-        protected float $price,
+        protected string $price,
         protected int $quantity,
         public ?string $image = null,
     ) {}
@@ -23,8 +23,8 @@ readonly class CartItemData
             id: $item->id,
             productId: $item->product->id,
             name: $item->product->name,
-            price: (float) $item->product->price,
-            quantity: (int) $item->quantity,
+            price: (string) $item->product->price,
+            quantity: $item->quantity,
             image: $item->product->images->first()?->path,
         );
     }

@@ -13,7 +13,6 @@ export default function Create() {
         post('/orders')
     }
 
-    // @ts-ignore
     return (
             <form onSubmit={submit}>
                 <TextInput
