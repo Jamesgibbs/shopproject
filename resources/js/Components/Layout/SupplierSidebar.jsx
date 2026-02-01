@@ -22,6 +22,13 @@ export default function SupplierSidebar() {
                     Products
                 </Link>
 
+                <Link
+                    href={route('supplier.info.edit')}
+                    className={isActive('/supplier/info') ? styles.active : ''}
+                >
+                    Company Info
+                </Link>
+
 
                 <Link
                     href="/supplier/orders"

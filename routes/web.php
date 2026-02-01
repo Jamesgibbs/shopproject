@@ -10,6 +10,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupplierDashboardController;
+use App\Http\Controllers\SupplierInfoController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -139,6 +140,12 @@ Route::middleware(['auth'])->group(function () {
 
         // Sales History
         Route::get('/orders/sales-history', [OrderController::class, 'salesHistory'])->name('orders.salesHistory');
+
+        // Supplier Info Management
+        Route::controller(SupplierInfoController::class)->prefix('supplier/info')->name('supplier.info.')->group(function () {
+            Route::get('/', 'edit')->name('edit');
+            Route::patch('/', 'update')->name('update');
+        });
     });
 });
 

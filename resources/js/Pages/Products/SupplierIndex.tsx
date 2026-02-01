@@ -1,7 +1,7 @@
 import SupplierLayout from '@/Layouts/SupplierLayout'
 import SupplierProductsTable from "@/Components/Features/Products/SupplierProductsTable";
 import {Link} from "@inertiajs/react";
-import styles from "@/Pages/Auth/Login.module.css";
+import styles from "./SupplierIndex.module.css";
 import React from "react";
 import {Product} from "@/types/product";
 
@@ -21,12 +21,14 @@ interface SupplierIndexProps {
 
 export default function SupplierIndex({ products }: SupplierIndexProps) {
     return (
-        <div>
-            <h1>Products</h1>
+        <div className={styles.wrapper}>
+            <div className={styles.header}>
+                <h1 className={styles.title}>Products</h1>
 
-            <Link href={route('products.supplier.products.create')} className={styles.link}>
-                Add new Product
-            </Link>
+                <Link href={route('products.supplier.products.create')} className={styles.addButton}>
+                    Add new Product
+                </Link>
+            </div>
 
             <SupplierProductsTable products={products}/>
         </div>

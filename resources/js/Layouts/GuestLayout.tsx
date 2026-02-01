@@ -1,5 +1,6 @@
 import { Link, usePage } from '@inertiajs/react'
 import CategoriesDropdown from '@/Components/Features/Categories/CategoriesDropdown.jsx'
+import FlashMessage from '@/Components/Common/FlashMessage'
 import styles from './GuestLayout.module.css'
 import Logo from "@/Components/Layout/Logo";
 import Footer from "@/Components/Layout/Footer";
@@ -15,6 +16,7 @@ export default function GuestLayout({ header, children }: PropsWithChildren<Gues
 
     return (
         <div className="layout">
+            <FlashMessage />
             <nav className="navbar">
                 <div className="navbar-container">
                     <div className="navbar-inner">

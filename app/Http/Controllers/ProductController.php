@@ -76,11 +76,13 @@ class ProductController extends Controller
             $validated['supplier_id'] = Auth::id();
 
             Product::create($validated);
-        } catch (Throwable $th) {
-            Log::debug('creating Product failed', [$th]);
-        }
 
-        return redirect()->back();
+            return redirect()->back()->with('success', 'Product created successfully!');
+        } catch (Throwable $th) {
+            Log::error('creating Product failed', ['exception' => $th]);
+
+            return redirect()->back()->with('error', 'Failed to create product.');
+        }
     }
 
     public function store(StoreProductRequest $request): RedirectResponse

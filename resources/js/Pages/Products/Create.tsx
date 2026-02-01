@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useForm } from '@inertiajs/react'
+import { useForm, Link } from '@inertiajs/react'
 import SupplierLayout from "@/Layouts/SupplierLayout"
 import styles from './Create.module.css'
 
@@ -43,74 +43,87 @@ export default function Create({ categories, onSuccess }) {
     }
 
     return (
-        <>
+        <div className={styles.wrapper}>
+            <div className={styles.header}>
+                <Link href={route('supplier.products.index')} className={styles.backLink}>
+                    ← Back to Products
+                </Link>
+            </div>
+
             {!submitted && (
-                <form onSubmit={handleSubmit} className="form-container form-section">
-                    <h1 className="form-title">Add Product</h1>
+                <div className={styles.formContainer}>
+                    <h1 className={styles.formTitle}>Add Product</h1>
 
-                    <div className="form-section">
-                        <label htmlFor="name" className="label">Name</label>
-                        <input
-                            id="name"
-                            type="text"
-                            className="input"
-                            value={data.name}
-                            onChange={(e) => setData('name', e.target.value)}
-                        />
-                    </div>
+                    <form onSubmit={handleSubmit} className={styles.form}>
+                        <div className={styles.formSection}>
+                            <label htmlFor="name" className={styles.label}>Name</label>
+                            <input
+                                id="name"
+                                type="text"
+                                className={styles.input}
+                                value={data.name}
+                                onChange={(e) => setData('name', e.target.value)}
+                            />
+                            {errors.name && <div className={styles.errorText}>{errors.name}</div>}
+                        </div>
 
-                    <div className="form-section">
-                        <label htmlFor="description" className="label">Description</label>
-                        <textarea
-                            id="description"
-                            className="textarea"
-                            value={data.description}
-                            onChange={(e) => setData('description', e.target.value)}
-                        />
-                    </div>
+                        <div className={styles.formSection}>
+                            <label htmlFor="description" className={styles.label}>Description</label>
+                            <textarea
+                                id="description"
+                                className={styles.textarea}
+                                value={data.description}
+                                onChange={(e) => setData('description', e.target.value)}
+                            />
+                            {errors.description && <div className={styles.errorText}>{errors.description}</div>}
+                        </div>
 
-                    <div className="form-section">
-                        <label htmlFor="price" className="label">Price</label>
-                        <input
-                            id="price"
-                            type="number"
-                            className="input"
-                            value={data.price}
-                            onChange={(e) => setData('price', e.target.value)}
-                        />
-                    </div>
+                        <div className={styles.formSection}>
+                            <label htmlFor="price" className={styles.label}>Price</label>
+                            <input
+                                id="price"
+                                type="number"
+                                step="0.01"
+                                className={styles.input}
+                                value={data.price}
+                                onChange={(e) => setData('price', e.target.value)}
+                            />
+                            {errors.price && <div className={styles.errorText}>{errors.price}</div>}
+                        </div>
 
-                    <div className="form-section">
-                        <label htmlFor="stock" className="label">Stock Quantity</label>
-                        <input
-                            id="stock"
-                            type="number"
-                            className="input"
-                            value={data.stock_quantity}
-                            onChange={(e) => setData('stock_quantity', e.target.value)}
-                        />
-                    </div>
+                        <div className={styles.formSection}>
+                            <label htmlFor="stock" className={styles.label}>Stock Quantity</label>
+                            <input
+                                id="stock"
+                                type="number"
+                                className={styles.input}
+                                value={data.stock_quantity}
+                                onChange={(e) => setData('stock_quantity', e.target.value)}
+                            />
+                            {errors.stock_quantity && <div className={styles.errorText}>{errors.stock_quantity}</div>}
+                        </div>
 
-                    <div>
-                        <label className="label">Product Image</label>
-                        <input
-                            type="file"
-                            className="file-input"
-                            onChange={handleImageChange}
-                            accept="image/*"
-                        />
-                        {imagePreview && (
-                            <img src={imagePreview} alt="Preview" className="image-preview" />
-                        )}
-                    </div>
+                        <div className={styles.formSection}>
+                            <label className={styles.label}>Product Image</label>
+                            <input
+                                type="file"
+                                className={styles.fileInput}
+                                onChange={handleImageChange}
+                                accept="image/*"
+                            />
+                            {imagePreview && (
+                                <img src={imagePreview} alt="Preview" className={styles.imagePreview} />
+                            )}
+                            {errors.image && <div className={styles.errorText}>{errors.image}</div>}
+                        </div>
 
-                    <button type="submit" disabled={processing} className="submit-btn">
-                        Save
-                    </button>
-                </form>
-
+                        <button type="submit" disabled={processing} className={styles.submitBtn}>
+                            {processing ? 'Saving...' : 'Save Product'}
+                        </button>
+                    </form>
+                </div>
             )}
-        </>
+        </div>
     )
 }
 
