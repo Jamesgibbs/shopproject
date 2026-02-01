@@ -1,7 +1,7 @@
-import React from 'react'
-import { Link, router } from '@inertiajs/react'
-import Pagination from '@/Components/Pagination/Pagination.jsx'
-
+import React from "react";
+import { Link } from "@inertiajs/react";
+import styles from "./SupplierProductsTable.module.css";
+import { Product } from "@/types/product";
 
 interface PaginationLink {
     url: string | null
@@ -9,65 +9,57 @@ interface PaginationLink {
     active: boolean
 }
 
-interface PaginatedProducts {
-    data: Product[]
-    links: PaginationLink[]
-}
-
-interface SupplierProductsTableProps {
-    products: PaginatedProducts
-}
-
-export default function SupplierProductsTable({ products } : SupplierProductsTableProps) {
-
-    if (!products?.data?.length) {
-        return <p>No products found.</p>;
+interface Props {
+    products: {
+        data: Product[]
+        links: PaginationLink[]
     }
+}
 
-    const handleDelete = (productId: number) => {
-        if (confirm("Are you sure you want to delete this product?")) {
-            router.delete(`/products/${productId}`);
-        }
-    };
-
-    const headers = ['Name', 'Description', 'Price', 'Stock', 'Actions']
-
+export default function SupplierProductsTable({ products }: Props) {
     return (
-        <div className="supplier-table-wrapper">
-            <table className="supplier-table">
+        <div className={styles.card}>
+            <table className={styles.table}>
                 <thead>
                 <tr>
-                    {headers.map((header, index) => (
-                        <th key={index}>{header}</th>
-                    ))}
+                    <th>Name</th>
+                    <th>Stock</th>
+                    <th>Price</th>
+                    <th>Updated</th>
+                    <th></th>
                 </tr>
                 </thead>
 
                 <tbody>
-                {products.data.map((product) => (
+                {products.data.map(product => (
                     <tr key={product.id}>
                         <td>{product.name}</td>
-                        <td>{product.description}</td>
-                        <td>£{product.price}</td>
                         <td>{product.stock_quantity}</td>
-
+                        <td>£{product.price}</td>
+                        <td>{product.updated_at}</td>
                         <td>
-                            <div className="supplier-actions">
-                                <Link href={`/products/edit-product/${product.id}`}>
-                                    Edit
-                                </Link>
-
-                                <button onClick={() => handleDelete(product.id)}>
-                                    Delete
-                                </button>
-                            </div>
+                            <Link
+                                href={route('products.edit', product.id)}
+                                className={styles.editLink}
+                            >
+                                Edit
+                            </Link>
                         </td>
                     </tr>
                 ))}
                 </tbody>
             </table>
 
-            <Pagination links={products.links} />
+            <div className={styles.pagination}>
+                {products.links.map((link, i) => (
+                    <Link
+                        key={i}
+                        href={link.url || "#"}
+                        className={`${styles.pageLink} ${link.active ? styles.active : ""}`}
+                        dangerouslySetInnerHTML={{ __html: link.label }}
+                    />
+                ))}
+            </div>
         </div>
-    )
+    );
 }

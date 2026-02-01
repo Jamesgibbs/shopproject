@@ -1,5 +1,6 @@
 <?php
 
+use App\DataTransferObjects\ProductData;
 use App\Enums\Role;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupplierDashboardController;
+use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -31,10 +33,16 @@ Route::get('/dashboard', function () {
         return redirect()->route('supplier.dashboard');
     }
 
+    $featuredProducts = Product::featured()
+        ->orderBy('created_at', 'desc')
+        ->take(8)
+        ->get();
+
     return Inertia::render('Dashboard', [
         'auth' => [
             'user' => $user,
         ],
+        'featuredProducts' => $featuredProducts->map(fn (Product $product) => ProductData::fromModel($product)->toArray()),
     ]);
 })->name('dashboard');
 
@@ -118,6 +126,12 @@ Route::middleware(['auth'])->group(function () {
 
             Route::get('/supplier/products', [ProductController::class, 'supplierIndex'])
                 ->name('supplier.products.index');
+
+            Route::get('/supplier/create-product', [ProductController::class, 'create'])
+                ->name('supplier.products.create');
+
+            Route::post('/supplier/products/create-submit', [ProductController::class, 'createSubmit'])
+                ->name('supplier.products.create-submit');
         });
 
         Route::get('/supplier/dashboard', [SupplierDashboardController::class, 'index'])

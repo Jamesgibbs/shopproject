@@ -18,7 +18,6 @@ class HomeController
             ->take(8)
             ->get();
 
-
         return Inertia::render('Welcome', [
             'featuredProducts' => $featuredProducts->map(fn (Product $product) => ProductData::fromModel($product)->toArray()),
         ]);

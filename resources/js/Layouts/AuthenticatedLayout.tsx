@@ -1,5 +1,5 @@
 import { useState, PropsWithChildren, ReactNode } from 'react'
-import {Link, usePage} from '@inertiajs/react'
+import {Link, router, usePage} from '@inertiajs/react'
 import Logo from "@/Components/Layout/Logo";
 import Footer from "@/Components/Layout/Footer";
 import CategoriesDropdown from '@/Components/Features/Categories/CategoriesDropdown.jsx'
@@ -49,9 +49,7 @@ export default function AuthenticatedLayout({ header, children }: PropsWithChild
                         </div>
 
                         <div className="navbar-right">
-                            <Link href={route('logout')} className="btn btn-light">
-                                Sign Out
-                            </Link>
+                            <button onClick={() => router.post(route('logout'))} > Logout </button>
 
                             <Link href={route('cart.view')} className="btn btn-light">
                                 Basket

@@ -14,6 +14,7 @@ readonly class ProductData
         protected string $description,
         protected string $price,
         protected int $stockQuantity,
+        protected ?int $supplierId = null,
         protected ?string $supplierName = null,
         protected ?float $averageRating = null,
         protected ?int $reviewsCount = null,
@@ -29,6 +30,7 @@ readonly class ProductData
             description: $product->description,
             price: (string) $product->price,
             stockQuantity: $product->stock_quantity,
+            supplierId: $product->relationLoaded('supplier') ? $product->supplier?->id : null,
             supplierName: $product->relationLoaded('supplier') ? $product->supplier?->name : null,
             averageRating: $product->average_rating !== null
                 ? floatval($product->average_rating)
@@ -50,6 +52,7 @@ readonly class ProductData
             'description' => $this->description,
             'price' => $this->price,
             'stock_quantity' => $this->stockQuantity,
+            'supplier_id' => $this->supplierId,
             'supplier_name' => $this->supplierName,
             'average_rating' => $this->averageRating,
             'reviews_count' => $this->reviewsCount,

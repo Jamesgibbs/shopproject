@@ -11,12 +11,15 @@ export default function Show() {
 
     const breadcrumb = category.parent
         ? [
-            { id: category.parent.id, name: category.parent.name },
-            { id: category.id, name: category.name }
+            { id: category.parent.id, slug: category.parent.slug, name: category.parent.name },
+            { id: category.id, slug: category.slug, name: category.name }
         ]
         : [
-            { id: category.id, name: category.name }
+            { id: category.id, slug: category.slug, name: category.name }
         ]
+
+
+    console.log(breadcrumb)
 
 
     return (
@@ -26,7 +29,7 @@ export default function Show() {
                 <p className={styles.breadcrumb}>
                     {breadcrumb.map((item, index) => (
                         <span key={item.id}>
-                            <Link href={`/categories/${item.id}`}>
+                            <Link href={`/categories/${item.slug}`}>
                                 {item.name}
                             </Link>
                             {index < breadcrumb.length - 1 && ' / '}

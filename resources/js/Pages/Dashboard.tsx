@@ -1,10 +1,15 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import GuestLayout from '@/Layouts/GuestLayout'
-import { Head } from '@inertiajs/react'
+import {Head, usePage} from '@inertiajs/react'
 import React from "react"
+import {PageProps} from "@/types";
+import FeaturedCarousel from "@/Components/Features/Products/FeaturedCarousel";
 
 export default function Dashboard({ auth }) {
     const Layout = auth.user ? AuthenticatedLayout : GuestLayout
+    const { featuredProducts = [] } = usePage<PageProps>().props
+
+    console.log(Layout)
 
     return (
         <Layout
@@ -13,6 +18,10 @@ export default function Dashboard({ auth }) {
             }
         >
             <Head title="Dashboard" />
+
+            <h2> Featured Products</h2>
+
+            <FeaturedCarousel products={featuredProducts} />
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">

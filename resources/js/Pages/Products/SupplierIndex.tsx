@@ -3,6 +3,7 @@ import SupplierProductsTable from "@/Components/Features/Products/SupplierProduc
 import {Link} from "@inertiajs/react";
 import styles from "@/Pages/Auth/Login.module.css";
 import React from "react";
+import {Product} from "@/types/product";
 
 interface PaginationLink {
     url: string | null
@@ -23,7 +24,7 @@ export default function SupplierIndex({ products }: SupplierIndexProps) {
         <div>
             <h1>Products</h1>
 
-            <Link href={route('password.request')} className={styles.link}>
+            <Link href={route('products.supplier.products.create')} className={styles.link}>
                 Add new Product
             </Link>
 

@@ -21,4 +21,5 @@ export interface Product {
     supplier_id: number
     supplier_name: string | null
     reviews: Review[]
+    updated_at: number | null
 }

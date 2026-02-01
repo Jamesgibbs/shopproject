@@ -24,8 +24,8 @@ ARG PUID=1000
 ARG PGID=1000
 
 # 1) Create laravel:www-data
-#RUN groupadd -g ${PGID} www-data \
-# && useradd -u ${PUID} -g www-data -m laravel
+# (Removed usermod/groupmod to avoid issues with basic debian images,
+# typically handled by volume permissions or specialized images if needed)
 
 # 2) System & PHP extensions
 RUN apt-get update \
@@ -45,8 +45,7 @@ WORKDIR /var/www
 COPY --chown=www-data . .
 
 # 5) Pull in built frontend assets
-COPY --from=nodebuilder --chown=www-data \
-     /var/www/public/build /var/www/public/build
+COPY --from=nodebuilder --chown=www-data:www-data /var/www/public/build /var/www/public/build/
 
 # 6) Install PHP packages
 RUN composer install --no-dev --optimize-autoloader --no-interaction \

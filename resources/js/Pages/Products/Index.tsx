@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { usePage } from '@inertiajs/react'
 import ProductsTable from './ProductsTable.jsx'
-import CreateProduct from './Create.jsx'
+import CreateProduct from './Create'
 import PageCard from '@/Components/Common/PageCard.jsx'
 import GuestLayout from '@/Layouts/GuestLayout'
 import { PageProps, Category } from '@/types'

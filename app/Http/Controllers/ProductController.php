@@ -57,7 +57,12 @@ class ProductController extends Controller
         ]);
     }
 
-    public function create(Request $request): RedirectResponse
+    public function create(): Response
+    {
+        return Inertia::render('Products/Create', []);
+    }
+
+    public function createSubmit(Request $request): RedirectResponse
     {
         try {
 

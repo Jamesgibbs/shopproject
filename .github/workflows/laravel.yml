@@ -34,25 +34,11 @@ jobs:
         with:
           php-version: '8.3'
           extensions: mbstring, dom, fileinfo, mysql, redis
-          coverage: xdebug
+          coverage: none
           tools: composer:v2
-
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-      - name: Cache Composer dependencies
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
 
       - name: Copy .env.ci
         run: cp .env.ci .env
-
-      - name: Trust /var/www for Git
-        run: git config --global --add safe.directory /var/www
 
       - name: Install Composer Dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
@@ -73,28 +59,9 @@ jobs:
         run: npm ci
 
       - name: Build assets
-        env:
-          VITE_DEV_SERVER_URL: ""
-          NODE_ENV: production
-        run: |
-          npm run build
-          echo "Listing build contents:"
-          ls -la public/build
+        run: npm run build
 
-      - name: Check if public/build exists
-        run: ls -la public/build
-
-      - name: Check manifest presence
-        run: ls -la public/build/manifest.json
-
-      - name: Fail if build directory is empty
-        run: |
-          if [ ! -s public/build/manifest.json ]; then
-            echo "Build failed: manifest.json missing or empty"
-            exit 1
-          fi
-
-      - name: Execute tests (Unit and Feature tests) via PHPUnit
+      - name: Execute tests
         env:
           DB_CONNECTION: mysql
           DB_HOST: 127.0.0.1
@@ -106,100 +73,70 @@ jobs:
           REDIS_PORT: 6379
         run: php artisan test
 
-      - name: Archive built assets
-        run: zip -r build.zip public/build
-
-      - name: List contents of build.zip before upload
-        run: unzip -l build.zip
-
-      - name: Upload build.zip as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: vite-assets
-          path: build.zip
-
-  build_and_push:
-    name: Build & Push Docker Image
+  build-and-push:
+    needs: test
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    outputs:
+      image_tag: ${{ steps.set-image-tag.outputs.tag }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build & push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: Dockerfile
-          push: true
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/laravel-app:latest
-            ghcr.io/${{ github.repository_owner }}/laravel-app:${{ github.sha }}
-          build-args: |
-            PUID=1000
-            PGID=1000
-
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up QEMU (for multi-arch, optional)
-        uses: docker/setup-qemu-action@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Login to registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io           # or docker.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build & push image
-        uses: docker/build-push-action@v4
-        env:
-          REPO_OWNER: ${{ github.repository_owner }}
+      - name: Set Image Tag
+        id: set-image-tag
+        run: |
+          IMAGE_TAG=$(echo "${{ github.sha }}" | cut -c1-7)
+          echo "tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
         with:
           context: .
-          file: Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ toLower(github.repository_owner) }}/laravel-app:latest
-            ghcr.io/${{ toLower(github.repository_owner) }}/laravel-app:${{ github.sha }}
-          build-args: |
-            PUID=1000
-            PGID=1000
+            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/${{ github.repository }}:${{ steps.set-image-tag.outputs.tag }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
       - name: Deploy to Server
-        uses: appleboy/ssh-action@v0.1.8
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          envs: |
-            APP_URL=${{ secrets.APP_URL }}
-            DB_HOST=${{ secrets.DB_CONTAINER }}
-            DB_DATABASE=${{ secrets.DB_DATABASE }}
-            DB_USERNAME=${{ secrets.DB_USERNAME }}
-            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
           script: |
             cd /var/www/laravel-app
-            docker-compose pull app
-            docker-compose up -d app nginx
-            docker-compose exec -T app php artisan migrate --force
-            docker-compose exec -T app php artisan cache:clear
+
+            # Update the image tag in .env or docker-compose
+            # Assuming you use the :latest tag for simplicity in docker-compose.prod.yml
+            # or you can update it dynamically:
+            # sed -i "s/laravel-app:latest/laravel-app:${{ needs.build-and-push.outputs.image_tag }}/g" docker-compose.prod.yml
+
+            docker compose -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.prod.yml up -d
+
+            docker compose -f docker-compose.prod.yml exec -T app php artisan migrate --force
+            docker compose -f docker-compose.prod.yml exec -T app php artisan config:cache
+            docker compose -f docker-compose.prod.yml exec -T app php artisan route:cache
+            docker compose -f docker-compose.prod.yml exec -T app php artisan view:cache
 
