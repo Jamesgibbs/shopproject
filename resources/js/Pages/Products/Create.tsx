@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useForm } from '@inertiajs/react'
 import MultiSelect from '@/Components/Common/Multiselect'
+import SupplierIndex from "@/Pages/Products/SupplierIndex.tsx";
+import SupplierLayout from "@/Layouts/SupplierLayout.tsx";
 
 export default function Create({ categories, onSuccess }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -174,3 +176,7 @@ export default function Create({ categories, onSuccess }) {
         </>
     )
 }
+
+SupplierIndex.layout = (page: React.ReactNode) => (
+    <SupplierLayout>{page}</SupplierLayout>
+);
