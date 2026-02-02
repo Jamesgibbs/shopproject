@@ -2,28 +2,16 @@ import React from 'react'
 import CartTable from './CartTable.jsx'
 import { Link, router } from '@inertiajs/react'
 import { usePage } from '@inertiajs/react'
-import GuestLayout from "@/Layouts/GuestLayout.tsx";
-import SupplierLayout from "@/Layouts/SupplierLayout.tsx";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.tsx";
+import AppLayout from "@/Layouts/AppLayout";
 
-export default function ViewCart({ auth }) {
+export default function ViewCart() {
     const { cartItems = [] } = usePage().props
     const handleCheckout = () => {
         router.post(route('cart.checkout'))
     }
 
-    let Layout;
-
-    if (auth?.user && auth.user.role === 'customer') {
-        Layout = AuthenticatedLayout;
-    } else if (auth?.user && auth.user.role === 'supplier') {
-        Layout = SupplierLayout;
-    } else {
-        Layout = GuestLayout;
-    }
-
     return (
-        <Layout>
+        <AppLayout>
             <div className="min-h-screen bg-gray-50">
                 <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
                     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -52,7 +40,7 @@ export default function ViewCart({ auth }) {
                                     </button>
                                 ) : (
                                     <Link
-                                        href="/products"
+                                        href="/"
                                         className="inline-flex items-center px-4 py-2
                                                  bg-blue-600 hover:bg-blue-700
                                                  text-sm font-medium text-white
@@ -69,7 +57,7 @@ export default function ViewCart({ auth }) {
                     </div>
                 </div>
             </div>
-        </Layout>
+        </AppLayout>
     )
 }
 

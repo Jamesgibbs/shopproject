@@ -1,18 +1,13 @@
+import AppLayout from "@/Layouts/AppLayout";
 import { Head, Link } from '@inertiajs/react'
 import DeleteUserForm from './Partials/DeleteUserForm'
 import UpdatePasswordForm from './Partials/UpdatePasswordForm'
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm'
-import GuestLayout from "@/Layouts/GuestLayout";
-import SupplierLayout from "@/Layouts/SupplierLayout";
 
-export default function Edit({ mustVerifyEmail, status, auth }) {
-
-    const user = auth.user
-    const isSupplier = user && user.role === 'supplier'
-    const Layout = isSupplier ? SupplierLayout : GuestLayout;
+export default function Edit({ mustVerifyEmail, status }) {
 
     return (
-        <Layout
+        <AppLayout
             header={<h2 className="text-xl font-semibold leading-tight text-gray-800">Profile</h2>}
         >
             <Head title="Profile" />
@@ -45,6 +40,6 @@ export default function Edit({ mustVerifyEmail, status, auth }) {
                     </div>
                 </div>
             </div>
-        </Layout>
+        </AppLayout>
     )
 }

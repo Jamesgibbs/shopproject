@@ -22,6 +22,7 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
         success: string | null;
         error: string | null;
     };
+    import_errors?: string[];
 };
 
 export interface FeaturedProduct {

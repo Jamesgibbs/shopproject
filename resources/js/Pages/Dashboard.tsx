@@ -1,18 +1,14 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import GuestLayout from '@/Layouts/GuestLayout'
+import AppLayout from '@/Layouts/AppLayout'
 import {Head, usePage} from '@inertiajs/react'
 import React from "react"
 import {PageProps} from "@/types";
 import FeaturedCarousel from "@/Components/Features/Products/FeaturedCarousel";
 
-export default function Dashboard({ auth }) {
-    const Layout = auth.user ? AuthenticatedLayout : GuestLayout
-    const { featuredProducts = [] } = usePage<PageProps>().props
-
-    console.log(Layout)
+export default function Dashboard() {
+    const { auth, featuredProducts = [] } = usePage<PageProps>().props
 
     return (
-        <Layout
+        <AppLayout
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">Dashboard</h2>
             }
@@ -32,6 +28,6 @@ export default function Dashboard({ auth }) {
                     </div>
                 </div>
             </div>
-        </Layout>
+        </AppLayout>
     )
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.tsx'
+import AppLayout from '@/Layouts/AppLayout.tsx'
 
 export default function DeliveryInfo() {
     return (
@@ -9,4 +9,4 @@ export default function DeliveryInfo() {
     )
 }
 
-DeliveryInfo.layout = (page) => <AuthenticatedLayout children={page} />
+DeliveryInfo.layout = (page) => <AppLayout children={page} />

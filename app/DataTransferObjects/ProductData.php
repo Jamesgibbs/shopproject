@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataTransferObjects;
 
 use App\Models\Product;
+use Carbon\Carbon;
 
 readonly class ProductData
 {
@@ -20,6 +21,7 @@ readonly class ProductData
         protected ?int $reviewsCount = null,
         protected ?string $image = null,
         protected array $reviews = [],
+        protected Carbon $updatedAt,
     ) {}
 
     public static function fromModel(Product $product): self
@@ -38,6 +40,7 @@ readonly class ProductData
             reviewsCount: $product->reviews_count,
             image: $product->image ?? null,
             reviews: $product->relationLoaded('reviews') ? $product->reviews->toArray() : [],
+            updatedAt: Carbon::parse($product->updated_at),
         );
     }
 
@@ -58,6 +61,7 @@ readonly class ProductData
             'reviews_count' => $this->reviewsCount,
             'image' => $this->image,
             'reviews' => $this->reviews,
+            'updated_at' => $this->updatedAt->toDateTimeString(),
         ];
     }
 }

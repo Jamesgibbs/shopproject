@@ -1,5 +1,5 @@
 import { Head, useForm } from '@inertiajs/react'
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.tsx'
+import AppLayout from '@/Layouts/AppLayout.tsx'
 import InputError from '@/Components/Common/InputError'
 import InputLabel from '@/Components/Common/InputLabel'
 import PrimaryButton from '@/Components/Common/PrimaryButton'
@@ -19,8 +19,7 @@ export default function BillingInfoForm({ auth, billingInfo }) {
     }
 
     return (
-        <AuthenticatedLayout
-            user={auth.user}
+        <AppLayout
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
                     {billingInfo ? 'Update Billing Information' : 'Add Billing Information'}
@@ -100,6 +99,6 @@ export default function BillingInfoForm({ auth, billingInfo }) {
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </AppLayout>
     )
 }

@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $stock_quantity
  * @property-read float $average_rating
  * @property-read int $reviews_count
+ * @property string $updated_at
  */
 class Product extends Model
 {
@@ -37,6 +38,7 @@ class Product extends Model
         'supplier_id',
         'stock_quantity',
         'image',
+        'updated_at',
     ];
 
     /**

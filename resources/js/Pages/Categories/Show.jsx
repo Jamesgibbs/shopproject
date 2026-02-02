@@ -1,6 +1,6 @@
 import React from 'react'
 import { usePage, Link } from '@inertiajs/react'
-import GuestLayout from '@/Layouts/GuestLayout.tsx'
+import AppLayout from '@/Layouts/AppLayout.tsx'
 import PageCard from '@/Components/Common/PageCard.jsx'
 import CategoryCard from '@/Components/Features/Categories/CategoryCard.jsx'
 import CardGrid from '@/Components/Common/CardGrid.jsx'
@@ -79,4 +79,4 @@ export default function Show() {
     )
 }
 
-Show.layout = (page) => <GuestLayout children={page} />
+Show.layout = (page) => <AppLayout children={page} />

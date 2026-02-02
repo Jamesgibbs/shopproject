@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Head, useForm } from '@inertiajs/react'
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.tsx'
+import AppLayout from '@/Layouts/AppLayout.tsx'
 import InputLabel from '@/Components/Common/InputLabel'
 import PrimaryButton from '@/Components/Common/PrimaryButton'
 import TextInput from '@/Components/Common/TextInput'
@@ -32,8 +32,7 @@ export default function PaymentForm({ auth }) {
     }
 
     return (
-        <AuthenticatedLayout
-            user={auth.user}
+        <AppLayout
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
                     Payment Information
@@ -133,6 +132,6 @@ export default function PaymentForm({ auth }) {
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </AppLayout>
     )
 }

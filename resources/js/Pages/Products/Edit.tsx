@@ -1,6 +1,6 @@
 import React from 'react'
 import { useForm, usePage, Link } from '@inertiajs/react'
-import SupplierLayout from "@/Layouts/SupplierLayout"
+import AppLayout from '@/Layouts/AppLayout'
 import styles from './Edit.module.css'
 import { PageProps, Category } from '@/types'
 
@@ -115,4 +115,4 @@ export default function Edit() {
     )
 }
 
-Edit.layout = (page: React.ReactNode) => <SupplierLayout children={page} />
+Edit.layout = (page: React.ReactNode) => <AppLayout children={page} />

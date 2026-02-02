@@ -1,6 +1,5 @@
 import {Link, router} from '@inertiajs/react'
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import GuestLayout from '@/Layouts/GuestLayout'
+import AppLayout from '@/Layouts/AppLayout'
 import styles from './Product.module.css'
 import StarRating from "@/Components/Common/StarRating"
 import ReviewCard from "@/Components/Common/ReviewCard"
@@ -8,12 +7,7 @@ import React, {JSX} from "react"
 import { Product as ProductType } from '../../types/product'
 import { PageProps } from '@/types'
 
-export default function Product({ product, auth }: PageProps<{ product: ProductType }>): JSX.Element {
-    const Layout = (auth?.user ? AuthenticatedLayout : GuestLayout) as React.ComponentType<{
-        children: React.ReactNode;
-        header?: React.ReactNode;
-    }>
-
+export default function Product({ product }: PageProps<{ product: ProductType }>): JSX.Element {
     const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>, productId: number) => {
         e.stopPropagation()
         router.post('/cart', {
@@ -23,7 +17,7 @@ export default function Product({ product, auth }: PageProps<{ product: ProductT
     }
 
     return (
-        <Layout>
+        <AppLayout>
             <div className={styles.pageWrapper}>
                 <div className={styles.container}>
                     <div className={styles.card}>
@@ -88,7 +82,7 @@ export default function Product({ product, auth }: PageProps<{ product: ProductT
                     </div>
                 </div>
             </div>
-        </Layout>
+        </AppLayout>
     )
 }
 

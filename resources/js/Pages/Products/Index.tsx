@@ -3,7 +3,7 @@ import { usePage } from '@inertiajs/react'
 import ProductsTable from './ProductsTable.jsx'
 import CreateProduct from './Create'
 import PageCard from '@/Components/Common/PageCard.jsx'
-import GuestLayout from '@/Layouts/GuestLayout'
+import AppLayout from '@/Layouts/AppLayout'
 import { PageProps, Category } from '@/types'
 import styles from './Index.module.css'
 
@@ -62,4 +62,4 @@ export default function Index() {
     )
 }
 
-Index.layout = (page: React.ReactNode) => <GuestLayout>{page}</GuestLayout>
+Index.layout = (page: React.ReactNode) => <AppLayout>{page}</AppLayout>

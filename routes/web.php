@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductImportController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupplierDashboardController;
 use App\Http\Controllers\SupplierInfoController;
@@ -133,6 +134,9 @@ Route::middleware(['auth'])->group(function () {
 
             Route::post('/supplier/products/create-submit', [ProductController::class, 'createSubmit'])
                 ->name('supplier.products.create-submit');
+
+            Route::post('/supplier/products/import', [ProductImportController::class, 'import'])
+                ->name('supplier.products.import');
         });
 
         Route::get('/supplier/dashboard', [SupplierDashboardController::class, 'index'])

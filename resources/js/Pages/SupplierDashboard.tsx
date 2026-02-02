@@ -1,8 +1,8 @@
-import SupplierLayout from '@/Layouts/SupplierLayout'
+import AppLayout from '@/Layouts/AppLayout'
 import React from "react"
 
 export default function SupplierDashboard() {
     return <div>Welcome Supplier</div>
 }
 
-SupplierDashboard.layout = (page) => <SupplierLayout children={page} />
+SupplierDashboard.layout = (page) => <AppLayout children={page} />

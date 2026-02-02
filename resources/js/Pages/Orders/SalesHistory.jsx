@@ -1,6 +1,6 @@
 import React from 'react'
 import { usePage } from '@inertiajs/react'
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.tsx'
+import AppLayout from '@/Layouts/AppLayout'
 import PageCard from '@/Components/Common/PageCard.jsx'
 
 export default function SalesHistory() {
@@ -42,4 +42,4 @@ export default function SalesHistory() {
     )
 }
 
-SalesHistory.layout = (page) => <AuthenticatedLayout children={page} />
+SalesHistory.layout = (page) => <AppLayout children={page} />

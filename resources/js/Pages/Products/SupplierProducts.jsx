@@ -1,6 +1,6 @@
 import React from 'react'
 import { Head } from '@inertiajs/react'
-import GuestLayout from '@/Layouts/GuestLayout.tsx'
+import AppLayout from '@/Layouts/AppLayout.tsx'
 import PageCard from '@/Components/Common/PageCard'
 import ProductCard from '@/Components/Features/Products/ProductCard'
 import CardGrid from '@/Components/Common/CardGrid'
@@ -35,4 +35,4 @@ export default function SupplierProducts({ supplier, products }) {
     )
 }
 
-SupplierProducts.layout = (page) => <GuestLayout children={page} />
+SupplierProducts.layout = (page) => <AppLayout children={page} />

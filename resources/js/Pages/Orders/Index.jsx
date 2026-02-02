@@ -1,5 +1,5 @@
 import React from 'react'
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
+import AppLayout from '@/Layouts/AppLayout'
 import { usePage } from '@inertiajs/react'
 import OrdersTable from './OrdersTable.jsx'
 import PageCard from '@/Components/Common/PageCard.jsx'
@@ -20,4 +20,4 @@ export default function Index() {
     )
 }
 
-Index.layout = (page) => <AuthenticatedLayout children={page} />
+Index.layout = (page) => <AppLayout children={page} />

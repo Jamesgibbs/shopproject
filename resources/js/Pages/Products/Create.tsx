@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useForm, Link } from '@inertiajs/react'
-import SupplierLayout from "@/Layouts/SupplierLayout"
+import AppLayout from '@/Layouts/AppLayout'
 import styles from './Create.module.css'
 
 export default function Create({ categories, onSuccess }) {
@@ -128,5 +128,5 @@ export default function Create({ categories, onSuccess }) {
 }
 
 Create.layout = (page: React.ReactNode) => (
-    <SupplierLayout>{page}</SupplierLayout>
+    <AppLayout>{page}</AppLayout>
 );

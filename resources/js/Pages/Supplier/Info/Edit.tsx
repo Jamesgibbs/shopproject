@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm, usePage } from '@inertiajs/react';
-import SupplierLayout from '@/Layouts/SupplierLayout';
+import AppLayout from '@/Layouts/AppLayout';
 import styles from './Edit.module.css';
 
 interface Props {
@@ -76,4 +76,4 @@ export default function Edit({ user }: Props) {
     );
 }
 
-Edit.layout = (page: React.ReactNode) => <SupplierLayout>{page}</SupplierLayout>;
+Edit.layout = (page: React.ReactNode) => <AppLayout>{page}</AppLayout>;
