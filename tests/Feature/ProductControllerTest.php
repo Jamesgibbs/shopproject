@@ -110,4 +110,19 @@ class ProductControllerTest extends TestCase
             ->has('products.data', 5)
         );
     }
+
+    public function test_search_returns_filtered_products()
+    {
+        Product::factory()->create(['name' => 'Awesome Gadget', 'description' => 'A very cool item']);
+        Product::factory()->create(['name' => 'Generic Tool', 'description' => 'Useful for many things']);
+        Product::factory()->create(['name' => 'Another Gadget', 'description' => 'Not so cool']);
+
+        $response = $this->get(route('home', ['q' => 'Gadget']));
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => $page->component('Welcome')
+            ->has('searchResults.data', 2)
+            ->where('searchQuery', 'Gadget')
+        );
+    }
 }

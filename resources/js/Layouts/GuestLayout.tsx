@@ -1,4 +1,4 @@
-import { Link, usePage } from '@inertiajs/react'
+import { Link, usePage, router } from '@inertiajs/react'
 import CategoriesDropdown from '@/Components/Features/Categories/CategoriesDropdown.jsx'
 import FlashMessage from '@/Components/Common/FlashMessage'
 import styles from './GuestLayout.module.css'
@@ -29,10 +29,15 @@ export default function GuestLayout({ header, children }: PropsWithChildren<Gues
                             </div>
 
                             <div className={styles.searchWrapper}>
-                                <form method="GET" action="/search" className={styles.searchForm}>
+                                <form onSubmit={(e) => {
+                                    e.preventDefault();
+                                    const formData = new FormData(e.currentTarget);
+                                    router.get('/', { q: formData.get('q') });
+                                }} className={styles.searchForm}>
                                     <input
                                         type="text"
                                         name="q"
+                                        defaultValue={new URLSearchParams(window.location.search).get('q') || ''}
                                         placeholder="Search products…"
                                         className={styles.searchInput}
                                     />

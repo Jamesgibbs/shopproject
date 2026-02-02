@@ -4,22 +4,19 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\DataTransferObjects\ProductData;
-use App\Models\Product;
+use App\Services\ProductSearchService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class HomeController
 {
-    public function index(): Response
+    public function index(Request $request, ProductSearchService $service): Response
     {
-        $featuredProducts = Product::featured()
-            ->orderBy('created_at', 'desc')
-            ->take(8)
-            ->get();
-
         return Inertia::render('Welcome', [
-            'featuredProducts' => $featuredProducts->map(fn (Product $product) => ProductData::fromModel($product)->toArray()),
+            'featuredProducts' => $service->featured(),
+            'searchResults' => $service->search($request->input('q')),
+            'searchQuery' => $request->input('q'),
         ]);
     }
 }

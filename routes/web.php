@@ -22,7 +22,7 @@ use Inertia\Inertia;
 | Public Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index'])->name('home');
 /*
 |--------------------------------------------------------------------------
 | Authentication Required Routes

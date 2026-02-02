@@ -15,12 +15,12 @@ readonly class ProductData
         protected string $description,
         protected string $price,
         protected int $stockQuantity,
-        protected ?int $supplierId = null,
-        protected ?string $supplierName = null,
-        protected ?float $averageRating = null,
-        protected ?int $reviewsCount = null,
-        protected ?string $image = null,
-        protected array $reviews = [],
+        protected ?int $supplierId,
+        protected ?string $supplierName,
+        protected ?float $averageRating,
+        protected ?int $reviewsCount,
+        protected ?string $image,
+        protected array $reviews,
         protected Carbon $updatedAt,
     ) {}
 

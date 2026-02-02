@@ -29,10 +29,11 @@ interface Paginated<T> {
 interface IndexProps extends Record<string, unknown> {
     products: Paginated<Product>;
     categories: Category[];
+    searchQuery?: string;
 }
 
 export default function Index() {
-    const { products, auth, categories = [] } = usePage<PageProps<IndexProps>>().props
+    const { products, auth, categories = [], searchQuery } = usePage<PageProps<IndexProps>>().props
     const [showForm, setShowForm] = useState(false)
     const user = auth.user
     const isSupplier = user && user.role === 'supplier'
@@ -49,8 +50,10 @@ export default function Index() {
         </button>
     ) : null
 
+    const title = searchQuery ? `Search Results for "${searchQuery}"` : "Products";
+
     return (
-        <PageCard title="Products" actions={actions}>
+        <PageCard title={title} actions={actions}>
             {showForm && (
                 <div className={styles.formWrapper}>
                     <CreateProduct onSuccess={() => setShowForm(false)} categories={categories} />
