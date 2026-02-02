@@ -55,3 +55,25 @@
     font-weight: 600;
     margin-top: auto;
 }
+
+.addToCartButton {
+    background-color: #fbbf24;
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 0.5rem;
+}
+
+.addToCartButton:hover {
+    background-color: #f59e0b;
+}
+
+.addToCartButton:disabled {
+    background-color: #d1d5db;
+    cursor: not-allowed;
+}

@@ -5,8 +5,23 @@ import Pagination from '@/Components/Pagination/Pagination.jsx'
 export default function ProductsTable({ products, user }) {
     const isSupplier = user && user.role === 'supplier'
 
+    // For Demo: Allow triggering an intentional error to show Scoped Error Boundary
+    const triggerError = () => {
+        throw new Error("Intentional demo error from ProductsTable!");
+    };
+
     if (!products || !products.data || products.data.length === 0) {
-        return <p>No products available.</p>
+        return (
+            <div className="text-center py-10">
+                <p className="text-gray-500 mb-4">No products available.</p>
+                <button
+                    onClick={triggerError}
+                    className="text-xs text-gray-400 hover:text-gray-600 underline"
+                >
+                    (Demo: Trigger Error)
+                </button>
+            </div>
+        )
     }
 
     const handleDelete = (productId) => {
@@ -82,6 +97,15 @@ export default function ProductsTable({ products, user }) {
             </table>
 
             <Pagination links={products.links} />
+
+            <div className="mt-8 pt-4 border-t border-gray-100 text-center">
+                <button
+                    onClick={triggerError}
+                    className="text-xs text-gray-400 hover:text-gray-600 underline"
+                >
+                    (Demo: Trigger Error in List)
+                </button>
+            </div>
         </div>
     )
 }

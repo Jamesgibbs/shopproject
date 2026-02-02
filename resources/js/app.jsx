@@ -3,6 +3,7 @@ import './bootstrap'
 
 import { createInertiaApp } from '@inertiajs/react'
 import { createRoot } from 'react-dom/client'
+import ErrorBoundary from '@/Components/Common/ErrorBoundary'
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel'
 
@@ -19,7 +20,11 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el)
 
-        root.render(<App {...props} />)
+        root.render(
+            <ErrorBoundary name="Global App">
+                <App {...props} />
+            </ErrorBoundary>
+        )
     },
     progress: {
         color: '#4B5563',

@@ -1,5 +1,5 @@
 import React from 'react'
-import { usePage, Link } from '@inertiajs/react'
+import { usePage, Link, router } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout.tsx'
 import PageCard from '@/Components/Common/PageCard.jsx'
 import CategoryCard from '@/Components/Features/Categories/CategoryCard.jsx'
@@ -9,6 +9,15 @@ import styles from './Show.module.css'
 export default function Show() {
     const { category } = usePage().props
 
+    const handleAddToCart = (e, productId) => {
+        e.preventDefault()
+        e.stopPropagation()
+        router.post('/cart', {
+            product_id: productId,
+            quantity: 1,
+        })
+    }
+
     const breadcrumb = category.parent
         ? [
             { id: category.parent.id, slug: category.parent.slug, name: category.parent.name },
@@ -17,10 +26,6 @@ export default function Show() {
         : [
             { id: category.id, slug: category.slug, name: category.name }
         ]
-
-
-    console.log(breadcrumb)
-
 
     return (
         <PageCard title="Category">
@@ -70,6 +75,14 @@ export default function Show() {
                                 <span className={styles.productPrice}>
                                     £{product.price}
                                 </span>
+
+                                <button
+                                    onClick={(e) => handleAddToCart(e, product.id)}
+                                    className={styles.addToCartButton}
+                                    disabled={product.stock_quantity < 1}
+                                >
+                                    {product.stock_quantity < 1 ? 'Out of Stock' : 'Add to Basket'}
+                                </button>
                             </Link>
                         ))}
                     </div>

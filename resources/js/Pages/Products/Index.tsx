@@ -4,6 +4,7 @@ import ProductsTable from './ProductsTable.jsx'
 import CreateProduct from './Create'
 import PageCard from '@/Components/Common/PageCard.jsx'
 import AppLayout from '@/Layouts/AppLayout'
+import ErrorBoundary from '@/Components/Common/ErrorBoundary'
 import { PageProps, Category } from '@/types'
 import styles from './Index.module.css'
 
@@ -60,7 +61,9 @@ export default function Index() {
                 </div>
             )}
 
-            <ProductsTable products={products} user={user} />
+            <ErrorBoundary name="Products List">
+                <ProductsTable products={products} user={user} />
+            </ErrorBoundary>
         </PageCard>
     )
 }

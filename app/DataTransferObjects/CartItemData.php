@@ -15,6 +15,8 @@ readonly class CartItemData
         protected string $price,
         protected int $quantity,
         public ?string $image = null,
+        protected ?int $supplierId = null,
+        protected ?string $supplierName = null,
     ) {}
 
     public static function fromModel(CartItem $item): self
@@ -25,7 +27,9 @@ readonly class CartItemData
             name: $item->product->name,
             price: (string) $item->product->price,
             quantity: $item->quantity,
-            image: $item->product->images->first()?->path,
+            image: $item->product->images->first()?->path ?? $item->product->image,
+            supplierId: $item->product->supplier?->id,
+            supplierName: $item->product->supplier?->name,
         );
     }
 
@@ -41,6 +45,8 @@ readonly class CartItemData
             'price' => $this->price,
             'quantity' => $this->quantity,
             'image' => $this->image,
+            'supplier_id' => $this->supplierId,
+            'supplier_name' => $this->supplierName,
         ];
     }
 }

@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Enums\Role;
-use App\Models\Cart;
+use App\Models\CartItem;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,10 +13,13 @@ class CartControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_guest_cannot_view_cart()
+    public function test_guest_can_view_empty_cart()
     {
         $response = $this->get(route('cart.view'));
         $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => $page->component('Cart/ViewCart')
+            ->has('cartItems', 0)
+        );
     }
 
     public function test_user_can_view_empty_cart()
@@ -37,10 +40,10 @@ class CartControllerTest extends TestCase
         $user = User::factory()->create(['role' => Role::CUSTOMER->value]);
         $this->actingAs($user);
 
-        $cart = Cart::factory()->create(['user_id' => $user->id]);
         $product = Product::factory()->create();
 
-        $cart->items()->create([
+        CartItem::create([
+            'user_id' => $user->id,
             'product_id' => $product->id,
             'quantity' => 2,
             'price_at_time' => $product->price,
@@ -74,6 +77,7 @@ class CartControllerTest extends TestCase
         $this->assertDatabaseHas('cart_items', [
             'product_id' => $product->id,
             'quantity' => 1,
+            'user_id' => $user->id,
         ]);
     }
 
@@ -82,9 +86,9 @@ class CartControllerTest extends TestCase
         $user = User::factory()->create(['role' => Role::CUSTOMER->value]);
         $this->actingAs($user);
 
-        $cart = Cart::factory()->create(['user_id' => $user->id]);
         $product = Product::factory()->create();
-        $cartItem = $cart->items()->create([
+        $cartItem = CartItem::create([
+            'user_id' => $user->id,
             'product_id' => $product->id,
             'quantity' => 1,
             'price_at_time' => $product->price,
@@ -105,9 +109,9 @@ class CartControllerTest extends TestCase
         $user = User::factory()->create(['role' => Role::CUSTOMER->value]);
         $this->actingAs($user);
 
-        $cart = Cart::factory()->create(['user_id' => $user->id]);
         $product = Product::factory()->create(['stock_quantity' => 10]);
-        $cartItem = $cart->items()->create([
+        $cartItem = CartItem::create([
+            'user_id' => $user->id,
             'product_id' => $product->id,
             'quantity' => 1,
             'price_at_time' => $product->price,
@@ -133,9 +137,9 @@ class CartControllerTest extends TestCase
         $user = User::factory()->create(['role' => Role::CUSTOMER->value]);
         $this->actingAs($user);
 
-        $cart = Cart::factory()->create(['user_id' => $user->id]);
         $product = Product::factory()->create(['stock_quantity' => 5]);
-        $cartItem = $cart->items()->create([
+        $cartItem = CartItem::create([
+            'user_id' => $user->id,
             'product_id' => $product->id,
             'quantity' => 1,
             'price_at_time' => $product->price,
@@ -161,9 +165,9 @@ class CartControllerTest extends TestCase
         $user = User::factory()->create(['role' => Role::CUSTOMER->value]);
         $this->actingAs($user);
 
-        $cart = Cart::factory()->create(['user_id' => $user->id]);
         $product = Product::factory()->create();
-        $cart->items()->create([
+        CartItem::create([
+            'user_id' => $user->id,
             'product_id' => $product->id,
             'quantity' => 1,
             'price_at_time' => $product->price,
@@ -178,8 +182,6 @@ class CartControllerTest extends TestCase
     {
         $user = User::factory()->create(['role' => Role::CUSTOMER->value]);
         $this->actingAs($user);
-
-        $cart = Cart::factory()->create(['user_id' => $user->id]);
 
         $response = $this->post(route('cart.checkout'));
 

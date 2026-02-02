@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\DataTransferObjects\CartItemData;
-use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
 use App\Services\AddToCartService;
@@ -30,12 +29,13 @@ class CartController extends Controller
 
         // Fetch cart items with products
         $cartItems = CartItem::where($identifier)
-            ->with('product')
+            ->with(['product.images', 'product.supplier'])
             ->get()
             ->filter(fn (CartItem $item) => $item->product !== null)
             ->map(fn (CartItem $item) => CartItemData::fromModel($item)->toArray())
             ->values()
             ->all();
+
 
         return Inertia::render('Cart/ViewCart', [
             'cartItems' => $cartItems,
@@ -80,13 +80,12 @@ class CartController extends Controller
 
     public function removeFromCart(Request $request): RedirectResponse
     {
-        $cart = CartItem::where('user_id', auth()->id())->first();
-
-        if (! $cart) {
-            return redirect()->back()->with('error', 'No cart found.');
-        }
-
-        $cartItem = $cart->items()->where('id', $request->id)->first();
+        $cartItem = CartItem::where('id', $request->id)
+            ->where(function ($query) {
+                $query->where('user_id', auth()->id())
+                    ->orWhere('cart_token', session()->get('cart_token'));
+            })
+            ->first();
 
         if ($cartItem) {
             $cartItem->delete();
@@ -99,9 +98,16 @@ class CartController extends Controller
 
     public function checkout(): RedirectResponse
     {
-        $cart = CartItem::with('items.product')->where('user_id', auth()->id())->firstOrFail();
+        $userId = auth()->id();
+        $cartToken = session()->get('cart_token');
 
-        if ($cart->items->isEmpty()) {
+        $identifier = $userId
+            ? ['user_id' => $userId]
+            : ['cart_token' => $cartToken];
+
+        $hasItems = CartItem::where($identifier)->exists();
+
+        if (! $hasItems) {
             return redirect()->back()->with('error', 'Your cart is empty.');
         }
 
@@ -121,8 +127,12 @@ class CartController extends Controller
             return redirect()->back()->with('error', 'No more stock available!');
         }
 
-        $cart = CartItem::where('user_id', auth()->id())->firstOrFail();
-        $cartItem = $cart->items()->findOrFail($validated['cart_item_id']);
+        $cartItem = CartItem::where('id', $validated['cart_item_id'])
+            ->where(function ($query) {
+                $query->where('user_id', auth()->id())
+                    ->orWhere('cart_token', session()->get('cart_token'));
+            })
+            ->firstOrFail();
 
         $cartItem->update([
             'quantity' => $validated['quantity'],

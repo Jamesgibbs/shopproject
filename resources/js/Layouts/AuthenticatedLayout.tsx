@@ -1,4 +1,4 @@
-import { useState, PropsWithChildren, ReactNode } from 'react'
+import { PropsWithChildren, ReactNode } from 'react'
 import {Link, router, usePage} from '@inertiajs/react'
 import Logo from "@/Components/Layout/Logo";
 import Footer from "@/Components/Layout/Footer";
@@ -12,16 +12,14 @@ export default function AuthenticatedLayout({ header, children }: PropsWithChild
     const { auth, flash, categories } = usePage<PageProps>().props
     const user = auth.user
 
-    const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false)
-
     return (
-            <div className={styles.layoutWrapper}>
-                <FlashMessage />
-                <nav className={styles.navbar}>
-                    <div className={styles.navInner}>
-                        <div className={styles.navLeft}>
-
-                            <div className={styles.navLinks}>
+        <div className="layout">
+            <FlashMessage />
+            <nav className="navbar">
+                <div className="navbar-container">
+                    <div className="navbar-inner">
+                        <div className="navbar-left">
+                            <div className="nav-links">
                                 <Logo />
                                 <CategoriesDropdown categories={categories} />
                             </div>
@@ -41,48 +39,35 @@ export default function AuthenticatedLayout({ header, children }: PropsWithChild
                                     />
                                 </form>
                             </div>
-
-                            {user?.role === 'customer' && (
-                                <div className={styles.customerLinks}>
-                                    <Link href={route('cart.view')}>
-                                        Basket
-                                    </Link>
-
-                                    <Link href={route('payment.form')}>
-                                        Checkout
-                                    </Link>
-                                </div>
-                            )}
                         </div>
 
                         <div className="navbar-right">
-                            <button onClick={() => router.post(route('logout'))} > Logout </button>
-
                             <Link href={route('cart.view')} className="btn btn-light">
                                 Basket
                             </Link>
+
+                            <button
+                                onClick={() => router.post(route('logout'))}
+                                className="btn btn-dark"
+                            >
+                                Logout
+                            </button>
                         </div>
-
-                        <button
-                            className={styles.mobileToggle}
-                            onClick={() => setShowingNavigationDropdown(prev => !prev)}
-                        >
-                            {showingNavigationDropdown ? '✕' : '☰'}
-                        </button>
                     </div>
-                </nav>
+                </div>
+            </nav>
 
-                {header && (
-                    <header className={styles.header}>
-                        <div className={styles.headerInner}>{header}</div>
-                    </header>
-                )}
+            {header && (
+                <header className="page-header">
+                    <div className="header-container">{header}</div>
+                </header>
+            )}
 
-                <main className={styles.main}>
-                    {children}
-                </main>
+            <main className="page-content">
+                {children}
+            </main>
 
-                <Footer />
-            </div>
+            <Footer />
+        </div>
     )
 }

@@ -70,8 +70,6 @@ export default function GuestLayout({ header, children }: PropsWithChildren<Gues
             )}
 
             <main className="page-content">
-                {flash.success && <div className="flash-success">{flash.success}</div>}
-                {flash.error && <div className="flash-error">{flash.error}</div>}
                 {children}
             </main>
             <Footer />

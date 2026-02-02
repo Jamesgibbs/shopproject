@@ -21,6 +21,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class CartItem extends Model
 {
     protected $fillable = [
+        'user_id',
+        'cart_token',
         'product_id',
         'quantity',
         'price_at_time',

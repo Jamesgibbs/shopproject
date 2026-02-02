@@ -1,0 +1,55 @@
+/* Layout */
+.viewcart-wrapper {
+    @apply min-h-screen bg-gray-50;
+}
+
+.viewcart-container {
+    @apply max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8;
+}
+
+.viewcart-card {
+    @apply bg-white rounded-lg shadow-lg overflow-hidden;
+}
+
+.viewcart-header {
+    @apply p-6 border-b border-gray-200;
+}
+
+.viewcart-title {
+    @apply text-3xl font-extrabold text-gray-900;
+}
+
+/* Totals section */
+.viewcart-summary {
+    @apply mt-10 flex flex-col sm:flex-row justify-between items-center gap-6
+    border-t border-gray-100 pt-10;
+}
+
+.viewcart-summary-label {
+    @apply text-sm text-gray-500 mb-1;
+}
+
+.viewcart-summary-value {
+    @apply text-xl font-bold text-gray-900;
+}
+
+/* Buttons */
+.checkout-btn {
+    @apply w-full sm:w-auto inline-flex items-center justify-center px-8 py-4
+    bg-black hover:bg-gray-800
+    text-base font-bold text-white
+    rounded-full shadow-lg
+    focus:outline-none focus:ring-2
+    focus:ring-offset-2 focus:ring-gray-900
+    transition-all duration-200 transform hover:scale-105;
+}
+
+.start-shopping-btn {
+    @apply inline-flex items-center px-6 py-3
+    bg-blue-600 hover:bg-blue-700
+    text-sm font-medium text-white
+    rounded-full shadow-sm
+    focus:outline-none focus:ring-2
+    focus:ring-offset-2 focus:ring-blue-500
+    transition-all duration-200;
+}

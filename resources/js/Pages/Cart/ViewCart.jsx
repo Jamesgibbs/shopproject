@@ -3,6 +3,8 @@ import CartTable from './CartTable.jsx'
 import { Link, router } from '@inertiajs/react'
 import { usePage } from '@inertiajs/react'
 import AppLayout from "@/Layouts/AppLayout";
+import styles from './ViewCart.module.css'
+
 
 export default function ViewCart() {
     const { cartItems = [] } = usePage().props
@@ -12,44 +14,37 @@ export default function ViewCart() {
 
     return (
         <AppLayout>
-            <div className="min-h-screen bg-gray-50">
-                <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-                    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                        <div className="p-6 border-b border-gray-200">
+            <div className={styles['viewcart-wrapper']}>
+                <div className={styles['viewcart-container']}>
+                    <div className={styles['viewcart-card']}>
+                        <div className={styles['viewcart-header']}>
                             <div className="flex justify-between items-center">
-                                <h1 className="text-3xl font-extrabold text-gray-900">Shopping Cart</h1>
+                                <h1 className={styles['viewcart-title']}>Your Basket</h1>
                             </div>
                         </div>
 
                         <div className="p-6">
                             <CartTable cartItems={cartItems} />
 
-                            <div className="mt-6">
+                            <div className={styles['viewcart-summary']}>
+                                <div className="text-center sm:text-left">
+                                    <p className={styles['viewcart-summary-label']}>Total items in cart</p>
+                                    <p className={styles['viewcart-summary-value']}>{cartItems.reduce((acc, item) => acc + item.quantity, 0)} items</p>
+                                </div>
+
                                 {Array.isArray(cartItems) && cartItems.length > 0 ? (
                                     <button
                                         onClick={handleCheckout}
-                                        className="inline-flex items-center px-4 py-2
-                                                 bg-blue-600 hover:bg-blue-700
-                                                 text-sm font-medium text-white
-                                                 rounded-md shadow-sm
-                                                 focus:outline-none focus:ring-2
-                                                 focus:ring-offset-2 focus:ring-blue-500
-                                                 transition-all duration-200"
+                                        className={styles['checkout-btn']}
                                     >
-                                        Continue To Checkout!
+                                        Proceed to Checkout
                                     </button>
                                 ) : (
                                     <Link
                                         href="/"
-                                        className="inline-flex items-center px-4 py-2
-                                                 bg-blue-600 hover:bg-blue-700
-                                                 text-sm font-medium text-white
-                                                 rounded-md shadow-sm
-                                                 focus:outline-none focus:ring-2
-                                                 focus:ring-offset-2 focus:ring-blue-500
-                                                 transition-all duration-200"
+                                        className={styles['start-shopping-btn']}
                                     >
-                                        Cart is empty. Click here to add items to your cart.
+                                        Start Shopping
                                     </Link>
                                 )}
                             </div>
