@@ -16,7 +16,7 @@ export interface Product {
     description: string | null
     stock_quantity: number
     image: string | null
-    average_rating: number
+    average_rating: number | null
     reviews_count: number
     supplier_id: number
     supplier_name: string | null

@@ -27,7 +27,7 @@ readonly class CartItemData
             name: $item->product->name,
             price: (string) $item->product->price,
             quantity: $item->quantity,
-            image: $item->product->images->first()?->path ?? $item->product->image,
+            image: $item->product->images->first()->path ?? $item->product->image,
             supplierId: $item->product->supplier?->id,
             supplierName: $item->product->supplier?->name,
         );

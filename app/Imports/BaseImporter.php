@@ -16,6 +16,9 @@ abstract class BaseImporter implements ImporterInterface
 
     protected int $errorCount = 0;
 
+    /**
+     * @var array<int, string>
+     */
     protected array $errors = [];
 
     public function __construct(
@@ -23,6 +26,9 @@ abstract class BaseImporter implements ImporterInterface
         protected LoggerInterface $logger
     ) {}
 
+    /**
+     * @return array{successCount: int, errorCount: int, errors: array<int, string>}
+     */
     public function import(UploadedFile $file): array
     {
         $this->successCount = 0;
@@ -58,8 +64,14 @@ abstract class BaseImporter implements ImporterInterface
         return $this->getResult();
     }
 
+    /**
+     * @param array<string, mixed> $row
+     */
     abstract protected function processRow(array $row, int $index): void;
 
+    /**
+     * @return array{successCount: int, errorCount: int, errors: array<int, string>}
+     */
     protected function getResult(): array
     {
         return [

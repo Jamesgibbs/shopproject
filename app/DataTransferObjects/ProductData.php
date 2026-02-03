@@ -9,6 +9,9 @@ use Carbon\Carbon;
 
 readonly class ProductData
 {
+    /**
+     * @param array<int, mixed> $reviews
+     */
     public function __construct(
         protected int $id,
         protected string $name,
@@ -35,8 +38,8 @@ readonly class ProductData
             stockQuantity: $product->stock_quantity,
             supplierId: $product->relationLoaded('supplier') ? $product->supplier?->id : null,
             supplierName: $product->relationLoaded('supplier') ? $product->supplier?->name : null,
-            averageRating: $product->average_rating !== null
-                ? floatval($product->average_rating)
+            averageRating: $product->average_rating > 0
+                ? $product->average_rating
                 : null,
             reviewsCount: $product->reviews_count,
             image: $product->image ?? null,

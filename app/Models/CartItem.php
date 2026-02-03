@@ -10,7 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
- * @property int $cart_id
+ * @property int|null $user_id
+ * @property string|null $cart_token
  * @property int $product_id
  * @property int $quantity
  * @property float $price_at_time
@@ -26,7 +27,6 @@ class CartItem extends Model
         'product_id',
         'quantity',
         'price_at_time',
-        'created_at',
     ];
 
     /**

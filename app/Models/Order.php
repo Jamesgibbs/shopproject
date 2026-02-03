@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Order extends Model
 {
+    /** @use HasFactory<\Database\Factories\OrderFactory> */
     use HasDeletedData, HasFactory, SoftDeletes;
 
     protected $fillable = [

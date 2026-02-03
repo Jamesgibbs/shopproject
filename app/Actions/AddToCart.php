@@ -2,21 +2,19 @@
 
 namespace App\Actions;
 
-use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
 
 class AddToCart
 {
-    public function execute(Product $product, int $quantity): Cart
+    public function execute(Product $product, int $quantity): void
     {
-        $cart = Cart::firstOrCreate(
-            ['user_id' => auth()->id()],
-            ['created_at' => now()]
-        );
+        $userId = auth()->id();
 
         // Check if item exists in cart
-        $cartItem = $cart->items()->where('product_id', $product->id)->first();
+        $cartItem = CartItem::where('user_id', $userId)
+            ->where('product_id', $product->id)
+            ->first();
 
         if ($cartItem instanceof CartItem) {
             $cartItem->update([
@@ -24,16 +22,15 @@ class AddToCart
                 'price_at_time' => $product->price,
             ]);
 
-            return $cart;
+            return;
         }
 
-        $cart->items()->create([
+        CartItem::create([
+            'user_id' => $userId,
             'product_id' => $product->id,
             'quantity' => $quantity,
             'price_at_time' => $product->price,
         ]);
-
-        return $cart;
     }
 
     private function calculateNewQuantity(CartItem $cartItem, int $quantity): int

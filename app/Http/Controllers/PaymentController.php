@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\Cart;
+use App\Models\CartItem;
 use App\Services\ProcessPaymentService;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -23,9 +23,13 @@ class PaymentController extends Controller
      */
     public function processPayment(ProcessPaymentService $processPaymentService): ?RedirectResponse
     {
-        $cart = Cart::with('items.product')->where('user_id', auth()->id())->firstOrFail();
+        $cartItems = CartItem::with('product')->where('user_id', auth()->id())->get();
 
-        foreach ($cart->items as $item) {
+        if ($cartItems->isEmpty()) {
+            return redirect()->back()->with('error', 'Your cart is empty.');
+        }
+
+        foreach ($cartItems as $item) {
             $product = $item->product;
             if (! $product || $product->stock_quantity < $item->quantity) {
                 return redirect()->back()->with(
@@ -36,7 +40,7 @@ class PaymentController extends Controller
         }
 
         try {
-            $processPaymentService->processPayment($cart);
+            $processPaymentService->processPayment($cartItems);
 
             return redirect()->route('orders.index')->with('success', 'Payment successful!');
         } catch (Throwable $exception) {

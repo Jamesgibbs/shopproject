@@ -11,23 +11,34 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProductSearchService
 {
-    public function search(?string $query): LengthAwarePaginator|AbstractPaginator|null
+    /**
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<int, array<string, mixed>>|null
+     */
+    public function search(?string $query): ?\Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         if (! $query) {
             return null;
         }
 
-        return Product::with('supplier')
+        /** @var \Illuminate\Pagination\LengthAwarePaginator<int, Product> $paginator */
+        $paginator = Product::with('supplier')
             ->where(fn ($q) => $q->where('name', 'like', "%{$query}%")
                 ->orWhere('description', 'like', "%{$query}%")
             )
             ->latest()
-            ->paginate(12)
-            ->withQueryString()
+            ->paginate(12);
+
+        /** @var \Illuminate\Contracts\Pagination\LengthAwarePaginator<int, array<string, mixed>> $result */
+        $result = $paginator->withQueryString()
             ->through(fn ($p) => ProductData::fromModel($p)->toArray());
+
+        return $result;
     }
 
-    public function featured()
+    /**
+     * @return \Illuminate\Support\Collection<int, array<string, mixed>>
+     */
+    public function featured(): \Illuminate\Support\Collection
     {
         return Product::featured()
             ->latest()
@@ -36,7 +47,10 @@ class ProductSearchService
             ->map(fn ($p) => ProductData::fromModel($p)->toArray());
     }
 
-    public function deals()
+    /**
+     * @return \Illuminate\Support\Collection<int, array<string, mixed>>
+     */
+    public function deals(): \Illuminate\Support\Collection
     {
         return Product::deals()
             ->latest()

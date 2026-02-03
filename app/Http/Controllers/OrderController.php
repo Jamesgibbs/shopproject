@@ -7,7 +7,7 @@ namespace App\Http\Controllers;
 use App\DataTransferObjects\SalesHistoryData;
 use App\Enums\OrderStatus;
 use App\Mail\OrderConfirmation;
-use App\Models\Cart;
+use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Orders\DataTransferObjects\BaseOrderData;
@@ -51,18 +51,32 @@ class OrderController extends Controller
     public function submit(Request $request): RedirectResponse
     {
         try {
-            $cart = Cart::where('user_id', $request->user()->id)->first();
+            $cartItems = CartItem::where('user_id', $request->user()->id)->get();
 
-            if (! $cart) {
-                return redirect()->back()->with('error', 'Cart not found!');
+            if ($cartItems->isEmpty()) {
+                return redirect()->back()->with('error', 'Cart is empty!');
             }
+
+            $totalAmount = $cartItems->sum(fn ($item) => $item->quantity * $item->price_at_time);
 
             $order = Order::create([
                 'user_id' => $request->user()->id,
-                'cart_id' => $cart->id,
                 'status' => 'pending',
-                'total_amount' => $cart->total ?? 0,
+                'total_amount' => $totalAmount,
             ]);
+
+            foreach ($cartItems as $item) {
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $item->product_id,
+                    'quantity' => $item->quantity,
+                    'price_at_time' => $item->price_at_time,
+                    'product_name' => $item->product->name,
+                ]);
+            }
+
+            // Clear cart items
+            CartItem::where('user_id', $request->user()->id)->delete();
 
             Mail::to($request->user()->email)->send(new OrderConfirmation($order));
 

@@ -50,7 +50,7 @@ export default function Product({ product }: PageProps<{ product: ProductType }>
                                 <div className={styles.ratingBox}>
                                     <StarRating rating={product.average_rating} />
                                     <span className={styles.ratingCount}>
-                                        {product.average_rating.toFixed(1)} ({product.reviews_count} reviews)
+                                        {(product.average_rating || 0).toFixed(1)} ({product.reviews_count} reviews)
                                     </span>
                                 </div>
                                 <div className={styles.supplierLink}>

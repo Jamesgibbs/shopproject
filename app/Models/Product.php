@@ -74,9 +74,9 @@ class Product extends Model
     }
 
     // Helper method to get average rating
-    public function getAverageRatingAttribute(): string
+    public function getAverageRatingAttribute(): float
     {
-        return $this->reviews()->avg('rating') ?? '0.00';
+        return (float) ($this->reviews()->avg('rating') ?? 0.00);
     }
 
     // Helper method to get total number of reviews
@@ -102,6 +102,10 @@ class Product extends Model
         return $query->where('is_featured', true);
     }
 
+    /**
+     * @param  Builder<Product>  $query
+     * @return Builder<Product>
+     */
     public function scopeDeals(Builder $query): Builder
     {
         return $query->where('is_deal', true)

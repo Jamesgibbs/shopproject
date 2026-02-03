@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductImportProcessor
 {
+    /**
+     * @param array<string, mixed> $row
+     */
     public function process(array $row): void
     {
         Product::create([

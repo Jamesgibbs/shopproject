@@ -8,6 +8,9 @@ use App\Contracts\FileParserInterface;
 
 class CsvParser implements FileParserInterface
 {
+    /**
+     * @var array<int, string>
+     */
     private array $errors = [];
 
     /**

@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Mail\OrderConfirmation;
-use App\Models\Cart;
+use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\OrderItem;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Throwable;
@@ -15,19 +16,20 @@ use Throwable;
 class ProcessPaymentService
 {
     /**
+     * @param Collection<int, CartItem> $cartItems
      * @throws Throwable
      */
-    public function processPayment(Cart $cart): void
+    public function processPayment(Collection $cartItems): void
     {
-        DB::transaction(function () use ($cart) {
+        DB::transaction(function () use ($cartItems) {
 
             $order = Order::create([
                 'user_id' => auth()->id(),
-                'total_amount' => $cart->items->sum(fn ($item) => $item->quantity * $item->price_at_time),
+                'total_amount' => $cartItems->sum(fn ($item) => $item->quantity * $item->price_at_time),
                 'status' => 'pending',
             ])->load('user');
 
-            foreach ($cart->items as $item) {
+            foreach ($cartItems as $item) {
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $item->product_id,
@@ -39,17 +41,13 @@ class ProcessPaymentService
                 $product = $item->product;
                 if ($product && $product->stock_quantity >= $item->quantity) {
                     $product->decrement('stock_quantity', $item->quantity);
-                } else {
-                    if ($product->stock_quantity < $item->quantity) {
-                        return redirect()->back()->with('error', "Not enough stock for {$product->name}.");
-                    }
                 }
             }
 
             Mail::to(auth()->user()->email)->send(new OrderConfirmation($order));
 
             // Clear the cart
-            $cart->items()->delete();
+            CartItem::where('user_id', auth()->id())->delete();
 
         });
     }

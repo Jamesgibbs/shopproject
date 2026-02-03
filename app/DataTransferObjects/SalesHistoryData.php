@@ -31,7 +31,7 @@ readonly class SalesHistoryData
             productImage: $item->product->image,
             productId: $item->product->id,
             quantity: $item->quantity,
-            price: $item->price_at_time,
+            price: (string) $item->price_at_time,
             orderId: $item->order->id,
             totalAmount: (string) $item->order->total_amount,
             orderedAt: $item->order->created_at->toDateTimeString(),
