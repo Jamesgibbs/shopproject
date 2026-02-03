@@ -2,7 +2,7 @@ import AppLayout from '@/Layouts/AppLayout'
 import {Head, usePage} from '@inertiajs/react'
 import React from "react"
 import {PageProps} from "@/types";
-import FeaturedCarousel from "@/Components/Features/Products/FeaturedCarousel";
+import ProductCarousel from "@/Components/Features/Products/ProductCarousel";
 
 export default function Dashboard() {
     const { auth, featuredProducts = [] } = usePage<PageProps>().props
@@ -17,7 +17,7 @@ export default function Dashboard() {
 
             <h2> Featured Products</h2>
 
-            <FeaturedCarousel products={featuredProducts} />
+            <ProductCarousel products={featuredProducts} />
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
