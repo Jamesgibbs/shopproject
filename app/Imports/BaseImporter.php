@@ -65,7 +65,7 @@ abstract class BaseImporter implements ImporterInterface
     }
 
     /**
-     * @param array<string, mixed> $row
+     * @param  array<string, mixed>  $row
      */
     abstract protected function processRow(array $row, int $index): void;
 

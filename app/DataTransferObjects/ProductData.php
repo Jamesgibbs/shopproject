@@ -10,7 +10,7 @@ use Carbon\Carbon;
 readonly class ProductData
 {
     /**
-     * @param array<int, mixed> $reviews
+     * @param  array<int, mixed>  $reviews
      */
     public function __construct(
         protected int $id,

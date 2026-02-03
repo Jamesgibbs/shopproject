@@ -26,9 +26,10 @@ Route::get('/dashboard', function () {
 
     if ($user && $user->role === Role::SUPPLIER->value) {
         return redirect()->route('supplier.dashboard');
-    } {
-        return redirect()->route('home');
     }
+
+    return redirect()->route('home');
+
 })->name('dashboard');
 
 Route::post('/cart', [CartController::class, 'addToCart'])->name('cart.add');

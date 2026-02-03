@@ -16,7 +16,8 @@ use Throwable;
 class ProcessPaymentService
 {
     /**
-     * @param Collection<int, CartItem> $cartItems
+     * @param  Collection<int, CartItem>  $cartItems
+     *
      * @throws Throwable
      */
     public function processPayment(Collection $cartItems): void

@@ -21,7 +21,7 @@ readonly class OrderItemData
             id: $item->id,
             name: $item->product->name ?? 'Unknown Product',
             quantity: $item->quantity,
-            price: (string)$item->price_at_time,
+            price: (string) $item->price_at_time,
         );
     }
 

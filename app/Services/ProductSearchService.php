@@ -6,8 +6,6 @@ namespace App\Services;
 
 use App\DataTransferObjects\ProductData;
 use App\Models\Product;
-use Illuminate\Pagination\AbstractPaginator;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProductSearchService
 {

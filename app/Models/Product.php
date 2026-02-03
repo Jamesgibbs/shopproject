@@ -109,7 +109,7 @@ class Product extends Model
     public function scopeDeals(Builder $query): Builder
     {
         return $query->where('is_deal', true)
-            ->where(function($q) {
+            ->where(function ($q) {
                 $q->whereNull('deal_expires_at')
                     ->orWhere('deal_expires_at', '>', now());
             });

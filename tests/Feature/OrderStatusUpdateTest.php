@@ -17,19 +17,19 @@ class OrderStatusUpdateTest extends TestCase
         $supplier = User::factory()->create(['role' => Role::SUPPLIER->value]);
         $order = Order::factory()->create([
             'supplier_id' => $supplier->id,
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
 
         $this->actingAs($supplier);
 
         $response = $this->patch(route('orders.updateStatus', $order), [
-            'status' => 'shipped'
+            'status' => 'shipped',
         ]);
 
         $response->assertRedirect();
         $this->assertDatabaseHas('orders', [
             'id' => $order->id,
-            'status' => 'shipped'
+            'status' => 'shipped',
         ]);
     }
 
@@ -39,13 +39,13 @@ class OrderStatusUpdateTest extends TestCase
         $supplier2 = User::factory()->create(['role' => Role::SUPPLIER->value]);
         $order = Order::factory()->create([
             'supplier_id' => $supplier1->id,
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
 
         $this->actingAs($supplier2);
 
         $response = $this->patch(route('orders.updateStatus', $order), [
-            'status' => 'shipped'
+            'status' => 'shipped',
         ]);
 
         $response->assertForbidden();
