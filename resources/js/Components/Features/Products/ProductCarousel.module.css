@@ -15,20 +15,20 @@
 
 .carouselItem {
     display: inline-block;
-    width: 240px;
-    margin-right: 1rem;
+    width: 280px;
+    margin-right: 0.5rem;
     scroll-snap-align: start;
-    text-align: center;
+    text-align: left;
     vertical-align: top;
     white-space: normal;
 }
 
 .productImage {
     width: 100%;
-    height: 150px;
+    height: 200px;
     object-fit: cover;
-    border-radius: 6px;
-    margin-bottom: 0.5rem;
+    border-radius: 4px;
+    margin-bottom: 0.25rem;
 }
 
 .productName {
@@ -40,12 +40,17 @@
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-    height: 3rem;
+    padding-left: 0.25rem;
 }
 
 .productPrice {
     color: #374151;
     font-weight: 500;
+    padding-left: 0.25rem;
+}
+
+.carouselCard {
+    padding: 0.15rem !important;
 }
 
 .originalPrice {

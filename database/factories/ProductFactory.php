@@ -30,6 +30,7 @@ class ProductFactory extends Factory
             'is_deal' => false,
             'deal_price' => null,
             'deal_expires_at' => null,
+            'sku' => $this->faker->unique()->bothify('SKU-#####'),
         ];
     }
 

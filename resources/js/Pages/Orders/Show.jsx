@@ -1,9 +1,13 @@
 import React from 'react'
-import { Link } from '@inertiajs/react'
+import { Link, usePage } from '@inertiajs/react'
 import AppLayout from '@/Layouts/AppLayout'
 import PageCard from '@/Components/Common/PageCard.jsx'
+import SupplierLayout from "@/Layouts/SupplierLayout.tsx";
 
 export default function Show({ order }) {
+    const { auth } = usePage().props;
+    const isSupplier = auth.user.role === 'supplier';
+
     return (
         <PageCard title={`Order #${order.id} Details`}>
             <div className="mb-6">
@@ -47,10 +51,10 @@ export default function Show({ order }) {
 
                 <div className="mt-8">
                     <Link
-                        href="/orders/sales-history"
+                        href={isSupplier ? route('supplier.orders.index') : route('orders.index')}
                         className="text-indigo-600 hover:text-indigo-900"
                     >
-                        &larr; Back to Sales History
+                        &larr; Back to {isSupplier ? 'Orders' : 'My Orders'}
                     </Link>
                 </div>
             </div>
@@ -58,4 +62,10 @@ export default function Show({ order }) {
     )
 }
 
-Show.layout = (page) => <AppLayout children={page} />
+Show.layout = (page) => {
+    const { auth } = page.props;
+    if (auth.user.role === 'supplier') {
+        return <SupplierLayout children={page} />;
+    }
+    return <AppLayout children={page} />;
+}

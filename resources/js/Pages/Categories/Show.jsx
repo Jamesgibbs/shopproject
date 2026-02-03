@@ -30,7 +30,6 @@ export default function Show() {
     return (
         <PageCard title="Category">
             <div className={styles.header}>
-                <h1 className={styles.title}>{category.name}</h1>
                 <p className={styles.breadcrumb}>
                     {breadcrumb.map((item, index) => (
                         <span key={item.id}>

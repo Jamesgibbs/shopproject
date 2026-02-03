@@ -9,9 +9,23 @@
     max-width: 400px;
 }
 
+.inputContainer {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.searchIcon {
+    position: absolute;
+    left: 0.75rem;
+    color: #999;
+    pointer-events: none;
+}
+
 .searchInput {
     width: 100%;
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem 0.75rem 0.5rem 2.25rem;
     border: 1px solid #ddd;
     border-radius: 6px;
     font-size: 1rem;

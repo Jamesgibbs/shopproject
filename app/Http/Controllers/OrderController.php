@@ -38,7 +38,10 @@ class OrderController extends Controller
 
     public function supplierIndex(): Response
     {
-        $orders = Order::where('supplier_id', auth()->id())->paginate(20);
+        $orders = Order::with(['items.product', 'user'])
+            ->where('supplier_id', auth()->id())
+            ->latest()
+            ->paginate(20);
 
         return Inertia::render('Orders/SupplierIndex', [
             'orders' => $orders->through(fn (Order $order) => BaseOrderData::fromModel($order)->toArray()),
@@ -92,5 +95,22 @@ class OrderController extends Controller
         return Inertia::render('Orders/Show', [
             'order' => BaseOrderData::fromModel($order)->toArray(),
         ]);
+    }
+
+    public function updateOrderStatus(Request $request, Order $order): RedirectResponse
+    {
+        if ($order->supplier_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'status' => 'required|string|in:pending,paid,shipped,cancelled,completed',
+        ]);
+
+        $order->update([
+            'status' => $validated['status'],
+        ]);
+
+        return redirect()->back()->with('success', 'Order status updated successfully.');
     }
 }

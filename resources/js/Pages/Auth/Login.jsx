@@ -6,6 +6,7 @@ import TextInput from '@/Components/Common/TextInput'
 import GuestLayout from '@/Layouts/GuestLayout.tsx'
 import { Head, Link, useForm } from '@inertiajs/react'
 import styles from './Login.module.css'
+import Logo from '@/Components/Layout/Logo'
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -25,6 +26,10 @@ export default function Login({ status, canResetPassword }) {
     return (
         <GuestLayout>
             <Head title="Log in" />
+
+            <div className="flex flex-col items-center mb-6">
+                <Logo />
+            </div>
 
             {status && <div className={styles.statusMessage}>{status}</div>}
 

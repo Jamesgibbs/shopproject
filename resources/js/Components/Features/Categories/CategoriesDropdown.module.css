@@ -40,10 +40,3 @@
     text-decoration: underline;
 }
 
-/* Hamburger icon container */
-.icon {
-    width: 18px; height: 14px; display: flex; flex-direction: column; justify-content: space-between; }
-
-.icon div {
-    height: 2px; background: #333; border-radius: 2px;
-}

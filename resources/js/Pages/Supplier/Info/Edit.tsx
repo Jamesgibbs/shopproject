@@ -8,17 +8,22 @@ interface Props {
         id: number;
         name: string;
         supplier_overview: string | null;
+        logo_path: string | null;
     };
 }
 
 export default function Edit({ user }: Props) {
-    const { data, setData, patch, processing, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         supplier_overview: user.supplier_overview || '',
+        logo: null as File | null,
+        _method: 'PATCH'
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        patch(route('supplier.info.update'));
+        post(route('supplier.info.update'), {
+            forceFormData: true,
+        });
     };
 
     return (
@@ -39,6 +44,29 @@ export default function Edit({ user }: Props) {
                             className={styles.inputDisabled}
                         />
                         <p className={styles.helpText}>To change your company name, please visit account settings.</p>
+                    </div>
+
+                    <div className={styles.formSection}>
+                        <label className={styles.label}>Company Logo</label>
+                        {user.logo_path && (
+                            <div className="mb-4">
+                                <img
+                                    src={`/storage/${user.logo_path}`}
+                                    alt="Current Logo"
+                                    className="w-24 h-24 object-contain rounded border"
+                                />
+                            </div>
+                        )}
+                        <input
+                            type="file"
+                            onChange={(e) => setData('logo', e.target.files ? e.target.files[0] : null)}
+                            className={styles.input}
+                            accept="image/*"
+                        />
+                        {errors.logo && (
+                            <div className={styles.error}>{errors.logo}</div>
+                        )}
+                        <p className={styles.helpText}>Recommended: Square image, max 2MB.</p>
                     </div>
 
                     <div className={styles.formSection}>

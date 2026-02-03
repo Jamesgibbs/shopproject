@@ -1,5 +1,6 @@
 import { Link, usePage } from '@inertiajs/react'
 import styles from './SupplierSidebar.module.css'
+import { LayoutDashboard, Package, Building2, ClipboardList, Warehouse, Settings } from 'lucide-react'
 
 export default function SupplierSidebar() {
     const { url } = usePage()
@@ -15,18 +16,21 @@ export default function SupplierSidebar() {
                     href="/supplier/dashboard"
                     className={isActive('/supplier/dashboard') ? styles.active : ''}
                 >
-                    Dashboard
+                    <LayoutDashboard size={20} />
+                    <span>Dashboard</span>
                 </Link>
 
                 <Link href="/supplier/products" className={isActive('/supplier/products') ? styles.active : ''}>
-                    Products
+                    <Package size={20} />
+                    <span>Products</span>
                 </Link>
 
                 <Link
                     href={route('supplier.info.edit')}
                     className={isActive('/supplier/info') ? styles.active : ''}
                 >
-                    Company Info
+                    <Building2 size={20} />
+                    <span>Company Info</span>
                 </Link>
 
 
@@ -34,21 +38,24 @@ export default function SupplierSidebar() {
                     href="/orders/sales-history"
                     className={isActive('/orders/sales-history') ? styles.active : ''}
                 >
-                    Orders
+                    <ClipboardList size={20} />
+                    <span>Orders</span>
                 </Link>
 
                 <Link
                     href="/supplier/inventory"
                     className={isActive('/supplier/inventory') ? styles.active : ''}
                 >
-                    Inventory
+                    <Warehouse size={20} />
+                    <span>Inventory</span>
                 </Link>
 
                 <Link
                     href="/profile"
                     className={isActive('/profile') ? styles.active : ''}
                 >
-                    Settings
+                    <Settings size={20} />
+                    <span>Settings</span>
                 </Link>
             </nav>
         </aside>

@@ -12,7 +12,16 @@ export default function SupplierProducts({ supplier, products }) {
             <Head title={`${supplier.name}'s Products`} />
 
             <PageCard title={`${supplier.name}'s`}>
-                <h2>{supplier.supplier_overview}</h2>
+                <div className="flex items-center gap-4 mb-6">
+                    {supplier.logo_url && (
+                        <img
+                            src={supplier.logo_url}
+                            alt={`${supplier.name} logo`}
+                            className="w-16 h-16 object-contain rounded-md border"
+                        />
+                    )}
+                    <h2 className="text-xl font-medium">{supplier.supplier_overview}</h2>
+                </div>
                 {products.data.length > 0 ? (
                     <>
                         <CardGrid>

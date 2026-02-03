@@ -24,7 +24,7 @@ export default function ProductCarousel({ products }: Props) {
                         href={`/products/${product.id}`}
                         style={{ textDecoration: 'none', color: 'inherit' }}
                     >
-                        <Card>
+                        <Card className={styles.carouselCard}>
                             <img src={product.image} alt={product.name} className={styles.productImage} />
 
                             <div className={styles.productName}>{product.name}</div>

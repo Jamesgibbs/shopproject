@@ -1,12 +1,13 @@
 import { PropsWithChildren, ReactNode } from 'react'
-import {Link, router, usePage} from '@inertiajs/react'
+import { Link, router, usePage } from '@inertiajs/react'
 import Logo from "@/Components/Layout/Logo";
 import Footer from "@/Components/Layout/Footer";
 import CategoriesDropdown from '@/Components/Features/Categories/CategoriesDropdown.jsx'
 import FlashMessage from '@/Components/Common/FlashMessage'
 import styles from './AuthenticatedLayout.module.css'
-import {PageProps} from "@/types";
+import { PageProps } from "@/types";
 import React from "react";
+import { ShoppingCart, Search } from 'lucide-react';
 
 export default function AuthenticatedLayout({ header, children }: PropsWithChildren<{ header?: ReactNode }>) {
     const { auth, flash, categories } = usePage<PageProps>().props
@@ -30,20 +31,24 @@ export default function AuthenticatedLayout({ header, children }: PropsWithChild
                                     const formData = new FormData(e.currentTarget);
                                     router.get('/', { q: formData.get('q') });
                                 }} className={styles.searchForm}>
-                                    <input
-                                        type="text"
-                                        name="q"
-                                        defaultValue={new URLSearchParams(window.location.search).get('q') || ''}
-                                        placeholder="Search products…"
-                                        className={styles.searchInput}
-                                    />
+                                    <div className={styles.inputContainer}>
+                                        <Search className={styles.searchIcon} size={18} />
+                                        <input
+                                            type="text"
+                                            name="q"
+                                            defaultValue={new URLSearchParams(window.location.search).get('q') || ''}
+                                            placeholder="Search products…"
+                                            className={styles.searchInput}
+                                        />
+                                    </div>
                                 </form>
                             </div>
                         </div>
 
                         <div className="navbar-right">
-                            <Link href={route('cart.view')} className="btn btn-light">
-                                Basket
+                            <Link href={route('cart.view')} className="btn btn-light flex items-center gap-2">
+                                <ShoppingCart size={20} />
+                                <span>Basket</span>
                             </Link>
 
                             <button

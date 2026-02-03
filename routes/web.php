@@ -33,6 +33,8 @@ Route::get('/dashboard', function () {
 
 Route::post('/cart', [CartController::class, 'addToCart'])->name('cart.add');
 Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
+Route::post('/remove', [CartController::class, 'removeFromCart'])->name('remove');
+Route::post('/update-quantity', [CartController::class, 'updateQuantity'])->name('cart.updateQuantity');
 
 // Products (Public View)
 Route::controller(ProductController::class)->group(function () {
@@ -71,10 +73,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware('customer')->group(function () {
         // Cart Management
         Route::controller(CartController::class)->prefix('cart')->name('cart.')->group(function () {
-            Route::post('/remove', 'removeFromCart')->name('remove');
             Route::post('/checkout', 'checkout')->name('checkout');
-            Route::post('/update-quantity', 'updateQuantity')->name('updateQuantity');
-
         });
 
         // Order Management
@@ -133,6 +132,7 @@ Route::middleware(['auth'])->group(function () {
         // Sales History
         Route::get('/orders/sales-history', [OrderController::class, 'salesHistory'])->name('orders.salesHistory');
         Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+        Route::patch('/orders/{order}/status', [OrderController::class, 'updateOrderStatus'])->name('orders.updateStatus');
 
         // Supplier Info Management
         Route::controller(SupplierInfoController::class)->prefix('supplier/info')->name('supplier.info.')->group(function () {

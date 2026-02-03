@@ -1,6 +1,7 @@
 import {Link, router} from '@inertiajs/react'
 import {useEffect, useState} from 'react'
 import styles from './CategoriesDropdown.module.css'
+import { Menu } from 'lucide-react'
 
 export default function CategoriesDropdown({ categories }) {
     const [open, setOpen] = useState(false)
@@ -17,11 +18,7 @@ export default function CategoriesDropdown({ categories }) {
     return (
         <div className={styles.dropdown}>
             <button className={styles.trigger} onClick={toggle}>
-                <span className={styles.icon}>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </span>
+                <Menu size={20} className="mr-2" />
                 Categories
             </button>
 

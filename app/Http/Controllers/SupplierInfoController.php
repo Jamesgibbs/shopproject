@@ -14,7 +14,7 @@ class SupplierInfoController extends Controller
     public function edit(Request $request): Response
     {
         return Inertia::render('Supplier/Info/Edit', [
-            'user' => $request->user()->only(['id', 'name', 'supplier_overview']),
+            'user' => $request->user()->only(['id', 'name', 'supplier_overview', 'logo_path']),
         ]);
     }
 
@@ -22,9 +22,17 @@ class SupplierInfoController extends Controller
     {
         $validated = $request->validate([
             'supplier_overview' => 'nullable|string|max:2000',
+            'logo' => 'nullable|image|max:2048',
         ]);
 
-        $request->user()->update($validated);
+        $user = $request->user();
+
+        if ($request->hasFile('logo')) {
+            $path = $request->file('logo')->store('supplier_logos', 'public');
+            $validated['logo_path'] = $path;
+        }
+
+        $user->update($validated);
 
         return redirect()->back()->with('success', 'Supplier information updated successfully.');
     }

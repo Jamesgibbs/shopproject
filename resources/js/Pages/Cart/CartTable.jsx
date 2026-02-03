@@ -34,7 +34,7 @@ export default function CartTable({ cartItems }) {
     }
 
     const handleRemove = (itemId) => {
-        router.post(route('cart.remove'), {
+        router.post(route('remove'), {
             id: itemId,
         })
     }

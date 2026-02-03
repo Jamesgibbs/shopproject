@@ -166,6 +166,7 @@ class ProductController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'supplier_overview' => $user->supplier_overview,
+                'logo_url' => $user->logo_path ? asset('storage/'.$user->logo_path) : null,
             ],
             'products' => $products->through(fn (Product $product) => ProductData::fromModel($product)->toArray()),
         ]);

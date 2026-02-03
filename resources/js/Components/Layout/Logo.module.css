@@ -8,19 +8,12 @@
     gap: 0.5rem;
 }
 
-/* Three-line icon */
+/* Icon container */
 .icon {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 18px;
-    height: 14px;
-}
-
-.icon div {
-    height: 2px;
-    background: #222;
-    border-radius: 2px;
+    align-items: center;
+    justify-content: center;
+    color: #ff9900; /* Amazon-ish orange for that e-commerce feel */
 }
 
 /* Wordmark */

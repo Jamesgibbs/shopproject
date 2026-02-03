@@ -25,6 +25,17 @@ class DatabaseSeeder extends Seeder
                 'role' => 'supplier',
                 'email_verified_at' => now(),
                 'supplier_overview' => 'This is the dummy supplier overview text giving a brief description about the supplier.',
+                'logo_path' => "https://picsum.photos/seed/category-1111/600/300",
+            ]);
+
+        User::firstOrCreate(
+            ['email' => 'acerimmer@test.com'],
+            [
+                'name' => 'Ace Rimmer',
+                'password' => Hash::make('password'),
+                'role' => 'supplier',
+                'email_verified_at' => now(),
+                'supplier_overview' => 'Dummy supplier overview text',
             ]);
 
         User::firstOrCreate(

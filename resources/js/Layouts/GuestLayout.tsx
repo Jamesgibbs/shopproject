@@ -6,6 +6,7 @@ import Logo from "@/Components/Layout/Logo";
 import Footer from "@/Components/Layout/Footer";
 import React, { PropsWithChildren, ReactNode } from "react";
 import { PageProps } from '@/types';
+import { ShoppingCart, Search, LogIn, UserPlus } from 'lucide-react';
 
 interface GuestLayoutProps {
     header?: ReactNode
@@ -34,29 +35,35 @@ export default function GuestLayout({ header, children }: PropsWithChildren<Gues
                                     const formData = new FormData(e.currentTarget);
                                     router.get('/', { q: formData.get('q') });
                                 }} className={styles.searchForm}>
-                                    <input
-                                        type="text"
-                                        name="q"
-                                        defaultValue={new URLSearchParams(window.location.search).get('q') || ''}
-                                        placeholder="Search products…"
-                                        className={styles.searchInput}
-                                    />
+                                    <div className={styles.inputContainer}>
+                                        <Search className={styles.searchIcon} size={18} />
+                                        <input
+                                            type="text"
+                                            name="q"
+                                            defaultValue={new URLSearchParams(window.location.search).get('q') || ''}
+                                            placeholder="Search products…"
+                                            className={styles.searchInput}
+                                        />
+                                    </div>
                                 </form>
                             </div>
                         </div>
 
                         {/* Right side */}
                         <div className="navbar-right">
-                            <Link href={route('login')} className="btn btn-light">
-                                Sign In
+                            <Link href={route('login')} className="btn btn-light flex items-center gap-2">
+                                <LogIn size={20} />
+                                <span>Sign In</span>
                             </Link>
 
-                            <Link href={route('register')} className="btn btn-dark">
-                                Register
+                            <Link href={route('register')} className="btn btn-dark flex items-center gap-2">
+                                <UserPlus size={20} />
+                                <span>Register</span>
                             </Link>
 
-                            <Link href={route('cart.view')} className="btn btn-light">
-                                Basket
+                            <Link href={route('cart.view')} className="btn btn-light flex items-center gap-2">
+                                <ShoppingCart size={20} />
+                                <span>Basket</span>
                             </Link>
                         </div>
                     </div>

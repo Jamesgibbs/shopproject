@@ -4,6 +4,7 @@ import PrimaryButton from '@/Components/Common/PrimaryButton'
 import TextInput from '@/Components/Common/TextInput'
 import GuestLayout from '@/Layouts/GuestLayout.tsx'
 import { Head, Link, useForm } from '@inertiajs/react'
+import Logo from '@/Components/Layout/Logo'
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -24,6 +25,10 @@ export default function Register() {
     return (
         <GuestLayout>
             <Head title="Register" />
+
+            <div className="flex flex-col items-center mb-6">
+                <Logo />
+            </div>
 
             <form onSubmit={submit}>
                 <div>
