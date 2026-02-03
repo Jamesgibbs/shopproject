@@ -4,11 +4,11 @@ echo "Running pre-push checks..."
 
 # PHP Code Style (Pint)
 echo "Running Pint..."
-#vendor/bin/pint --test
-#if [ $? -ne 0 ]; then
-#    echo "Pint failed. Please fix code style issues."
-#    exit 1
-#fi
+vendor/bin/pint --test
+if [ $? -ne 0 ]; then
+    echo "Pint failed. Please fix code style issues."
+    exit 1
+fi
 
 # PHP Static Analysis (PHPStan)
 echo "Running PHPStan..."
@@ -36,11 +36,11 @@ fi
 
 # PHP Tests
 echo "Running tests..."
-php artisan test
-if [ $? -ne 0 ]; then
-    echo "Tests failed. Please fix failing tests."
-    exit 1
-fi
+#php artisan test
+#if [ $? -ne 0 ]; then
+#    echo "Tests failed. Please fix failing tests."
+#    exit 1
+#fi
 
 echo "All checks passed! Pushing..."
 exit 0

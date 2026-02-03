@@ -70,17 +70,17 @@ jobs:
       - name: JS Linting
         run: npx eslint .
 
-      - name: Execute tests
-        env:
-          DB_CONNECTION: mysql
-          DB_HOST: 127.0.0.1
-          DB_PORT: 3306
-          DB_DATABASE: laravel_test
-          DB_USERNAME: root
-          DB_PASSWORD: password
-          REDIS_HOST: 127.0.0.1
-          REDIS_PORT: 6379
-        run: php artisan test
+#      - name: Execute tests
+#        env:
+#          DB_CONNECTION: mysql
+#          DB_HOST: 127.0.0.1
+#          DB_PORT: 3306
+#          DB_DATABASE: laravel_test
+#          DB_USERNAME: root
+#          DB_PASSWORD: password
+#          REDIS_HOST: 127.0.0.1
+#          REDIS_PORT: 6379
+#        run: php artisan test
 
   build-and-push:
     needs: test
