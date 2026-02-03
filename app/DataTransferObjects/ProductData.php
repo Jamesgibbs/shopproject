@@ -22,6 +22,7 @@ readonly class ProductData
         protected ?string $image,
         protected array $reviews,
         protected Carbon $updatedAt,
+        protected ?string $dealPrice = null,
     ) {}
 
     public static function fromModel(Product $product): self
@@ -41,6 +42,7 @@ readonly class ProductData
             image: $product->image ?? null,
             reviews: $product->relationLoaded('reviews') ? $product->reviews->toArray() : [],
             updatedAt: Carbon::parse($product->updated_at),
+            dealPrice: $product->deal_price !== null ? (string) $product->deal_price : null,
         );
     }
 
@@ -62,6 +64,7 @@ readonly class ProductData
             'image' => $this->image,
             'reviews' => $this->reviews,
             'updated_at' => $this->updatedAt->toDateTimeString(),
+            'deal_price' => $this->dealPrice,
         ];
     }
 }

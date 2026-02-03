@@ -23,7 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property bool $is_anonymized
  * @property Carbon|null $anonymized_at
  * @property-read User $user
- * @property-read Collection<int, \App\Models\OrderItem> $items
+ * @property-read Collection<int, OrderItem> $items
  */
 class Order extends Model
 {

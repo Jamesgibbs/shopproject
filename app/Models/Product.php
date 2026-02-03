@@ -101,4 +101,13 @@ class Product extends Model
     {
         return $query->where('is_featured', true);
     }
+
+    public function scopeDeals(Builder $query): Builder
+    {
+        return $query->where('is_deal', true)
+            ->where(function($q) {
+                $q->whereNull('deal_expires_at')
+                    ->orWhere('deal_expires_at', '>', now());
+            });
+    }
 }

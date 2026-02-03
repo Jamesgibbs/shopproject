@@ -19,7 +19,11 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->integer('stock_quantity')->default(0);
             $table->string('image')->nullable();
+            $table->string('sku')->unique();
             $table->boolean('is_featured')->default(false);
+            $table->boolean('is_deal')->default(false);
+            $table->decimal('deal_price', 10, 2)->nullable();
+            $table->timestamp('deal_expires_at')->nullable();
             $table->timestamps();
         });
     }

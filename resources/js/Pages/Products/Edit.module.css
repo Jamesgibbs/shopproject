@@ -1,61 +1,117 @@
-.editProductPage {
-    max-width: 600px;
+.wrapper {
+    max-width: 1100px;
     margin: 0 auto;
     padding: 2rem;
 }
 
-.editTitle {
-    text-align: center;
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 1.5rem;
+.header {
+    margin-bottom: 2rem;
 }
 
-.editForm {
-    background: #fff;
+.backLink {
+    color: #4b5563;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+.backLink:hover {
+    color: #1f2937;
+}
+
+.title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    font-size: 1rem;
+    color: #6b7280;
+}
+
+.formContainer {
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
     padding: 2rem;
-    border-radius: 8px;
-    border: 1px solid #ddd;
+    margin-top: 2rem;
+    max-width: 800px;
 }
 
-.editSubtitle {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 1.5rem;
-}
-
-.formGroup {
+.form {
     display: flex;
     flex-direction: column;
-    margin-bottom: 1rem;
+    gap: 1.5rem;
 }
 
-.formErrors {
-    color: #b00000;
-    margin-bottom: 1rem;
+.formSection {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.label {
+    font-size: 0.875rem;
     font-weight: 600;
+    color: #374151;
 }
 
-.btnPrimary {
-    display: block;
+.input,
+.textarea,
+.select {
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
     width: 100%;
-    padding: 0.8rem;
+    background-color: white;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    outline: none;
+}
+
+.textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.errorText {
+    color: #dc2626;
+    font-size: 0.875rem;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
     margin-top: 1rem;
-    background: #0055cc;
+}
+
+.submitBtn {
+    background: #2563eb;
     color: white;
-    border-radius: 4px;
-    text-align: center;
+    font-weight: 600;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.375rem;
+    transition: background 0.2s;
+    border: none;
     cursor: pointer;
 }
 
-.btnSecondary {
-    display: block;
-    width: 100%;
-    padding: 0.8rem;
-    margin-top: 1rem;
-    background: #444;
-    color: white;
-    border-radius: 4px;
-    text-align: center;
-    cursor: pointer;
+.submitBtn:hover {
+    background: #1d4ed8;
+}
+
+.submitBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }

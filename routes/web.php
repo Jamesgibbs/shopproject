@@ -1,6 +1,5 @@
 <?php
 
-use App\DataTransferObjects\ProductData;
 use App\Enums\Role;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
@@ -12,10 +11,8 @@ use App\Http\Controllers\ProductImportController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupplierDashboardController;
 use App\Http\Controllers\SupplierInfoController;
-use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,29 +20,15 @@ use Inertia\Inertia;
 |--------------------------------------------------------------------------
 */
 Route::get('/', [HomeController::class, 'index'])->name('home');
-/*
-|--------------------------------------------------------------------------
-| Authentication Required Routes
-|--------------------------------------------------------------------------
-*/
+
 Route::get('/dashboard', function () {
     $user = Auth::user();
 
     if ($user && $user->role === Role::SUPPLIER->value) {
         return redirect()->route('supplier.dashboard');
+    } {
+        return redirect()->route('home');
     }
-
-    $featuredProducts = Product::featured()
-        ->orderBy('created_at', 'desc')
-        ->take(8)
-        ->get();
-
-    return Inertia::render('Dashboard', [
-        'auth' => [
-            'user' => $user,
-        ],
-        'featuredProducts' => $featuredProducts->map(fn (Product $product) => ProductData::fromModel($product)->toArray()),
-    ]);
 })->name('dashboard');
 
 Route::post('/cart', [CartController::class, 'addToCart'])->name('cart.add');
@@ -64,6 +47,11 @@ Route::controller(CategoryController::class)->group(function () {
     Route::get('/categories/{category}', 'show')->name('categories.show');
 });
 
+/*
+|--------------------------------------------------------------------------
+| Authentication Required Routes
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth'])->group(function () {
     // Dashboard
 

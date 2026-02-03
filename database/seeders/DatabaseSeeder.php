@@ -68,7 +68,25 @@ class DatabaseSeeder extends Seeder
         });
 
         $allCategories = Category::all();
-        Product::factory()->count(200)
+
+        // Create some featured products
+        Product::factory()->count(10)
+            ->featured()
+            ->create()
+            ->each(function ($product) use ($allCategories) {
+                $product->categories()->attach($allCategories->random(rand(1, 3))->pluck('id'));
+            });
+
+        // Create some deals
+        Product::factory()->count(10)
+            ->deal()
+            ->create()
+            ->each(function ($product) use ($allCategories) {
+                $product->categories()->attach($allCategories->random(rand(1, 3))->pluck('id'));
+            });
+
+        // Create regular products
+        Product::factory()->count(180)
             ->create()
             ->each(function ($product) use ($allCategories) {
                 $product->categories()->attach($allCategories->random(rand(1, 3))->pluck('id'));

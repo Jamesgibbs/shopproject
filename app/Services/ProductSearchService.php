@@ -35,4 +35,13 @@ class ProductSearchService
             ->get()
             ->map(fn ($p) => ProductData::fromModel($p)->toArray());
     }
+
+    public function deals()
+    {
+        return Product::deals()
+            ->latest()
+            ->take(8)
+            ->get()
+            ->map(fn ($p) => ProductData::fromModel($p)->toArray());
+    }
 }

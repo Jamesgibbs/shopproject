@@ -18,6 +18,7 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
     };
     categories: Category[];
     featuredProducts?: FeaturedProduct[];
+    deals?: FeaturedDeal[]
     flash: {
         success: string | null;
         error: string | null;
@@ -29,6 +30,16 @@ export interface FeaturedProduct {
     id: number
     name: string
     price: number
+    image: string
+    average_rating: number
+    reviews_count: number
+}
+
+export interface FeaturedDeal {
+    id: number
+    name: string
+    price: number
+    deal_price: number
     image: string
     average_rating: number
     reviews_count: number

@@ -12,7 +12,12 @@ export default function SupplierTopNav() {
                 </Link>
             </div>
 
-            <button onClick={() => router.post(route('logout'))} > Logout </button>
+            <button
+                className={styles.logoutButton}
+                onClick={() => router.post(route('logout'))}
+            >
+                Logout
+            </button>
         </header>
     )
 }

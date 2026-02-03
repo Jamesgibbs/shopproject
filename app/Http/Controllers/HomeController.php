@@ -15,6 +15,7 @@ class HomeController
     {
         return Inertia::render('Welcome', [
             'featuredProducts' => $service->featured(),
+            'deals' => $service->deals(),
             'searchResults' => $service->search($request->input('q')),
             'searchQuery' => $request->input('q'),
         ]);

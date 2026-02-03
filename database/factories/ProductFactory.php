@@ -26,6 +26,26 @@ class ProductFactory extends Factory
             'description' => $this->faker->words(5, true),
             'stock_quantity' => $this->faker->numberBetween(1, 100),
             'image' => "https://picsum.photos/seed/product-{$this->faker->unique()->numberBetween(1, 9999)}/600/300",
+            'is_featured' => false,
+            'is_deal' => false,
+            'deal_price' => null,
+            'deal_expires_at' => null,
         ];
+    }
+
+    public function featured(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_featured' => true,
+        ]);
+    }
+
+    public function deal(?float $dealPrice = null): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_deal' => true,
+            'deal_price' => $dealPrice ?? round($attributes['price'] * 0.8, 2),
+            'deal_expires_at' => now()->addDays(7),
+        ]);
     }
 }

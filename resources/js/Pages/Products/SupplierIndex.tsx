@@ -37,6 +37,7 @@ export default function SupplierIndex({ products, filters }: SupplierIndexProps)
         if (file) {
             post(route('products.supplier.products.import'), {
                 preserveUrl: false,
+                // @ts-ignore
                 data: { csv_file: file },
                 onSuccess: () => {
                     if (fileInputRef.current) fileInputRef.current.value = '';
