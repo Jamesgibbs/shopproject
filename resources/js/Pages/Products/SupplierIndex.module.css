@@ -1,5 +1,5 @@
 .wrapper {
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
 }
@@ -8,52 +8,102 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .title {
-    font-size: 2rem;
+    font-size: 1.875rem;
     font-weight: 700;
-    color: #1f2937;
+    color: #111827;
+    margin: 0;
+}
+
+.subtitle {
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
 }
 
 .addButton {
+    display: inline-flex;
+    align-items: center;
     background: #2563eb;
     color: white;
-    padding: 0.6rem 1.2rem;
-    border-radius: 0.375rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.5rem;
     font-weight: 600;
     text-decoration: none;
-    transition: background 0.2s ease;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 .addButton:hover {
     background: #1d4ed8;
 }
 
-.actions {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-}
-
 .importButton {
-    background: #f3f4f6;
+    display: inline-flex;
+    align-items: center;
+    background: white;
     color: #374151;
-    padding: 0.6rem 1.2rem;
-    border-radius: 0.375rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.5rem;
     font-weight: 600;
     border: 1px solid #d1d5db;
     cursor: pointer;
     transition: all 0.2s ease;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 .importButton:hover {
-    background: #e5e7eb;
+    background: #f9fafb;
     border-color: #9ca3af;
 }
 
 .importButton:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.filtersBar {
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.searchWrapper {
+    position: relative;
+    flex: 1;
+    max-width: 400px;
+}
+
+.searchIcon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    pointer-events: none;
+}
+
+.searchInput {
+    width: 100%;
+    padding: 0.5rem 0.75rem 0.5rem 2.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #d1d5db;
+    font-size: 0.875rem;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.searchInput:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }

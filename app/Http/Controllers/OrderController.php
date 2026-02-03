@@ -84,4 +84,13 @@ class OrderController extends Controller
             'sales' => $sales->map(fn (OrderItem $item) => SalesHistoryData::fromModel($item)->toArray()),
         ]);
     }
+
+    public function show(Order $order): Response
+    {
+        $order->load(['items.product', 'user']);
+
+        return Inertia::render('Orders/Show', [
+            'order' => BaseOrderData::fromModel($order)->toArray(),
+        ]);
+    }
 }

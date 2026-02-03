@@ -74,6 +74,8 @@ class DatabaseSeeder extends Seeder
                 $product->categories()->attach($allCategories->random(rand(1, 3))->pluck('id'));
             });
 
-        Review::factory()->count(50)->create();
+        // Review::factory()->count(50)->create();
+
+        $this->call(OrderSeeder::class);
     }
 }

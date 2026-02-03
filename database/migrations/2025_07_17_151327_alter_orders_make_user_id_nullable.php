@@ -22,7 +22,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::table('orders', function (Blueprint $table) {
             $table->foreignId('user_id')->nullable(false)->change();
             $table->dropSoftDeletes();
         });

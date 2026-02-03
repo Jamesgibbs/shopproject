@@ -144,6 +144,7 @@ Route::middleware(['auth'])->group(function () {
 
         // Sales History
         Route::get('/orders/sales-history', [OrderController::class, 'salesHistory'])->name('orders.salesHistory');
+        Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 
         // Supplier Info Management
         Route::controller(SupplierInfoController::class)->prefix('supplier/info')->name('supplier.info.')->group(function () {

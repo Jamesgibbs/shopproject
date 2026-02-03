@@ -19,12 +19,22 @@ use Throwable;
 
 class ProductController extends Controller
 {
-    public function supplierIndex(): Response
+    public function supplierIndex(Request $request): Response
     {
-        $products = Product::where('supplier_id', auth()->id())->paginate(20);
+        $products = Product::where('supplier_id', auth()->id())
+            ->when($request->search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%");
+                });
+            })
+            ->latest()
+            ->paginate(20)
+            ->withQueryString();
 
         return Inertia::render('Products/SupplierIndex', [
             'products' => $products->through(fn (Product $product) => ProductData::fromModel($product)->toArray()),
+            'filters' => $request->only(['search']),
         ]);
     }
 

@@ -31,8 +31,8 @@ export default function SupplierSidebar() {
 
 
                 <Link
-                    href="/supplier/orders"
-                    className={isActive('/supplier/orders') ? styles.active : ''}
+                    href="/orders/sales-history"
+                    className={isActive('/orders/sales-history') ? styles.active : ''}
                 >
                     Orders
                 </Link>

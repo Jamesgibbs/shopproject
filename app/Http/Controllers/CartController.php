@@ -36,7 +36,6 @@ class CartController extends Controller
             ->values()
             ->all();
 
-
         return Inertia::render('Cart/ViewCart', [
             'cartItems' => $cartItems,
         ]);

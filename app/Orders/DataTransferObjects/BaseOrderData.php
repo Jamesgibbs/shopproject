@@ -15,7 +15,7 @@ readonly class BaseOrderData
     public function __construct(
         protected readonly int $id,
         protected readonly ?string $customerName,
-        protected readonly float $total,
+        protected readonly string $total,
         protected readonly string $status,
         protected readonly Collection $items,
         protected readonly string $orderedAt
@@ -26,7 +26,7 @@ readonly class BaseOrderData
         return new self(
             id: $order->id,
             customerName: $order->user->name,
-            total: $order->total_amount,
+            total: (string) $order->total_amount,
             status: $order->status,
             items: $order->items->map(fn ($item) => OrderItemData::fromModel($item)),
             orderedAt: $order->created_at->toDateTimeString(), );

@@ -12,7 +12,7 @@ readonly class OrderItemData
         protected readonly int $id,
         protected readonly string $name,
         protected readonly int $quantity,
-        protected readonly float $price,
+        protected readonly string $price,
     ) {}
 
     public static function fromModel(OrderItem $item): self
@@ -21,7 +21,7 @@ readonly class OrderItemData
             id: $item->id,
             name: $item->product->name ?? 'Unknown Product',
             quantity: $item->quantity,
-            price: $item->price_at_time,
+            price: (string)$item->price_at_time,
         );
     }
 
