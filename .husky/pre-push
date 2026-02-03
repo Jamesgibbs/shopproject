@@ -1,0 +1,46 @@
+#!/bin/sh
+
+echo "Running pre-push checks..."
+
+# PHP Code Style (Pint)
+echo "Running Pint..."
+vendor/bin/pint --test
+if [ $? -ne 0 ]; then
+    echo "Pint failed. Please fix code style issues."
+    exit 1
+fi
+
+# PHP Static Analysis (PHPStan)
+echo "Running PHPStan..."
+vendor/bin/phpstan analyse --memory-limit=2G
+if [ $? -ne 0 ]; then
+    echo "PHPStan failed. Please fix static analysis issues."
+    exit 1
+fi
+
+# JS Linting
+echo "Running ESLint..."
+npm run lint
+if [ $? -ne 0 ]; then
+    echo "ESLint failed. Please fix linting issues."
+    exit 1
+fi
+
+# Frontend Build
+echo "Running npm run build..."
+npm run build
+if [ $? -ne 0 ]; then
+    echo "Build failed. Please fix build issues."
+    exit 1
+fi
+
+# PHP Tests
+echo "Running tests..."
+php artisan test
+if [ $? -ne 0 ]; then
+    echo "Tests failed. Please fix failing tests."
+    exit 1
+fi
+
+echo "All checks passed! Pushing..."
+exit 0

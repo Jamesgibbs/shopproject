@@ -37,7 +37,7 @@ export default function SupplierIndex({ products, filters }: SupplierIndexProps)
         if (file) {
             post(route('products.supplier.products.import'), {
                 preserveUrl: false,
-                // @ts-ignore
+                // @ts-expect-error data is actually supported by inertia post helper but types are messy here
                 data: { csv_file: file },
                 onSuccess: () => {
                     if (fileInputRef.current) fileInputRef.current.value = '';

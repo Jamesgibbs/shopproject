@@ -3,13 +3,16 @@ import React from "react";
 import {JSX} from "react";
 import {PageProps} from "@/types";
 import {usePage} from "@inertiajs/react";
-import ProductCarousel from "@/Components/Features/Products/ProductCarousel";
+import ProductCarousel, {CarouselProduct} from "@/Components/Features/Products/ProductCarousel";
 import ProductsTable from "@/Pages/Products/ProductsTable";
 
 interface WelcomeProps extends Record<string, unknown> {
-    featuredProducts: any[];
-    deals: any[];
-    searchResults?: any;
+    featuredProducts: CarouselProduct[];
+    deals: CarouselProduct[];
+    searchResults?: {
+        data: CarouselProduct[];
+        links: unknown[];
+    };
     searchQuery?: string;
 }
 

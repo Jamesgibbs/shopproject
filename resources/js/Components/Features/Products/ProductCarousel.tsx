@@ -3,7 +3,7 @@ import styles from "./ProductCarousel.module.css";
 import { Link } from "@inertiajs/react";
 import Card from "@/Components/Common/Card";
 
-interface Product {
+export interface CarouselProduct {
     id: number;
     name: string;
     price: number | string;
@@ -12,7 +12,7 @@ interface Product {
 }
 
 interface Props {
-    products: Product[];
+    products: CarouselProduct[];
 }
 
 export default function ProductCarousel({ products }: Props) {
